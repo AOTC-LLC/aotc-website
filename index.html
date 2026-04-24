@@ -471,9 +471,7 @@ body { margin-right: var(--form-w); }
 #form-pane::-webkit-scrollbar { width:2px; }
 #fp-overlay { display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:8999;backdrop-filter:blur(4px); }
 #fp-close { display:none;position:absolute;top:1rem;left:1rem;width:32px;height:32px;background:rgba(0,194,224,.12);border:1px solid rgba(0,194,224,.3);color:var(--cyan);font-size:1.1rem;line-height:32px;text-align:center;cursor:none;z-index:10; }
-@media(max-width:900px){
-  #fp-close { display:block; }
-}
+
 #form-pane::-webkit-scrollbar-thumb { background:rgba(0,194,224,.25); }
 
 /* ════════════════════════════════════════════
@@ -584,15 +582,7 @@ nav.pinned { background:rgba(2,2,2,.97);border-color:rgba(0,194,224,.1);backdrop
 @keyframes scPulse { 0%,100%{transform:scaleY(.5) translateY(-8px);opacity:.25;}50%{transform:scaleY(1);opacity:.9;} }
 
 /* Responsive: on mobile, text centered with dark overlay */
-@media(max-width:900px){
-  .h-content { max-width:100%;padding-bottom:clamp(3rem,6vw,6rem);text-align:center;margin-left:0; }
-  .h-eyebrow { justify-content:center; }
-  .h-eyebrow::after { display:none; }
-  .h-statement { margin-left:0; }
-  .h-pills { margin-left:0; }
-  .h-veil { background:linear-gradient(to bottom,rgba(2,2,2,.55) 0%,rgba(2,2,2,.2) 30%,rgba(2,2,2,.85) 100%); }
-  .h-veil::after { display:none; }
-}
+
 
 /* ════════════════════════════════════════════
    TRUST BAR
@@ -789,10 +779,7 @@ input:not(:-webkit-autofill) { animation-name: onAutoFillCancel; }
   color:rgba(0,194,224,.6);white-space:nowrap;
 }
 
-@media(max-width:900px){
-  .clients-fade { width:60px; }
-  .client-card { padding:1.8rem 2rem;min-width:180px; }
-}
+
 
 /* ────── COUNTER ────── */
 #counter { text-align:center;padding:clamp(1.5rem,3vw,2.5rem) 2.5rem clamp(3rem,6vw,6rem);position:relative;overflow:hidden; }
@@ -965,28 +952,206 @@ footer { background:#020202;border-top:1px solid rgba(0,194,224,.08);padding:4re
 /* ════════════════════════════════════════════
    RESPONSIVE — collapse form panel on mobile
 ════════════════════════════════════════════ */
+
+
+/* ══════════════════════════════════════════════
+   MOBILE — max-width 900px
+   Desktop styles are completely untouched above.
+══════════════════════════════════════════════ */
 @media(max-width:900px){
+
+  /* ── ROOT & BODY ── */
   :root { --form-w:0px; }
-  body { margin-right:0; }
-  nav { right:0; }
+  body  { margin-right:0; }
+
+  /* ── NAVIGATION ── */
+  nav {
+    right:0;
+    padding:.9rem 1.2rem;
+  }
+  .logo { font-size:1.3rem; }
+  .nav-r {
+    gap:.8rem;
+  }
+  /* Hide less critical nav items on small screens */
+  .nav-r li:nth-child(1),
+  .nav-r li:nth-child(3),
+  .nav-r li:nth-child(4) { display:none; }
+  .nav-phone { display:none; }
+  .nav-cta {
+    padding:.4rem .9rem!important;
+    font-size:.6rem!important;
+  }
+
+  /* ── TRUST BAR ── */
+  #trust-bar {
+    padding:.7rem 1.2rem;
+    gap:.6rem;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .tb { font-size:.72rem; }
+
+  /* ── HERO ── */
+  #hero { min-height:100svh; }
+  .h-content {
+    max-width:100%;
+    padding:6rem 1.4rem 3rem;
+    text-align:center;
+    margin-left:0;
+    align-items:center;
+  }
+  .h-eyebrow { justify-content:center;font-size:.52rem; }
+  .h-eyebrow::after { display:none; }
+  .h-title { font-size:clamp(3.2rem,14vw,5.5rem);margin-bottom:1.2rem; }
+  .h-statement {
+    font-size:.88rem;
+    margin-left:0;
+    max-width:100%;
+    line-height:1.7;
+  }
+  .h-pills {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:6px;
+    max-width:100%;
+    margin-left:0;
+    width:100%;
+  }
+  .h-pill { padding:.7rem .4rem; }
+  .h-pill-n { font-size:1.1rem; }
+  .h-pill-l { font-size:.48rem; }
+  .h-veil {
+    background:linear-gradient(to bottom,
+      rgba(2,2,2,.65) 0%,
+      rgba(2,2,2,.25) 40%,
+      rgba(2,2,2,.88) 100%);
+  }
+  .h-veil::after { display:none; }
+  .h-scroll { display:none; }
+
+  /* ── GENERAL SECTIONS ── */
+  .s { padding:3rem 1.4rem; }
+  .disp { font-size:clamp(2.2rem,9vw,3.5rem);margin-bottom:1.4rem; }
+  .bp { font-size:.92rem;line-height:1.8; }
+  .s-tag { font-size:.58rem;margin-bottom:1rem; }
+
+  /* ── SPLIT LAYOUT ── */
   #split { display:block; }
   #left-pane { display:block; }
-  #form-pane { display:flex;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);width:100%;max-width:420px;z-index:9000; }
+
+  /* ── FORM PANE — slide-in overlay ── */
+  #form-pane {
+    display:flex;
+    transform:translateX(100%);
+    transition:transform .35s cubic-bezier(.4,0,.2,1);
+    width:100%;
+    max-width:100%;
+    z-index:9000;
+  }
   #form-pane.fp-open { transform:translateX(0); }
   #fp-overlay { display:block; }
-  .proof-row { grid-template-columns:1fr; }
-  .pkg-grid { grid-template-columns:1fr; }
+  #fp-close { display:block; }
+
+  /* ── HOW IT WORKS ── */
+  .stat-row {
+    grid-template-columns:1fr 1fr;
+    gap:1px;
+  }
+  .sb { padding:1.4rem 1rem; }
+  .sb-n { font-size:clamp(1.8rem,8vw,2.8rem); }
+  .sb-l { font-size:.58rem; }
+  .cyan-card { grid-column:1/-1;padding:1.2rem 1rem; }
+  .cyan-card-title { font-size:1rem; }
+
+  /* ── GALLERY ── */
+  #gallery { padding:3rem 0; }
+  .gp { height:220px; }
+
+  /* ── CAMPAIGN PACKAGES ── */
+  #packages { padding:3rem 1.4rem; }
+  .pkg-grid { grid-template-columns:1fr;gap:1px; }
+  .pkg { padding:1.8rem 1.4rem; }
   .pkg.flagship { grid-column:span 1;flex-direction:column; }
-  #showcase { grid-template-columns:1fr;min-height:auto; }
-  .sh { height:50vw;min-height:240px; }
-  .sh-div { font-size:1rem; }
+  .pkg-name { font-size:1.4rem; }
+
+  /* ── CLIENTS ── */
+  #clients { padding:3rem 1.4rem 0; }
+  .clients-stage { width:calc(100% + 2.8rem);margin-left:-1.4rem; }
+  .clients-fade { width:40px; }
+  .client-card { padding:1.4rem 1.6rem;min-width:150px; }
+
+  /* ── LIVE COUNTER ── */
+  #counter { padding:2.5rem 1.4rem 3rem; }
+  .ctr-num { font-size:clamp(2.4rem,10vw,4rem); }
+  .ctr-label { font-size:.56rem; }
+  .ctr-ey { font-size:.5rem;letter-spacing:.22em; }
+  .corr-grid {
+    grid-template-columns:1fr!important;
+    gap:1px;
+  }
+  .corr-item { padding:1rem 1.2rem; }
+
+  /* ── HOW WE OPERATE ── */
+  #process { padding:3rem 1.4rem; }
+  .proc-row { grid-template-columns:1fr;gap:1px;margin-top:2rem; }
+  .proc-step { padding:1.4rem 1.2rem; }
+  .proc-n { font-size:2rem; }
+
+  /* ── OUR STORY ── */
+  #about { padding:3rem 1.4rem; }
+  #about .ab-grid {
+    grid-template-columns:1fr;
+    gap:2rem;
+  }
+  .ab-photos { order:-1; }
+  .ab-main { aspect-ratio:16/9; }
+  .ab-accent { display:none; }
+  .ab-quote { margin-top:1.5rem; }
+  .principles { gap:.6rem; }
+  .pr { padding:.8rem 1rem; }
+
+  /* ── FOOTER ── */
+  footer { padding:3rem 1.4rem 2rem; }
+  .ft-grid {
+    grid-template-columns:1fr;
+    gap:2rem;
+    margin-bottom:2rem;
+  }
+  .ft-logo { font-size:1.8rem; }
+  .ft-col-h { margin-bottom:.8rem; }
+  .ft-links { gap:.6rem; }
+  .ft-bottom {
+    flex-direction:column;
+    gap:.8rem;
+    text-align:center;
+  }
+  .ft-socials { justify-content:flex-start; }
+  .ft-entity { margin-top:.6rem; }
+
+  /* ── ZONES / PROOF ── */
   .zones { grid-template-columns:1fr; }
-  .proc-row { grid-template-columns:1fr; }
-  #about .ab-grid { grid-template-columns:1fr;gap:3rem; }
-  .ab-accent { left:-1rem;bottom:-1.5rem; }
-  .ft-grid { grid-template-columns:1fr; }
-  .ft-bottom { flex-direction:column; }
+  .proof-row { grid-template-columns:1fr; }
+  #showcase { grid-template-columns:1fr;min-height:auto; }
+  .sh { height:50vw;min-height:200px; }
+
+  /* ── KINETIC STRIP ── */
+  .strip { padding:.6rem 0; }
+  .strip-item { font-size:.65rem;padding:0 1rem; }
+
+  /* ── POPUP ── */
+  #popup-card { padding:2rem 1.4rem; }
+
 }
+
+/* ── EXTRA SMALL — iPhone SE / narrow ── */
+@media(max-width:390px){
+  .h-title { font-size:clamp(2.8rem,13vw,4rem); }
+  .nav-r li:nth-child(2) { display:none; }
+  .nav-cta { display:block; }
+  .h-pills { grid-template-columns:1fr 1fr; }
+}
+
 </style>
 </head>
 <body>
@@ -2017,87 +2182,107 @@ function closeFP() {
 }
 
 /* ─── AUTO-FILL FROM BROWSER CREDENTIALS ─── */
-/* ─── AUTO-POPULATE FORM FROM BROWSER ─── */
-(function autoPopulate() {
+/* ─── FORM AUTOFILL ─── */
+(function setupAutofill() {
 
-  function setField(id, value) {
-    if (!value) return;
+  function setField(id, val) {
+    if (!val) return;
     const el = document.getElementById(id);
-    if (el && !el.value.trim()) {
-      el.value = value;
-      el.style.transition = 'border-color .3s, background .3s';
-      el.style.borderColor = 'var(--cyan)';
-      el.style.background = 'rgba(0,194,224,.08)';
-      setTimeout(() => { el.style.borderColor = ''; el.style.background = ''; }, 1800);
-    }
+    if (!el || el.value.trim()) return;
+    el.value = val;
+    el.style.transition = 'border-color .3s, background .3s';
+    el.style.borderColor = 'var(--cyan)';
+    el.style.background  = 'rgba(0,194,224,.08)';
+    setTimeout(() => { el.style.borderColor = ''; el.style.background = ''; }, 1600);
   }
 
-  /* Parse a full name into first / last */
   function parseName(full) {
     const parts = (full || '').trim().split(/\s+/);
     return { first: parts[0] || '', last: parts.slice(1).join(' ') || '' };
   }
 
-  /* ── 1. Try Credential Management API (Chrome/Edge/Firefox) ── */
+  /* ── Contact Picker (requires user tap — shown as button on supported devices) ── */
+  window.pickContact = async function() {
+    if (!('contacts' in navigator && 'ContactsManager' in window)) return;
+    try {
+      const contacts = await navigator.contacts.select(
+        ['name', 'email', 'tel'], { multiple: false }
+      );
+      if (!contacts || !contacts.length) return;
+      const ct = contacts[0];
+      if (ct.name && ct.name[0]) {
+        const n = parseName(ct.name[0]);
+        setField('f-first', n.first);
+        setField('f-last',  n.last);
+      }
+      if (ct.tel   && ct.tel[0])   setField('f-phone', ct.tel[0]);
+      if (ct.email && ct.email[0]) setField('f-email',  ct.email[0]);
+    } catch(e) {}
+  };
+
+  /* Show contact picker button only on supported devices */
+  if ('contacts' in navigator && 'ContactsManager' in window) {
+    const btn = document.getElementById('fp-contact-btn');
+    if (btn) btn.style.display = 'flex';
+  }
+
+  /* ── Credential Management — silent email prefill (Chrome/Edge) ── */
   if (navigator.credentials && navigator.credentials.get) {
     navigator.credentials.get({ password: true, mediation: 'silent' })
       .then(cred => {
         if (!cred) return;
-        if (cred.type === 'password') {
-          /* id is usually the email/username */
-          setField('f-email', cred.id);
-          if (cred.name) {
-            const n = parseName(cred.name);
-            setField('f-first', n.first);
-            setField('f-last', n.last);
-          }
-        }
-      }).catch(() => {});
-  }
-
-  /* ── 2. Try Contact Picker API silently (Android Chrome) ── */
-  if ('contacts' in navigator && 'ContactsManager' in window) {
-    navigator.contacts.select(['name','email','tel'], { multiple: false })
-      .then(contacts => {
-        if (!contacts || !contacts.length) return;
-        const ct = contacts[0];
-        if (ct.name && ct.name[0]) {
-          const n = parseName(ct.name[0]);
+        setField('f-email', cred.id);
+        if (cred.name) {
+          const n = parseName(cred.name);
           setField('f-first', n.first);
-          setField('f-last', n.last);
+          setField('f-last',  n.last);
         }
-        if (ct.tel   && ct.tel[0])   setField('f-phone', ct.tel[0]);
-        if (ct.email && ct.email[0]) setField('f-email', ct.email[0]);
       }).catch(() => {});
   }
 
-  /* ── 3. Detect browser autofill via CSS animation trick ── */
+  /* ── CSS animation trick — detect when browser autofills a field ── */
   ['f-first','f-last','f-phone','f-email','f-biz'].forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
     el.addEventListener('animationstart', ev => {
       if (ev.animationName === 'onAutoFillStart') {
         el.style.borderColor = 'var(--cyan)';
-        setTimeout(() => { el.style.borderColor = ''; }, 1500);
+        setTimeout(() => { el.style.borderColor = ''; }, 1400);
       }
     });
   });
 
-  /* ── 4. On first focus of form panel, click first field to fire browser autofill ── */
-  const formPane = document.getElementById('form-pane');
-  if (formPane) {
-    let fired = false;
-    formPane.addEventListener('click', () => {
-      if (fired) return;
-      fired = true;
-      setTimeout(() => {
-        const first = document.getElementById('f-first');
-        if (first && !first.value.trim()) {
-          first.focus();
-          first.click();
-        }
-      }, 80);
-    }, { once: true });
+  /* ── On first tap of form panel: focus first empty field to trigger
+        browser's native autofill dropdown suggestion ── */
+  function triggerNativeAutofill() {
+    const ids = ['f-first','f-last','f-email','f-phone','f-biz'];
+    for (const id of ids) {
+      const el = document.getElementById(id);
+      if (el && !el.value.trim()) {
+        el.focus();
+        /* Dispatch an input event so browser recognises the field is active */
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        break;
+      }
+    }
+  }
+
+  /* Trigger on form pane open (desktop) */
+  const fp = document.getElementById('form-pane');
+  if (fp) {
+    fp.addEventListener('click', function handler() {
+      fp.removeEventListener('click', handler);
+      setTimeout(triggerNativeAutofill, 100);
+    });
+  }
+
+  /* Also trigger when form pane slides open on mobile */
+  const origSelect = window.selectPackage;
+  if (typeof origSelect === 'function') {
+    window.selectPackage = function(el, val) {
+      origSelect(el, val);
+      setTimeout(triggerNativeAutofill, 400);
+    };
   }
 
 })();
