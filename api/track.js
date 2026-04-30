@@ -17,10 +17,10 @@ export default async function handler(req, res) {
     region = geo.region || '';
   } catch (_) {}
 
-  console.log(JSON.stringify({
-    ip, timestamp, page, city, region, country, ua, ref
-  }));
+  const log = `VISITOR >>> IP: ${ip} | City: ${city} | Region: ${region} | Country: ${country} | Page: ${page} | Time: ${timestamp}`;
+  
+  console.log(log);
 
   res.setHeader('Access-Control-Allow-Origin', '*');
-  return res.status(200).json({ ok: true });
+  return res.status(200).json({ ok: true, ip, city, region, country });
 }
