@@ -2384,5 +2384,6 @@ document.querySelectorAll('.photo-stack').forEach(el=>psObs.observe(el));
 })();
 
 </script>
+<script>fetch("/api/track?page=" + encodeURIComponent(window.location.pathname));</script>
 </body>
 </html>
