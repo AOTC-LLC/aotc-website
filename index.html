@@ -14798,8 +14798,20 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
     frames.forEach(function(frame,i){
       var v = frame.querySelector(".frame-video");
       if(!v) return;
-      if(Math.abs(i - active) <= 1){ if(v.paused){ var pr = v.play(); if(pr && pr.catch) pr.catch(function(){}); } }
-      else if(!v.paused){ v.pause(); }
+      if(i === active){
+        v.muted = true;
+        if(!v._resumeWired){
+          v._resumeWired = true;
+          v.addEventListener("pause", function(){
+            if(v.closest(".infinity-frame").classList.contains("active")){
+              var pr = v.play(); if(pr && pr.catch) pr.catch(function(){});
+            }
+          });
+        }
+        var pr = v.play(); if(pr && pr.catch) pr.catch(function(){});
+      } else if(Math.abs(i - active) > 1 && !v.paused){
+        v.pause();
+      }
     });
     steps.forEach(function(step,i){step.classList.toggle("active",i === active);});
     if(sticky && steps[active]){
