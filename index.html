@@ -14795,23 +14795,9 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
     tunnel.style.opacity = isFinalStep ? 0 : Math.max(.08,.36 - visualP * .12);
     progress.style.width = (p * 100) + "%";
     frames.forEach(function(frame,i){frame.classList.toggle("active",i === active);});
-    frames.forEach(function(frame,i){
+    frames.forEach(function(frame){
       var v = frame.querySelector(".frame-video");
-      if(!v) return;
-      if(i === active){
-        v.muted = true;
-        if(!v._resumeWired){
-          v._resumeWired = true;
-          v.addEventListener("pause", function(){
-            if(v.closest(".infinity-frame").classList.contains("active")){
-              var pr = v.play(); if(pr && pr.catch) pr.catch(function(){});
-            }
-          });
-        }
-        var pr = v.play(); if(pr && pr.catch) pr.catch(function(){});
-      } else if(Math.abs(i - active) > 1 && !v.paused){
-        v.pause();
-      }
+      if(v && v.paused){ v.muted = true; var pr = v.play(); if(pr && pr.catch) pr.catch(function(){}); }
     });
     steps.forEach(function(step,i){step.classList.toggle("active",i === active);});
     if(sticky && steps[active]){
@@ -15018,6 +15004,28 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
   }
   setInterval(fitPanel,2500);
   setTimeout(fitPanel,400);setTimeout(fitPanel,1500);
+})();
+</script>
+<script>
+(function(){
+  function kickVideos(){
+    var vids = document.querySelectorAll(".frame-video");
+    for(var i=0;i<vids.length;i++){
+      var v = vids[i];
+      v.muted = true; v.loop = true; v.setAttribute("playsinline","");
+      if(!v._contWired){
+        v._contWired = true;
+        v.addEventListener("pause", function(ev){ var t=ev.target; if(!t.ended){ var p=t.play(); if(p&&p.catch)p.catch(function(){}); } });
+        v.addEventListener("stalled", function(ev){ var p=ev.target.play(); if(p&&p.catch)p.catch(function(){}); });
+        v.addEventListener("canplay", function(ev){ var p=ev.target.play(); if(p&&p.catch)p.catch(function(){}); });
+      }
+      if(v.paused){ var pr = v.play(); if(pr && pr.catch) pr.catch(function(){}); }
+    }
+  }
+  if(document.readyState !== "loading") kickVideos();
+  else document.addEventListener("DOMContentLoaded", kickVideos);
+  window.addEventListener("load", kickVideos);
+  setInterval(kickVideos, 1500);
 })();
 </script>
 </body>
