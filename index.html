@@ -13509,40 +13509,55 @@ body{
 .process-frame.active .walk-step:first-child .file-control em{display:none!important}
 </style>
 <style id="walkStepUniform">
-/* Uniform field height across all four steps so none stands out */
-.process-frame.active .walk-step{align-items:center!important;padding-top:10px!important;padding-bottom:10px!important}
-.process-frame.active .walk-step .walk-control,
-.process-frame.active .walk-step .file-control b,
-.process-frame.active .walk-step textarea.walk-control,
-.process-frame.active .walk-step .quick-submit{
-  min-height:40px!important;height:40px!important;max-height:40px!important;
-  padding:0 12px!important;
-  display:flex!important;align-items:center!important;
-  font-size:12.5px!important;line-height:1.1!important;
-  box-sizing:border-box!important;overflow:hidden!important;
-}
-.process-frame.active .walk-step textarea.walk-control{white-space:nowrap!important}
-.process-frame.active .walk-step .quick-submit{justify-content:center!important}
-.process-frame.active .walk-step .file-control b{justify-content:flex-start!important}
-/* Drop redundant per-field labels and the extra chip row — the walk-copy already explains each step */
-.process-frame.active .walk-step .walk-field em,
-.process-frame.active .walk-step .file-control em,
-html body .process-frame.active .walk-step .outcome-chips,
-html body .process-frame.active .walk-step:nth-child(2) .outcome-chips{display:none!important}
-html body .process-frame.active .walk-step:nth-child(2) textarea.walk-control,
-html body .process-frame.active .walk-step textarea.walk-control{min-height:40px!important;height:40px!important;max-height:40px!important}
-html body .process-frame.active .walk-step .file-control,
-html body .process-frame.active .walk-step .file-control b{width:100%!important;justify-self:stretch!important;grid-column:2!important;margin:0!important;box-sizing:border-box!important}
-html body .process-frame.active .walk-step label.file-control{display:flex!important;flex-direction:row!important;justify-content:flex-start!important;align-items:center!important;max-width:none!important}
-html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!important;min-width:0!important}
+/* All four steps share one grid so none stands out */
 html body .process-frame.active .walk-step,
 html body .process-frame.active .walk-step:first-child,
 html body .process-frame.active .walk-step:nth-child(1){
   grid-template-columns:140px minmax(0,1fr)!important;
   column-gap:12px!important;
   padding:10px 12px!important;
+  align-items:center!important;
 }
 .process-frame.active .walk-step .walk-field{display:block!important;margin:0!important}
+/* Real inputs: keep them native & interactive — NO flex, NO overflow clip (that broke the date picker) */
+.process-frame.active .walk-step input.walk-control,
+.process-frame.active .walk-step textarea.walk-control{
+  width:100%!important;min-height:40px!important;height:40px!important;
+  padding:0 12px!important;box-sizing:border-box!important;
+  font-size:12.5px!important;line-height:38px!important;
+  display:block!important;pointer-events:auto!important;position:relative!important;z-index:2!important;
+}
+.process-frame.active .walk-step textarea.walk-control{line-height:1.25!important;padding-top:9px!important;resize:none!important}
+.process-frame.active .walk-step input[type="date"].walk-control{cursor:text!important}
+/* Non-input controls (upload button, submit) can flex-center */
+.process-frame.active .walk-step .file-control b,
+.process-frame.active .walk-step .quick-submit{
+  min-height:40px!important;height:40px!important;
+  padding:0 12px!important;display:flex!important;align-items:center!important;
+  font-size:12.5px!important;box-sizing:border-box!important;
+}
+.process-frame.active .walk-step .quick-submit{justify-content:center!important}
+.process-frame.active .walk-step .file-control b{justify-content:flex-start!important}
+/* Hide only the redundant micro-labels, keep the fields and step 02's selectable chips */
+.process-frame.active .walk-step .walk-field em,
+.process-frame.active .walk-step .file-control em{display:none!important}
+/* Step 02: show the selectable outcome chips as a compact row under a short field */
+html body .process-frame.active .walk-step:nth-child(2){align-items:center!important}
+html body .process-frame.active .walk-step:nth-child(2) .walk-field{grid-column:2!important;grid-row:1!important}
+html body .process-frame.active .walk-step:nth-child(2) textarea.walk-control{height:34px!important;min-height:34px!important}
+html body .process-frame.active .walk-step:nth-child(2) .outcome-chips{
+  display:grid!important;grid-column:2!important;grid-row:2!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important;margin-top:6px!important;
+}
+html body .process-frame.active .walk-step:nth-child(2) .outcome-chips button{
+  min-height:28px!important;height:28px!important;font-size:10px!important;padding:0 4px!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;cursor:pointer!important;
+}
+/* Step 01 upload fills its column like the others */
+html body .process-frame.active .walk-step .file-control,
+html body .process-frame.active .walk-step .file-control b{width:100%!important;justify-self:stretch!important;grid-column:2!important;margin:0!important;box-sizing:border-box!important}
+html body .process-frame.active .walk-step label.file-control{display:flex!important;flex-direction:row!important;justify-content:flex-start!important;align-items:center!important;max-width:none!important}
+html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!important;min-width:0!important}
 </style>
 </head>
 <body>
@@ -13911,9 +13926,9 @@ html body .process-frame.active .walk-step:nth-child(1){
     url = (url || "").trim();
     if(!url) return "";
     var m;
-    if((m = url.match(/(?:youtube\.com\/(?:watch\?v=|live\/|embed\/)|youtu\.be\/)([\w-]{6,})/))) return "https://www.youtube.com/embed/" + m[1] + "?autoplay=1";
-    if((m = url.match(/twitch\.tv\/([A-Za-z0-9_]+)/))) return "https://player.twitch.tv/?channel=" + m[1] + "&parent=" + location.hostname + "&autoplay=true";
-    if((m = url.match(/(?:facebook\.com|fb\.watch)\/.+/))) return "https://www.facebook.com/plugins/video.php?href=" + encodeURIComponent(url) + "&autoplay=1";
+    if((m = url.match(/(?:youtube\.com\/(?:watch\?v=|live\/|embed\/)|youtu\.be\/)([\w-]{6,})/))) return "https://www.youtube.com/embed/" + m[1] + "?autoplay=1&mute=1&playsinline=1&rel=0";
+    if((m = url.match(/twitch\.tv\/([A-Za-z0-9_]+)/))) return "https://player.twitch.tv/?channel=" + m[1] + "&parent=" + location.hostname + "&autoplay=true&muted=true";
+    if((m = url.match(/(?:facebook\.com|fb\.watch)\/.+/))) return "https://www.facebook.com/plugins/video.php?href=" + encodeURIComponent(url) + "&autoplay=1&mute=1";
     if((m = url.match(/instagram\.com\/(?:reel|p|tv)\/([\w-]+)/))) return "https://www.instagram.com/" + (url.match(/\/(reel|p|tv)\//)[1]) + "/" + m[1] + "/embed";
     if((m = url.match(/tiktok\.com\/@[\w.-]+\/video\/(\d+)/))) return "https://www.tiktok.com/embed/v2/" + m[1];
     return url;
@@ -13926,7 +13941,6 @@ html body .process-frame.active .walk-step:nth-child(1){
     var src = toEmbed(rawUrl);
     if(!src){ live.setAttribute("data-stream-src",""); frame.innerHTML = LIVE_PLACEHOLDER_HTML; wireLivePrompt(); return; }
     live.setAttribute("data-stream-src", rawUrl.trim());
-    try{ localStorage.setItem("aotcLiveStream", rawUrl.trim()); }catch(e){}
     frame.innerHTML = "";
     var iframe = document.createElement("iframe");
     iframe.src = src;
@@ -13957,7 +13971,7 @@ html body .process-frame.active .walk-step:nth-child(1){
     if(!liveAuthed()) return;
     var live = document.getElementById("truckLive");
     var current = live ? (live.getAttribute("data-stream-src") || "") : "";
-    var url = window.prompt("Paste the live stream link (YouTube, Twitch, Facebook, Instagram, or TikTok). Leave blank to clear:", current);
+    var url = window.prompt("Paste the live stream link (YouTube, Twitch, Facebook, Instagram, or TikTok). Leave blank to clear.\n\nTHIS PREVIEWS ON YOUR SCREEN ONLY. To make it live for every visitor, paste the same link into the file AOTC_Infinity_assets/live-stream.txt in your site's repository (leave that file empty to clear it for everyone).", current);
     if(url === null) return;
     renderLiveStream(url);
   }
@@ -13982,11 +13996,16 @@ html body .process-frame.active .walk-step:nth-child(1){
     var live = document.getElementById("truckLive");
     var frame = document.getElementById("truckLiveFrame");
     if(!live || !frame) return;
-    var saved = "";
-    try{ saved = localStorage.getItem("aotcLiveStream") || ""; }catch(e){}
-    var src = saved || (live.getAttribute("data-stream-src") || "").trim();
-    if(src){ renderLiveStream(src); }
-    else { frame.innerHTML = LIVE_PLACEHOLDER_HTML; wireLivePrompt(); }
+    frame.innerHTML = LIVE_PLACEHOLDER_HTML; wireLivePrompt();
+    fetch("AOTC_Infinity_assets/live-stream.txt?cb=" + Date.now(), {cache:"no-store"})
+      .then(function(r){ return r.ok ? r.text() : ""; })
+      .then(function(txt){
+        var lines = (txt || "").split(/\r?\n/);
+        var urlLine = "";
+        for(var i=0;i<lines.length;i++){ var l = lines[i].trim(); if(l && l.charAt(0) !== "#"){ urlLine = l; break; } }
+        if(urlLine){ renderLiveStream(urlLine); }
+      })
+      .catch(function(){});
   }
 
   function ensureMoreTitle(){
@@ -14262,18 +14281,23 @@ html body .process-frame.active .walk-step:nth-child(1){
       pop(e.clientX,e.clientY);
       quickSubmit.disabled = true;
       quickSubmit.innerHTML = "Sending...";
+      var fd = new FormData();
+      fd.append("_subject","AOTC Fast Start Request");
+      fd.append("form","Call me fast (04)");
+      fd.append("outcome", quickCampaign.outcome || "Not specified yet");
+      fd.append("dates", quickCampaign.date || "Not specified yet");
+      fd.append("timing", quickCampaign.timing || "Not specified yet");
+      fd.append("message", message);
+      if(creative && creative.files && creative.files.length){
+        fd.append("attachment", creative.files[0]);
+        fd.append("creative", creative.files[0].name);
+      } else {
+        fd.append("creative", "Not uploaded yet");
+      }
       fetch("https://formsubmit.co/ajax/info@adsofthecentury.net",{
         method:"POST",
-        headers:{"Accept":"application/json","Content-Type":"application/json"},
-        body:JSON.stringify({
-          _subject:"AOTC Fast Start Request",
-          form:"Call me fast (04)",
-          creative:quickCampaign.creative || "Not uploaded yet",
-          outcome:quickCampaign.outcome || "Not specified yet",
-          dates:quickCampaign.date || "Not specified yet",
-          timing:quickCampaign.timing || "Not specified yet",
-          message:message
-        })
+        headers:{"Accept":"application/json"},
+        body: fd
       }).then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(){
         quickSubmit.innerHTML = "Sent. We call you next <span class=\"arr\">></span>";
         setContext("Got it. Drop your name and number in the form so we know who to call.");
@@ -14985,3 +15009,8 @@ html body .process-frame.active .walk-step:nth-child(1){
 </script>
 </body>
 </html>
+
+# AOTC live stream control file.
+# Paste ONE stream link below (YouTube, Twitch, Facebook, Instagram, or TikTok) to make it
+# play for every visitor. Leave it empty (or with only these # comment lines) to show
+# "Check Back Soon!" for everyone. Lines starting with # are ignored.
