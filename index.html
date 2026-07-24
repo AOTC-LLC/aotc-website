@@ -13203,25 +13203,25 @@ body{
   #journey .process-frame.active .process-proof{display:none!important}
   #journey .process-frame.active .process-lab{
     position:absolute!important;inset:auto!important;
-    left:4vw!important;right:4vw!important;top:calc(var(--nav-h,64px) + 10px)!important;bottom:14px!important;
+    left:3vw!important;right:3vw!important;top:calc(var(--nav-h,64px) + 6px)!important;bottom:8px!important;
     transform:none!important;
     display:flex!important;flex-direction:column!important;justify-content:center!important;
     grid-template-columns:none!important;grid-template-rows:none!important;
-    height:auto!important;max-height:none!important;width:auto!important;overflow-y:auto!important;
+    height:auto!important;max-height:none!important;width:auto!important;overflow:hidden!important;
   }
   #journey .process-frame.active .process-walk{
     position:static!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;transform:none!important;
-    display:flex!important;flex-direction:column!important;gap:10px!important;
+    display:flex!important;flex-direction:column!important;gap:7px!important;
     width:100%!important;min-height:0!important;max-height:none!important;height:auto!important;
     grid-template-columns:none!important;grid-template-rows:none!important;isolation:auto!important;
   }
   #journey .process-frame.active .process-walk::before{display:none!important}
   #journey .process-frame.active .walk-step{
-    display:grid!important;grid-template-columns:40px 1fr!important;grid-template-rows:auto auto auto!important;
-    column-gap:12px!important;row-gap:7px!important;align-items:center!important;justify-content:stretch!important;
-    padding:12px 14px!important;margin:0!important;min-height:0!important;height:auto!important;max-height:none!important;
+    display:grid!important;grid-template-columns:34px 1fr!important;grid-template-rows:auto auto auto!important;
+    column-gap:10px!important;row-gap:5px!important;align-items:center!important;justify-content:stretch!important;
+    padding:9px 12px!important;margin:0!important;min-height:0!important;height:auto!important;max-height:none!important;
     position:relative!important;transform:none!important;inset:auto!important;
-    border-radius:10px!important;border:1px solid rgba(255,255,255,.16)!important;border-left:3px solid var(--red)!important;
+    border-radius:9px!important;border:1px solid rgba(255,255,255,.16)!important;border-left:3px solid var(--red)!important;
     background:rgba(0,0,0,.5)!important;box-shadow:none!important;
   }
   #journey .process-frame.active .walk-step::before,
@@ -13229,18 +13229,18 @@ body{
   #journey .process-frame.active .walk-copy{display:contents!important}
   #journey .process-frame.active .walk-copy span{
     grid-column:1!important;grid-row:1!important;position:static!important;transform:none!important;inset:auto!important;margin:0!important;
-    width:40px!important;height:40px!important;display:flex!important;align-items:center!important;justify-content:center!important;
-    background:var(--red)!important;border:0!important;border-radius:8px!important;color:#fff!important;font-size:18px!important;font-family:var(--fh)!important;font-weight:800!important;letter-spacing:0!important;
+    width:34px!important;height:34px!important;display:flex!important;align-items:center!important;justify-content:center!important;
+    background:var(--red)!important;border:0!important;border-radius:7px!important;color:#fff!important;font-size:15px!important;font-family:var(--fh)!important;font-weight:800!important;letter-spacing:0!important;
   }
-  #journey .process-frame.active .walk-copy strong{grid-column:2!important;grid-row:1!important;position:static!important;font-size:15px!important;line-height:1.05!important;color:#fff!important;align-self:end!important;margin:0!important}
-  #journey .process-frame.active .walk-copy small{grid-column:2!important;grid-row:2!important;position:static!important;font-size:11px!important;color:#9b948a!important;align-self:start!important;line-height:1.3!important;margin:0!important;max-width:none!important}
+  #journey .process-frame.active .walk-copy strong{grid-column:2!important;grid-row:1!important;position:static!important;font-size:14px!important;line-height:1.05!important;color:#fff!important;align-self:end!important;margin:0!important}
+  #journey .process-frame.active .walk-copy small{grid-column:2!important;grid-row:2!important;position:static!important;font-size:10.5px!important;color:#9b948a!important;align-self:start!important;line-height:1.25!important;margin:0!important;max-width:none!important}
   #journey .process-frame.active .walk-control,
   #journey .process-frame.active .walk-field,
   #journey .process-frame.active .file-control{grid-column:1 / -1!important;grid-row:3!important;width:100%!important;margin:0!important;position:static!important;transform:none!important}
   #journey .process-frame.active input.walk-control,
   #journey .process-frame.active .file-control b{
-    width:100%!important;min-height:38px!important;height:38px!important;max-height:38px!important;box-sizing:border-box!important;
-    padding:0 12px!important;font-size:13px!important;line-height:36px!important;
+    width:100%!important;min-height:34px!important;height:34px!important;max-height:34px!important;box-sizing:border-box!important;
+    padding:0 12px!important;font-size:13px!important;line-height:32px!important;
     background:rgba(0,0,0,.55)!important;border:1px solid rgba(255,255,255,.18)!important;border-radius:6px!important;color:#fff!important;
     display:flex!important;align-items:center!important;justify-content:flex-start!important;
   }
@@ -13249,14 +13249,15 @@ body{
     grid-column:1 / -1!important;grid-row:3!important;display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:5px!important;margin:0!important;
   }
   #journey .process-frame.active .walk-step:nth-child(2) .outcome-chips button{
-    min-height:32px!important;height:32px!important;font-size:11px!important;padding:0!important;
+    min-height:30px!important;height:30px!important;font-size:10.5px!important;padding:0!important;
     background:rgba(255,255,255,.06)!important;border:1px solid rgba(255,255,255,.16)!important;color:#cfc9bf!important;border-radius:6px!important;
     display:flex!important;align-items:center!important;justify-content:center!important;
   }
+  #journey .process-frame.active .walk-step.final{padding-bottom:9px!important}
   #journey .process-frame.active .walk-step.final .quick-submit{
-    width:100%!important;min-height:44px!important;height:44px!important;max-height:44px!important;
+    width:78%!important;max-width:78%!important;min-height:40px!important;height:40px!important;max-height:40px!important;
     background:var(--red)!important;color:#fff!important;border:0!important;border-radius:8px!important;
-    font-family:var(--fh)!important;font-weight:800!important;text-transform:uppercase!important;font-size:14px!important;letter-spacing:.03em!important;
+    font-family:var(--fh)!important;font-weight:800!important;text-transform:uppercase!important;font-size:13px!important;letter-spacing:.03em!important;
     display:flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;clip-path:none!important;box-shadow:none!important;
   }
   html body .walk-field:has(#quickTiming),html body #quickTiming{display:none!important}
