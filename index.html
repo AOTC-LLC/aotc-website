@@ -13559,6 +13559,7 @@ html body .process-frame.active .walk-step .file-control b{width:100%!important;
 html body .process-frame.active .walk-step label.file-control{display:flex!important;flex-direction:row!important;justify-content:flex-start!important;align-items:center!important;max-width:none!important}
 html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!important;min-width:0!important}
 </style>
+
 </head>
 <body>
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#0b0b0b"/><rect x="30" y="34" width="40" height="26" rx="3" fill="#111" stroke="#333"/><rect x="33" y="37" width="30" height="18" fill="#d9000d"/><text x="48" y="49" text-anchor="middle" font-family="Arial Black,Arial" font-weight="900" font-size="9" fill="#fff">AOTC</text><circle cx="40" cy="64" r="4" fill="#0a0a0a" stroke="#444"/><circle cx="60" cy="64" r="4" fill="#0a0a0a" stroke="#444"/></svg></template>
@@ -13663,87 +13664,101 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
     </div>
   </nav>
 
+  <style id="lpHeroCss">
+    .lp-hero{position:relative;min-height:calc(100vh - 110px);min-height:calc(100svh - 110px);display:flex;flex-direction:column;justify-content:center;overflow:hidden;background:#080808;color:#fff;padding:calc(var(--nav-h,76px) + 24px) clamp(20px,4vw,64px) 40px;}
+    .lp-hero__bg{position:absolute;inset:0;z-index:0;}
+    .lp-hero__bg img,.lp-hero__bg video{width:100%;height:100%;object-fit:cover;object-position:42% 20%;}
+    .lp-hero__bg::after{content:none;}
+    .lp-hero__inner{position:relative;z-index:2;max-width:1120px;margin:0 auto;width:100%;padding-right:clamp(0px,24vw,360px);}
+    .lp-kicker{display:inline-flex;align-items:center;gap:10px;font-family:var(--fm);font-size:clamp(10px,1vw,12px);letter-spacing:.28em;text-transform:uppercase;color:#fff;padding:8px 14px;border:1px solid rgba(255,255,255,.2);border-left:3px solid var(--red);background:rgba(255,255,255,.03);margin-bottom:26px;}
+    .lp-kicker b{color:var(--red2);font-weight:700;}
+    .lp-hero h1{font-family:var(--fh);font-weight:800;text-transform:uppercase;line-height:.88;letter-spacing:-.005em;font-size:clamp(32px,4.4vw,62px);margin:0 0 22px;}
+    .lp-hero h1 .l1,.lp-hero h1 .l2,.lp-hero h1 em{display:block;white-space:nowrap;}
+    .lp-hero h1 .l1,.lp-hero h1 .l2{color:#fff;}
+    .lp-hero h1 em{font-style:normal;color:var(--red);text-shadow:0 0 34px rgba(217,0,13,.5);}
+    .lp-hero__sub{max-width:46ch;font-family:var(--fb);font-size:clamp(14px,1.25vw,18px);line-height:1.5;color:#d7d2c9;margin:0 0 28px;}
+    .lp-cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:40px;}
+    .lp-btn{cursor:pointer;font-family:var(--fh);font-weight:800;text-transform:uppercase;letter-spacing:.03em;font-size:clamp(16px,1.5vw,20px);padding:16px 30px;border:0;display:inline-flex;align-items:center;gap:10px;transition:transform .18s var(--ease),box-shadow .2s var(--ease),background .2s;}
+    .lp-btn--primary{background:var(--red);color:#fff;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);box-shadow:0 0 30px rgba(217,0,13,.4);}
+    .lp-btn--primary:hover{background:var(--red2);transform:translateY(-2px);box-shadow:0 0 44px rgba(217,0,13,.66);}
+    .lp-btn--ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.32);}
+    .lp-btn--ghost:hover{border-color:#fff;transform:translateY(-2px);}
+    .lp-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.14);max-width:720px;}
+    .lp-stat{background:#0a0a0a;padding:16px 16px;}
+    .lp-stat b{display:block;font-family:var(--fh);font-weight:800;font-size:clamp(24px,2.6vw,38px);line-height:1;color:#fff;}
+    .lp-stat span{display:block;margin-top:8px;font-family:var(--fm);font-size:clamp(8.5px,.85vw,10.5px);letter-spacing:.16em;text-transform:uppercase;color:#8b847a;}
+    .lp-trust{position:relative;z-index:2;max-width:1120px;margin:34px auto 0;width:100%;padding-right:clamp(0px,24vw,360px);}
+    .lp-trust__label{font-family:var(--fm);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:#6f6a61;margin-bottom:14px;}
+    .lp-trust__row{display:flex;flex-wrap:wrap;align-items:center;gap:12px;}
+    .lp-trust__row .chip{height:52px;width:110px;display:flex;align-items:center;justify-content:center;background:#f4f1ea;border:1px solid rgba(255,255,255,.08);padding:8px 12px;}
+    .lp-trust__row .chip img{max-width:100%;max-height:100%;object-fit:contain;mix-blend-mode:multiply;}
+    .lp-ticker{position:relative;width:100%;overflow:hidden;background:#0d0d0f;border-top:1px solid rgba(255,255,255,.12);border-bottom:1px solid rgba(255,255,255,.12);z-index:3;}
+    .lp-ticker__track{display:inline-flex;align-items:center;white-space:nowrap;padding:22px 0;will-change:transform;animation:lpTicker 40s linear infinite;}
+    .lp-ticker__item{font-family:var(--fh);font-weight:800;text-transform:uppercase;letter-spacing:.03em;font-size:clamp(18px,1.9vw,26px);color:#f2eee6;padding:0 4px;}
+    .lp-ticker__sep{font-family:var(--fh);font-weight:800;font-size:clamp(18px,1.9vw,26px);color:var(--red2);padding:0 22px;}
+    .lp-ticker:hover .lp-ticker__track{animation-play-state:paused;}
+    @keyframes lpTicker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    .lp-statement{position:relative;background:#080808;color:#fff;padding:clamp(56px,9vw,120px) clamp(20px,5vw,80px);}
+    .lp-statement__eyebrow{font-family:var(--fm);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--red2);margin:0 0 20px;}
+    .lp-statement__head{font-family:var(--fh);font-weight:800;text-transform:uppercase;line-height:.9;letter-spacing:-.005em;font-size:clamp(38px,6vw,88px);margin:0 0 26px;max-width:16ch;}
+    .lp-statement__head em{font-style:normal;color:var(--red);text-shadow:0 0 34px rgba(217,0,13,.45);}
+    .lp-statement__body{max-width:60ch;font-family:var(--fb);font-size:clamp(15px,1.4vw,20px);line-height:1.6;color:#cfc9bf;margin:0 0 20px;}
+    .lp-statement__tag{font-family:var(--fh);font-weight:800;text-transform:uppercase;font-size:clamp(18px,2vw,28px);color:#fff;margin:0 0 30px;}
+    .lp-statement__tag b{color:var(--red);}
+    .lp-statement__btn{margin-top:4px;}
+    .lp-scrollcue{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:2;font-family:var(--fm);font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;color:#a49d92;display:flex;flex-direction:column;align-items:center;gap:6px;animation:lpCue 2.2s ease-in-out infinite;}
+    @keyframes lpCue{0%,100%{transform:translateX(-50%) translateY(0);opacity:.7}50%{transform:translateX(-50%) translateY(6px);opacity:1}}
+    @media(max-width:960px){
+      .lp-hero__inner,.lp-trust{padding-right:0;}
+      .lp-ticker{width:100%;}
+    }
+    @media(max-width:900px){
+      .lp-hero{min-height:0!important;height:56vh!important;height:56svh!important;padding:calc(var(--nav-h,64px) + 8px) 0 0!important;}
+      .lp-hero__bg img,.lp-hero__bg video{object-position:center!important;}
+      .lp-ticker__track{padding:14px 0!important;}
+      .lp-ticker__item,.lp-ticker__sep{font-size:15px!important;}
+      .lp-statement{padding:44px 22px!important;}
+      .lp-statement__head{font-size:clamp(30px,9vw,46px)!important;max-width:none!important;}
+      .lp-statement__body{font-size:15px!important;}
+      .lp-statement__tag{font-size:18px!important;}
+    }
+    @media(max-width:720px){
+      .lp-stats{grid-template-columns:repeat(2,minmax(0,1fr));}
+      .lp-trust__row .chip{width:92px;height:44px;}
+      .lp-cta{margin-bottom:32px;}
+    }
+  </style>
+  <section class="lp-hero" aria-label="AOTC mobile LED billboard advertising">
+    <div class="lp-hero__bg"><video src="hero-video.mp4" autoplay muted loop playsinline preload="auto" aria-label="AOTC mobile LED billboard truck"></video></div>
+    <div class="lp-hero__inner">
+    </div>
+  </section>
+
+  <div class="lp-ticker" aria-label="AOTC news">
+    <div class="lp-ticker__track">
+      <span class="lp-ticker__item">AOTC Lands New Agreement with United Steel Workers Local Union 7-1</span><span class="lp-ticker__sep">//</span>
+      <span class="lp-ticker__item">AOTC Expands Its Premium Footprint In Northwest Indiana During The Festival Of The Lakes</span><span class="lp-ticker__sep">//</span>
+      <span class="lp-ticker__item">AOTC Expanded Its Footprint to Michigan With Its Partnership In New Buffalo, Michigan</span><span class="lp-ticker__sep">//</span>
+      <span class="lp-ticker__item">Uncle Sam's Fireworks Partners with AOTC To Adapt To Audience Travel Pattern Shift</span><span class="lp-ticker__sep">//</span>
+      <span class="lp-ticker__item" aria-hidden="true">AOTC Lands New Agreement with United Steel Workers Local Union 7-1</span><span class="lp-ticker__sep" aria-hidden="true">//</span>
+      <span class="lp-ticker__item" aria-hidden="true">AOTC Expands Its Premium Footprint In Northwest Indiana During The Festival Of The Lakes</span><span class="lp-ticker__sep" aria-hidden="true">//</span>
+      <span class="lp-ticker__item" aria-hidden="true">AOTC Expanded Its Footprint to Michigan With Its Partnership In New Buffalo, Michigan</span><span class="lp-ticker__sep" aria-hidden="true">//</span>
+      <span class="lp-ticker__item" aria-hidden="true">Uncle Sam's Fireworks Partners with AOTC To Adapt To Audience Travel Pattern Shift</span><span class="lp-ticker__sep" aria-hidden="true">//</span>
+    </div>
+  </div>
+
+  <section class="lp-statement" aria-label="About AOTC">
+    <p class="lp-statement__eyebrow">Who we are</p>
+    <h2 class="lp-statement__head">We believe attention<br>is won <em>in the real world.</em></h2>
+    <p class="lp-statement__body">The feed is rented, skipped, and forgotten. The street is not. AOTC puts the most premium mobile LED inventory on the routes that actually matter &mdash; grand openings, packed events, and the busiest corridors across Chicago, Northwest Indiana, and now Michigan. Full-motion, GPS-verified, impossible to ignore. Real routes, real eyes, real proof.</p>
+    <p class="lp-statement__tag">What can we say? We like to <b>#OwnTheStreet.</b></p>
+    <button class="lp-btn lp-btn--primary lp-statement__btn" type="button" onclick="var s=document.getElementById('journey'); if(s) s.scrollIntoView({behavior:'smooth'});">Own The Street <span aria-hidden="true">&gt;</span></button>
+  </section>
+
   <section class="infinity-stage" id="journey" aria-label="AOTC infinity scroll campaign story">
     <div class="infinity-sticky" id="top" data-place="left-low">
       <div class="infinity-bg-wrap" id="infinityBgWrap">
-        <article class="infinity-frame crawl-hero active">
-          <div class="crawl-photo">
-            <img src="rent-this-space.jpg" alt="AOTC mobile LED billboard truck displaying Rent This Space ad in Chicago traffic" />
-          </div>
-          <div class="crawl-stage" aria-hidden="true">
-            <div class="crawl">
-              <div class="crawl-content">
-                <p class="prologue-line">
-                  Somewhere, on a street close by, a billboard is having a great time being ignored...
-                </p>
 
-                <p>
-                  You built something worth showing up for.
-                  Then you spent good money to be <span class="pop">ignored</span>.
-                </p>
-
-                <p>
-                  A billboard nobody looks up at. A post the algorithm buried
-                  before your own audience saw it. A sign by the door that only
-                  talks to people who already found you.
-                </p>
-
-                <p>
-                  That's not marketing. That's <span class="pop">decoration</span>.
-                </p>
-
-                <p>
-                  So what actually gets somebody off their phone, out of their
-                  routine, and through your door? Not a sign. Not a post.
-                  Something that moves through the city and
-                  <span class="pop-blue">takes attention instead of asking for it</span>
-                  - one street at a time.
-                </p>
-
-                <p>
-                  Mobile. Moving. <span class="pop">Unmissable</span>. It drives
-                  straight into the exact streets your customers are already on
-                  - impossible to scroll past, impossible to ignore, impossible
-                  to miss on the way to literally anywhere else.
-                </p>
-
-                <p>
-                  <span class="pop">Full tables</span> by Friday. A
-                  <span class="pop">signed offer</span> instead of another
-                  showing. A <span class="pop">sold-out room</span> instead of
-                  empty seats.
-                </p>
-
-                <p>
-                  That's the difference between paying for advertising and
-                  earning <span class="pop-blue">attention</span>. One hopes
-                  somebody notices. The other drives straight at them.
-                </p>
-
-                <p>
-                  The street was always going to talk about somebody today.
-                  It might as well be <span class="pop">you</span>.
-                </p>
-
-                <h2>OWN THE STREET.</h2>
-              </div>
-            </div>
-          </div>
-          <div class="crawl-fade"></div>
-          <div class="post-crawl" aria-hidden="true">
-            <div class="post-crawl-inner">
-              <div class="reward-eyebrow">Still here? That's exactly the kind of attention we sell.</div>
-              <div class="reward-line">MOST PEOPLE SCROLLED PAST.<br>YOU DIDN'T.</div>
-              <div class="reward-sub">
-                That's the difference between an audience and everybody else.
-                Let's put your business where people can't look away.
-              </div>
-            </div>
-          </div>
-        </article>
-        <article class="infinity-frame" style="--bg:url('section2.jpg'); --pos:42% center;">
-          <div class="frame-shade"></div>
-        </article>
         <article class="infinity-frame has-video" style="--pos:38% center;">
           <video class="frame-video" src="section3.mp4" style="object-position:38% center;" autoplay muted loop playsinline preload="auto"></video>
           <div class="frame-shade"></div>
@@ -13787,12 +13802,12 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
           <div class="process-lab" aria-label="Simple AOTC booking process">
             <div class="process-proof">
               <span>Everything included &mdash; nothing rented</span>
-              <strong>Send the file.<br>Name the goal.<br>We build the campaign.</strong>
-              <p>Premium placement is guaranteed, the creative is on us, and every route runs at 100% share of voice &mdash; with bonus online retargeting and social promotion on top. Give us the basics; we turn it into a plan that moves.</p>
+              <strong>Tell us the goal.<br>We put it<br>on the street.</strong>
+              <p>You bring the ambition; we bring the 213 sq ft. Guaranteed placement, creative on us, 100% share of voice, plus bonus retargeting and social. Four steps and your brand owns the block.</p>
             </div>
             <div class="process-action process-walk" aria-label="Walk through an easy AOTC booking">
               <section class="walk-step">
-                <div class="walk-copy"><span>01</span><strong>Creative</strong><small>Have art? Send it. Don't? We design it free.</small></div>
+                <div class="walk-copy"><span>01</span><strong>Creative</strong><small>Got art? Send it. If not, we make it &mdash; free.</small></div>
                 <label class="walk-control file-control">
                   <input id="quickCreative" type="file" accept="image/*,.pdf" />
                   <em>Upload creative</em>
@@ -13800,7 +13815,7 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
                 </label>
               </section>
               <section class="walk-step">
-                <div class="walk-copy"><span>02</span><strong>Outcome</strong><small>Tell us what winning looks like.</small></div>
+                <div class="walk-copy"><span>02</span><strong>Outcome</strong><small>Name the win. We reverse-engineer the route.</small></div>
                 <label class="walk-field">
                   <em>Desired result</em>
                   <textarea id="quickOutcome" class="walk-control" rows="3" placeholder="Calls, walk-ins, showings, turnout..."></textarea>
@@ -13813,7 +13828,7 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
                 </div>
               </section>
               <section class="walk-step">
-                <div class="walk-copy"><span>03</span><strong>Timing</strong><small>Pick the moment you want attention.</small></div>
+                <div class="walk-copy"><span>03</span><strong>Timing</strong><small>Pick the day you want to own.</small></div>
                 <label class="walk-field">
                   <em>Date(s) of service</em>
                   <input id="quickDate" class="walk-control" type="date" />
@@ -13825,7 +13840,7 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
               </section>
               <section class="walk-step final">
                 <div class="walk-copy"><span>04</span><strong>Call</strong><small>We build the route, creative, and proof.</small></div>
-                <button class="quick-submit walk-control" id="quickSubmit" type="button">Call me fast <span class="arr">></span></button>
+                <button class="quick-submit walk-control" id="quickSubmit" type="button">Put me on the street <span class="arr">></span></button>
               </section>
             </div>
           </div>
@@ -13840,23 +13855,8 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
       </div>
 
       <div class="infinity-copy">
-        <article class="story-step hero-crawl-step active" data-place="crawl-hero">
-          <div class="num">01 / Brand Signal</div>
-          <h1>Own the <span>street.</span></h1>
-          <p><strong>Right now your competitor is one street over, invisible.</strong> You don't have to be. 213 square feet of moving LED that no cookie, no feed, and no skip button can ever take from you.</p>
-          <span class="memory">The brand in motion is the brand they remember.</span>
-          <div class="story-actions">
-            <button class="btn btn-red page-cta" type="button">Show Me My Route <span class="arr">></span></button>
-            <button class="btn btn-ghost page-cta" type="button" data-mode="quote">Price My Campaign</button>
-          </div>
-        </article>
-        <article class="story-step" data-place="right-tight">
-          <div class="num">02 / Launch Presence</div>
-          <h2>Own the<br>day you<br><em>open.</em></h2>
-          <p>A soft open is a missed one. We roll your brand down the busiest approach the day you open &mdash; so the whole neighborhood knows before you cut the ribbon.</p>
-          <span class="memory">Guaranteed premium placement, right where it converts.</span>
-        </article>
-        <article class="story-step" data-place="right-tight">
+
+        <article class="story-step active" data-place="right-tight">
           <div class="num">03 / Street Reach</div>
           <h2>Reach that<br>can't be<br><em>skipped.</em></h2>
           <p>The feed forgets you in a second. The street doesn't. Your message rolls through the exact corridors your buyers already drive &mdash; full attention, zero skip, no wasted spend.</p>
@@ -13940,7 +13940,7 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
     var frame = document.getElementById("truckLiveFrame");
     if(!live || !frame) return;
     var src = toEmbed(rawUrl);
-    if(!src){ live.setAttribute("data-stream-src",""); frame.innerHTML = LIVE_PLACEHOLDER_HTML; wireLivePrompt(); return; }
+    if(!src){ live.setAttribute("data-stream-src",""); frame.innerHTML = LIVE_PLACEHOLDER_HTML; return; }
     live.setAttribute("data-stream-src", rawUrl.trim());
     frame.innerHTML = "";
     var iframe = document.createElement("iframe");
@@ -13949,47 +13949,14 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
     iframe.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
     iframe.allowFullscreen = true;
     frame.appendChild(iframe);
-    var edit = document.createElement("button");
-    edit.type = "button";
-    edit.className = "live-edit-btn";
-    edit.textContent = "Change stream";
-    edit.style.cssText = "position:absolute;top:8px;right:8px;z-index:4;font-family:var(--fm);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:rgba(217,0,13,.85);border:0;border-radius:2px;padding:5px 8px;cursor:pointer";
-    edit.addEventListener("click", function(ev){ ev.stopPropagation(); promptLiveStream(); });
-    frame.appendChild(edit);
   }
 
   var LIVE_PASSWORD = "Survival of the Idiots";
-  function liveAuthed(){
-    try{ if(sessionStorage.getItem("aotcLiveAuthed") === "1") return true; }catch(e){}
-    var pw = window.prompt("Enter the AOTC stream password to update the live feed:");
-    if(pw === null) return false;
-    if(pw === LIVE_PASSWORD){ try{ sessionStorage.setItem("aotcLiveAuthed","1"); }catch(e){} return true; }
-    window.alert("Incorrect password.");
-    return false;
-  }
+  function liveAuthed(){ return false; }
 
-  function promptLiveStream(){
-    if(!liveAuthed()) return;
-    var live = document.getElementById("truckLive");
-    var current = live ? (live.getAttribute("data-stream-src") || "") : "";
-    var url = window.prompt("Paste the live stream link (YouTube, Twitch, Facebook, Instagram, or TikTok). Leave blank to clear.\n\nTHIS PREVIEWS ON YOUR SCREEN ONLY. To make it live for every visitor, paste the same link into the file live-stream.txt in your site's repository (leave that file empty to clear it for everyone).", current);
-    if(url === null) return;
-    renderLiveStream(url);
-  }
+  function promptLiveStream(){ return; }
 
-  function wireLivePrompt(){
-    var frame = document.getElementById("truckLiveFrame");
-    if(!frame) return;
-    frame.style.cursor = "pointer";
-    frame.title = "Click to set the live stream link";
-    if(!frame._livePromptWired){
-      frame._livePromptWired = true;
-      frame.addEventListener("click", function(){
-        if(frame.querySelector("iframe")) return;
-        promptLiveStream();
-      });
-    }
-  }
+  function wireLivePrompt(){ return; }
 
   var LIVE_PLACEHOLDER_HTML = '<div class="truck-live-placeholder" id="truckLivePlaceholder"><span class="live-pill">Live truck feed</span><strong>Check Back Soon!</strong><p>When the truck is broadcasting, paste the link here and the street view goes live.</p></div>';
 
@@ -13997,7 +13964,7 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
     var live = document.getElementById("truckLive");
     var frame = document.getElementById("truckLiveFrame");
     if(!live || !frame) return;
-    frame.innerHTML = LIVE_PLACEHOLDER_HTML; wireLivePrompt();
+    frame.innerHTML = LIVE_PLACEHOLDER_HTML;
     fetch("live-stream.txt?cb=" + Date.now(), {cache:"no-store"})
       .then(function(r){ return r.ok ? r.text() : ""; })
       .then(function(txt){
@@ -14777,10 +14744,10 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
     var local = 0;
     if(p > heroHold){
       var afterHero = clamp((p - heroHold) / (1 - heroHold),0,1);
-      var remaining = Math.max(1,steps.length - 1);
+      var remaining = Math.max(1,steps.length);
       var mapped = afterHero * remaining;
-      active = Math.min(steps.length - 1,1 + Math.floor(mapped));
-      local = mapped - (active - 1);
+      active = Math.min(steps.length - 1,Math.floor(mapped));
+      local = mapped - active;
     }
     var isFinalStep = active === steps.length - 1;
     var finalStartP = heroHold + ((Math.max(1,steps.length - 2)) / Math.max(1,steps.length - 1)) * (1 - heroHold);
