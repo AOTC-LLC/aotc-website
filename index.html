@@ -13627,11 +13627,11 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
     <div id="formArea">
       <div class="field">
         <label for="name">Your Name</label>
-        <input id="name" autocomplete="name" placeholder="Who should we call?" />
+        <input id="name" autocomplete="name" name="name" placeholder="Who should we call?" />
       </div>
       <div class="field">
         <label for="phone">Contact</label>
-        <input id="phone" autocomplete="tel" placeholder="Phone or email" />
+        <input id="phone" autocomplete="tel" name="phone" inputmode="tel" placeholder="Phone or email" />
       </div>
       <div class="field">
         <label for="creativeFile">Image / Logo Optional</label>
@@ -13807,16 +13807,16 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
     <div class="infinity-sticky" id="top" data-place="left-low">
       <div class="infinity-bg-wrap" id="infinityBgWrap">
 
-        <article class="infinity-frame has-video" style="--pos:38% center;">
-          <video class="frame-video" src="section3.mp4" style="object-position:38% center;" autoplay muted loop playsinline preload="auto"></video>
+        <article class="infinity-frame has-video" style="--pos:18% center;">
+          <video class="frame-video" src="section3.mp4" style="object-position:18% center;" autoplay muted loop playsinline preload="auto"></video>
           <div class="frame-shade"></div>
         </article>
-        <article class="infinity-frame has-video" style="--pos:43% center;">
-          <video class="frame-video" src="section4.mp4" style="object-position:43% center;" autoplay muted loop playsinline preload="auto"></video>
+        <article class="infinity-frame has-video" style="--pos:20% center;">
+          <video class="frame-video" src="section4.mp4" style="object-position:20% center;" autoplay muted loop playsinline preload="auto"></video>
           <div class="frame-shade"></div>
         </article>
-        <article class="infinity-frame has-video" style="--pos:42% center;">
-          <video class="frame-video" src="section5.mp4" style="object-position:42% center;" autoplay muted loop playsinline preload="auto"></video>
+        <article class="infinity-frame has-video" style="--pos:78% center;">
+          <video class="frame-video" src="section5.mp4" style="object-position:78% center;" autoplay muted loop playsinline preload="auto"></video>
           <div class="frame-shade"></div>
         </article>
         <article class="infinity-frame clients-ledger">
@@ -13824,7 +13824,7 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
             <div class="cl-left">
               <div class="cl-head">
                 <span class="cl-kicker">Client Spotlight</span>
-                <strong class="cl-title">The company your brand keeps.</strong>
+                <strong class="cl-title">In good company.</strong>
                 <p class="cl-sub">National brands, unions, agencies, and institutions have all put this fleet to work &mdash; every route GPS-verified, every delivery documented. This is the company your brand gets judged by. One slot is still open.</p>
               </div>
               <div class="cl-list" id="clLedgerList" aria-label="Client roster"></div>
@@ -13853,7 +13853,7 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
               <span>Everything included &mdash; nothing rented</span>
               <strong>Tell us the goal.<br>We put it<br>on the street.</strong>
               <p>You bring the ambition; we bring the 213 sq ft. Guaranteed placement, creative on us, 100% share of voice, plus bonus retargeting and social. Four steps and your brand owns the block.</p>
-              <button class="mobile-book-cta" type="button" onclick="var t=document.getElementById('panel-trigger'); if(t) t.click();">Book Your Route <span aria-hidden="true">&gt;</span></button>
+              <button class="mobile-book-cta" type="button" onclick="var t=document.getElementById('panel-trigger'); if(t) t.click(); setTimeout(function(){var n=document.getElementById('name'); if(n){n.focus();} var b=document.getElementById('panelBody'); if(b){b.scrollTop=0;}},350);">Book Your Route <span aria-hidden="true">&gt;</span></button>
             </div>
             <div class="process-action process-walk" aria-label="Walk through an easy AOTC booking">
               <section class="walk-step">
