@@ -3526,6 +3526,7 @@ h1{
   #panel-trigger{
     display:flex;
     position:fixed;
+    z-index:3000;
     right:18px;
     bottom:18px;
     z-index:210;
@@ -13710,9 +13711,15 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
 
 <div id="aotc-cookie" aria-live="polite"></div>
 <style>
-  #aotc-cookie{position:fixed;left:0;right:0;bottom:0;z-index:4000;display:none;padding:9px clamp(14px,4vw,40px);
+  #aotc-cookie{position:fixed;left:0;right:0;bottom:0;z-index:6000;display:none;padding:9px clamp(14px,4vw,40px);
     background:rgba(9,9,9,.97);border-top:1px solid rgba(255,255,255,.14);box-shadow:0 -12px 40px rgba(0,0,0,.6);backdrop-filter:blur(8px)}
   #aotc-cookie.show{display:block}
+  @media(max-width:768px){
+    #aotc-cookie{padding:12px 14px calc(12px + env(safe-area-inset-bottom))}
+    #aotc-cookie .ck-wrap{flex-direction:column;align-items:stretch;gap:10px}
+    #aotc-cookie .ck-btns{width:100%;justify-content:stretch}
+    #aotc-cookie .ck-btns .ck-btn{flex:1 1 auto;text-align:center;justify-content:center}
+  }
   .ck-wrap{max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:8px 22px;justify-content:space-between}
   .ck-copy{flex:1 1 380px;min-width:0;color:#c9c1b6;font-family:"Barlow",system-ui,sans-serif;font-size:12px;line-height:1.4}
   .ck-copy b{color:#f4efe6;font-family:"Barlow Condensed",Impact,sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:.02em;font-size:13px;display:inline;margin-right:6px}
@@ -15267,19 +15274,18 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
 <script>
 (function(){
   function kickVideos(){
-    var vids = document.querySelectorAll(".frame-video");
+    var vids = document.querySelectorAll(".frame-video, .lp-hero__bg video");
     for(var i=0;i<vids.length;i++){
       var v = vids[i];
-      v.muted = true; v.loop = true; v.setAttribute("playsinline","");
-      if(!v._contWired){
-        v._contWired = true;
-        v.addEventListener("pause", function(ev){ var t=ev.target; if(!t.ended){ var p=t.play(); if(p&&p.catch)p.catch(function(){}); } });
-        v.addEventListener("stalled", function(ev){ var p=ev.target.play(); if(p&&p.catch)p.catch(function(){}); });
-        v.addEventListener("canplay", function(ev){ var p=ev.target.play(); if(p&&p.catch)p.catch(function(){}); });
-      }
+      v.muted = true; v.defaultMuted = true; v.loop = true; v.playsInline = true;
+      v.setAttribute("muted",""); v.setAttribute("playsinline",""); v.setAttribute("webkit-playsinline","");
       if(v.paused){ var pr = v.play(); if(pr && pr.catch) pr.catch(function(){}); }
     }
   }
+  function kickOnGesture(){ kickVideos(); }
+  ["touchstart","touchend","pointerdown","click","scroll"].forEach(function(ev){
+    window.addEventListener(ev, kickOnGesture, {passive:true, once:false});
+  });
   if(document.readyState !== "loading") kickVideos();
   else document.addEventListener("DOMContentLoaded", kickVideos);
   window.addEventListener("load", kickVideos);
