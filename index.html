@@ -13638,6 +13638,87 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
 <div class="panel-overlay" id="panelOverlay"></div>
 <button id="panel-trigger" type="button">Book Now <span>+</span></button>
 
+<div id="aotc-cookie" aria-live="polite"></div>
+<style>
+  #aotc-cookie{position:fixed;left:0;right:0;bottom:0;z-index:4000;display:none;padding:9px clamp(14px,4vw,40px);
+    background:rgba(9,9,9,.97);border-top:1px solid rgba(255,255,255,.14);box-shadow:0 -12px 40px rgba(0,0,0,.6);backdrop-filter:blur(8px)}
+  #aotc-cookie.show{display:block}
+  .ck-wrap{max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:8px 22px;justify-content:space-between}
+  .ck-copy{flex:1 1 380px;min-width:0;color:#c9c1b6;font-family:"Barlow",system-ui,sans-serif;font-size:12px;line-height:1.4}
+  .ck-copy b{color:#f4efe6;font-family:"Barlow Condensed",Impact,sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:.02em;font-size:13px;display:inline;margin-right:6px}
+  .ck-copy a{color:#ff1520;text-decoration:none}
+  .ck-btns{display:flex;flex-wrap:wrap;gap:8px}
+  .ck-btn{cursor:pointer;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    padding:8px 13px;border-radius:6px;border:1px solid rgba(255,255,255,.22);background:transparent;color:#f4efe6;transition:transform .08s,background .18s,border-color .18s}
+  .ck-btn:active{transform:translateY(2px)}
+  .ck-btn.primary{background:#d9000d;border-color:#d9000d;color:#fff;box-shadow:0 4px 0 #7a0007}
+  .ck-btn.primary:active{box-shadow:0 1px 0 #7a0007}
+  .ck-btn.ghost:hover{border-color:#ff1520;color:#fff}
+  #aotc-cookie .ck-prefs{display:none;width:100%;max-width:1180px;margin:12px auto 0;border-top:1px solid rgba(255,255,255,.1);padding-top:12px}
+  #aotc-cookie.prefs-open .ck-prefs{display:block}
+  .ck-row{display:flex;align-items:flex-start;gap:12px;padding:8px 0;color:#c9c1b6;font-family:"Barlow",sans-serif;font-size:13px}
+  .ck-row b{color:#f4efe6;display:block;font-size:13px}
+  .ck-row input{margin-top:3px;width:16px;height:16px;accent-color:#d9000d;flex:0 0 auto}
+  .ck-row input:disabled{opacity:.5}
+</style>
+<script>
+(function(){
+  var KEY="aotc_cookie_consent";
+  var el=document.getElementById("aotc-cookie");
+  function saved(){try{return JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){return null;}}
+  function store(v){try{localStorage.setItem(KEY,JSON.stringify(Object.assign({t:Date.now()},v)));}catch(e){}}
+  function apply(c){window.AOTC_CONSENT=c;window.dispatchEvent(new CustomEvent("aotc-consent",{detail:c}));}
+  function notify(choice,c){
+    try{
+      var fd=new FormData();
+      fd.append("_subject","AOTC Cookie Consent — "+choice);
+      fd.append("choice",choice);
+      fd.append("analytics",c.analytics?"yes":"no");
+      fd.append("marketing",c.marketing?"yes":"no");
+      fd.append("page",location.href);
+      fd.append("referrer",document.referrer||"direct");
+      fd.append("userAgent",navigator.userAgent);
+      fd.append("language",navigator.language||"");
+      fd.append("screen",(screen.width+"x"+screen.height));
+      fd.append("timezone",(Intl.DateTimeFormat().resolvedOptions().timeZone||""));
+      fd.append("timestamp",new Date().toISOString());
+      fetch("https://formsubmit.co/ajax/info@adsofthecentury.net",{method:"POST",headers:{"Accept":"application/json"},body:fd}).catch(function(){});
+    }catch(e){}
+  }
+  function render(){
+    el.innerHTML=''+
+      '<div class="ck-wrap">'+
+        '<div class="ck-copy"><b>We use cookies.</b>AOTC uses strictly necessary cookies to run this site, and — only with your consent — analytics and marketing cookies. See our <a href="disclosures.html#cookies">Disclosures</a>.</div>'+
+        '<div class="ck-btns">'+
+          '<button class="ck-btn ghost" data-act="prefs" type="button">Preferences</button>'+
+          '<button class="ck-btn ghost" data-act="reject" type="button">Reject non-essential</button>'+
+          '<button class="ck-btn primary" data-act="accept" type="button">Accept all</button>'+
+        '</div>'+
+        '<div class="ck-prefs">'+
+          '<div class="ck-row"><input type="checkbox" checked disabled /><span><b>Strictly necessary</b>Required for the site to function. Always on.</span></div>'+
+          '<div class="ck-row"><input type="checkbox" id="ck-analytics" /><span><b>Analytics</b>Help us understand usage.</span></div>'+
+          '<div class="ck-row"><input type="checkbox" id="ck-marketing" /><span><b>Marketing</b>Support advertising and retargeting.</span></div>'+
+          '<div class="ck-btns" style="margin-top:8px"><button class="ck-btn primary" data-act="save" type="button">Save choices</button></div>'+
+        '</div>'+
+      '</div>';
+    el.querySelectorAll("[data-act]").forEach(function(b){
+      b.addEventListener("click",function(){
+        var a=b.getAttribute("data-act");
+        if(a==="accept"){store({necessary:true,analytics:true,marketing:true});apply({necessary:true,analytics:true,marketing:true});notify("Accept all",{analytics:true,marketing:true});hide();}
+        else if(a==="reject"){store({necessary:true,analytics:false,marketing:false});apply({necessary:true,analytics:false,marketing:false});notify("Reject non-essential",{analytics:false,marketing:false});hide();}
+        else if(a==="prefs"){el.classList.add("prefs-open");}
+        else if(a==="save"){var an=document.getElementById("ck-analytics").checked,mk=document.getElementById("ck-marketing").checked;store({necessary:true,analytics:an,marketing:mk});apply({necessary:true,analytics:an,marketing:mk});notify("Saved preferences",{analytics:an,marketing:mk});hide();}
+      });
+    });
+  }
+  function show(){el.classList.add("show");}
+  function hide(){el.classList.remove("show","prefs-open");}
+  window.AOTC_openCookiePrefs=function(){render();show();el.classList.add("prefs-open");var s=saved();if(s){var a=document.getElementById("ck-analytics"),m=document.getElementById("ck-marketing");if(a)a.checked=!!s.analytics;if(m)m.checked=!!s.marketing;}};
+  var s=saved();
+  if(s){apply(s);}else{render();show();}
+})();
+</script>
+
 <aside id="book-panel" aria-label="Book a campaign">
   <button class="close-panel" id="closePanel" type="button" aria-label="Close booking form">X</button>
   <div class="panel-head">
@@ -13724,6 +13805,7 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
             <a href="https://www.tiktok.com/@adsofthecentury" target="_blank" rel="noopener" role="menuitem">TikTok</a>
             <a href="sms:+17737081400" role="menuitem">Text 24/7</a>
             <a href="mailto:info@adsofthecentury.net" role="menuitem">Email 24/7</a>
+            <a href="disclosures.html" role="menuitem">Discretions</a>
           </div>
         </div>
       </div>
@@ -13742,6 +13824,19 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
     .lp-hero__bg img,.lp-hero__bg video{width:100%;height:100%;object-fit:cover;object-position:42% 20%;}
     .lp-hero__bg::after{content:none;}
     .lp-hero__inner{position:relative;z-index:2;max-width:1120px;margin:0 auto;width:100%;padding-right:clamp(0px,24vw,360px);}
+    .lp-hero-cue{position:absolute;left:clamp(20px,4vw,64px);bottom:30px;z-index:3;display:flex;flex-direction:column;align-items:flex-start;gap:14px;text-decoration:none;cursor:pointer}
+    .lp-hero-cue .cue-text{position:relative;font-family:var(--fm);font-weight:500;text-transform:uppercase;letter-spacing:.22em;line-height:1.3;
+      font-size:clamp(10px,1vw,12px);color:rgba(255,255,255,.82);text-shadow:0 2px 12px rgba(0,0,0,.7)}
+    .lp-hero-cue .cue-text b{color:rgba(255,255,255,.82);font-weight:500;text-shadow:none}
+    .lp-hero-cue .cue-text::after{content:"";position:absolute;left:0;bottom:-6px;height:3px;width:0;background:var(--red);transition:width .4s var(--ease,ease)}
+    .lp-hero-cue:hover .cue-text::after{width:100%}
+    .lp-hero-cue .cue-arrow{display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;
+      background:none;border:1px solid rgba(255,255,255,.5);color:rgba(255,255,255,.75);font-size:11px;
+      box-shadow:none;animation:lpCueBounce 1.8s ease-in-out infinite}
+    .lp-hero-cue:hover .cue-arrow{border-color:#fff;color:#fff}
+    @keyframes lpCueBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+    @keyframes lpCueRing{0%{box-shadow:0 0 0 0 rgba(217,0,13,.55),0 10px 26px rgba(0,0,0,.5),inset 0 2px 0 rgba(255,255,255,.35)}70%{box-shadow:0 0 0 18px rgba(217,0,13,0),0 10px 26px rgba(0,0,0,.5),inset 0 2px 0 rgba(255,255,255,.35)}100%{box-shadow:0 0 0 0 rgba(217,0,13,0),0 10px 26px rgba(0,0,0,.5),inset 0 2px 0 rgba(255,255,255,.35)}}
+    @media(max-width:768px){.lp-hero-cue{left:50%;transform:translateX(-50%);align-items:center;bottom:18px}.lp-hero-cue .cue-text{font-size:22px;text-align:center}}
     .lp-kicker{display:inline-flex;align-items:center;gap:10px;font-family:var(--fm);font-size:clamp(10px,1vw,12px);letter-spacing:.28em;text-transform:uppercase;color:#fff;padding:8px 14px;border:1px solid rgba(255,255,255,.2);border-left:3px solid var(--red);background:rgba(255,255,255,.03);margin-bottom:26px;}
     .lp-kicker b{color:var(--red2);font-weight:700;}
     .lp-hero h1{font-family:var(--fh);font-weight:800;text-transform:uppercase;line-height:.88;letter-spacing:-.005em;font-size:clamp(32px,4.4vw,62px);margin:0 0 22px;}
@@ -13764,10 +13859,10 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
     .lp-trust__row{display:flex;flex-wrap:wrap;align-items:center;gap:12px;}
     .lp-trust__row .chip{height:52px;width:110px;display:flex;align-items:center;justify-content:center;background:#f4f1ea;border:1px solid rgba(255,255,255,.08);padding:8px 12px;}
     .lp-trust__row .chip img{max-width:100%;max-height:100%;object-fit:contain;mix-blend-mode:multiply;}
-    .lp-ticker{position:relative;width:100%;overflow:hidden;background:#0d0d0f;border-top:1px solid rgba(255,255,255,.12);border-bottom:1px solid rgba(255,255,255,.12);z-index:3;}
+    .lp-ticker{position:relative;width:100%;overflow:hidden;background:linear-gradient(90deg,#c81e2d,#7a1620 60%,#c81e2d);border-top:1px solid rgba(255,255,255,.18);border-bottom:1px solid rgba(255,255,255,.18);z-index:3;}
     .lp-ticker__track{display:inline-flex;align-items:center;white-space:nowrap;padding:22px 0;will-change:transform;animation:lpTicker 40s linear infinite;}
-    .lp-ticker__item{font-family:var(--fh);font-weight:800;text-transform:uppercase;letter-spacing:.03em;font-size:clamp(18px,1.9vw,26px);color:#f2eee6;padding:0 4px;}
-    .lp-ticker__sep{font-family:var(--fh);font-weight:800;font-size:clamp(18px,1.9vw,26px);color:var(--red2);padding:0 22px;}
+    .lp-ticker__item{font-family:var(--fh);font-weight:800;text-transform:uppercase;letter-spacing:.03em;font-size:clamp(18px,1.9vw,26px);color:#fff;padding:0 4px;}
+    .lp-ticker__sep{font-family:var(--fh);font-weight:800;font-size:clamp(18px,1.9vw,26px);color:#ffd15a;padding:0 22px;}
     .lp-ticker:hover .lp-ticker__track{animation-play-state:paused;}
     @keyframes lpTicker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
     .lp-statement{position:relative;background:#080808;color:#fff;padding:clamp(56px,9vw,120px) clamp(20px,5vw,80px);}
@@ -13804,6 +13899,10 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
     <div class="lp-hero__bg"><video src="hero-video.mp4" autoplay muted loop playsinline preload="auto" aria-label="AOTC mobile LED billboard truck"></video></div>
     <div class="lp-hero__inner">
     </div>
+    <a class="lp-hero-cue" href="#journey" onclick="event.preventDefault();var s=document.getElementById('journey');if(s)s.scrollIntoView({behavior:'smooth'});">
+      <span class="cue-text">Keep scrolling &middot; Own the street</span>
+      <span class="cue-arrow" aria-hidden="true">&#9662;</span>
+    </a>
   </section>
 
   <div class="lp-ticker" aria-label="AOTC news">
