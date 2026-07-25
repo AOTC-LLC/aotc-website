@@ -13805,7 +13805,7 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
     <h2 class="lp-statement__head">We believe attention<br>is won <em>in the real world.</em></h2>
     <p class="lp-statement__body">The feed is rented, skipped, and forgotten. The street is not. AOTC puts the most premium mobile LED inventory on the routes that actually matter &mdash; grand openings, packed events, and the busiest corridors across Chicago, Northwest Indiana, and now Michigan. Full-motion, GPS-verified, impossible to ignore. Real routes, real eyes, real proof.</p>
     <p class="lp-statement__tag">What can we say? We like to <b>#OwnTheStreet.</b></p>
-    <button class="lp-btn lp-btn--primary lp-statement__btn" type="button" onclick="if(window.innerWidth<=900){var t=document.getElementById('panel-trigger'); if(t) t.click();}else{var s=document.getElementById('journey'); if(s) s.scrollIntoView({behavior:'smooth'});}">Own The Street <span aria-hidden="true">&gt;</span></button>
+    <button class="lp-btn lp-btn--primary lp-statement__btn" type="button" onclick="if(window.innerWidth<=900){if(window.openAOTCPanel){window.openAOTCPanel();}else{var t=document.getElementById('panel-trigger'); if(t) t.click();}}else{var s=document.getElementById('journey'); if(s) s.scrollIntoView({behavior:'smooth'});}">Own The Street <span aria-hidden="true">&gt;</span></button>
   </section>
 
   <section class="infinity-stage" id="journey" aria-label="AOTC infinity scroll campaign story">
@@ -13858,7 +13858,7 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
               <span>Everything included &mdash; nothing rented</span>
               <strong>Tell us the goal.<br>We put it<br>on the street.</strong>
               <p>You bring the ambition; we bring the 213 sq ft. Guaranteed placement, creative on us, 100% share of voice, plus bonus retargeting and social. Four steps and your brand owns the block.</p>
-              <button class="mobile-book-cta" type="button" onclick="var t=document.getElementById('panel-trigger'); if(t) t.click(); setTimeout(function(){var n=document.getElementById('name'); if(n){n.focus();} var b=document.getElementById('panelBody'); if(b){b.scrollTop=0;}},350);">Book Your Route <span aria-hidden="true">&gt;</span></button>
+              <button class="mobile-book-cta" type="button" onclick="if(window.openAOTCPanel){window.openAOTCPanel();}else{var t=document.getElementById('panel-trigger'); if(t) t.click();} setTimeout(function(){var n=document.getElementById('name'); if(n){n.focus();} var b=document.getElementById('panelBody'); if(b){b.scrollTop=0;}},350);">Book Your Route <span aria-hidden="true">&gt;</span></button>
             </div>
             <div class="process-action process-walk" aria-label="Walk through an easy AOTC booking">
               <section class="walk-step">
@@ -14338,6 +14338,7 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
     openPanel();
     pop(e.clientX,e.clientY);
   });
+  window.openAOTCPanel = openPanel;
   closePanel.addEventListener("click",closePanelFn);
   overlay.addEventListener("click",closePanelFn);
 
