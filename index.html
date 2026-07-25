@@ -12814,6 +12814,11 @@ body{
 .brand-fomo strong{
   text-shadow:0 12px 32px rgba(0,0,0,.72)!important;
 }
+.story-step.lp-alignleft,
+.story-step.lp-alignleft h2,
+.story-step.lp-alignleft p,
+.story-step.lp-alignleft .memory,
+.story-step.lp-alignleft .choice-grid{text-align:left!important;align-items:flex-start!important;justify-content:flex-start!important;}
 
 .story-step h1 span,
 .story-step h2 em{
@@ -13182,12 +13187,22 @@ body{
   html body .brand-copy{display:none!important}
   html body .brand{display:flex!important;align-items:center!important}
   html body .brand-mark{width:46px!important;height:46px!important;flex:0 0 46px!important}
+  /* 1b) Show Promos + Contact Us tabs on mobile */
+  html body .nav .nav-links{display:flex!important;gap:14px!important;align-items:center!important;margin-left:auto!important}
+  html body .nav .nav-group{position:static!important}
+  html body .nav .nav-drop{font-size:12px!important;padding:8px 12px!important;white-space:nowrap!important;
+    background:rgba(255,255,255,.06)!important;border:1px solid rgba(255,255,255,.16)!important;border-radius:8px!important;color:#fff!important;
+    transition:transform .08s ease, box-shadow .08s ease, background .15s ease!important;
+    box-shadow:0 3px 0 rgba(0,0,0,.5)!important;}
+  html body .nav .nav-drop:active{transform:translateY(3px)!important;box-shadow:0 0 0 rgba(0,0,0,.5)!important;background:rgba(217,0,13,.25)!important}
+  html body .nav .nav-menu{position:fixed!important;left:12px!important;right:12px!important;top:calc(var(--nav-h,64px) + 6px)!important;
+    width:auto!important;max-height:60vh!important;overflow-y:auto!important;z-index:1200!important;}
 
-  /* 2) Section media: keep the box truck in frame (center the crop) */
-  html body .frame-video{object-fit:cover!important;object-position:center center!important}
-  html body .lp-hero__bg img,html body .lp-hero__bg video{object-position:center center!important}
-  html body .infinity-frame[style*="--bg"]{background-position:center center!important;background-size:cover!important}
-  html body .process-frame{background-position:center center!important;background-size:cover!important}
+  /* 2) Section media: keep the box truck in frame (contain so full horizontal video fits) */
+  html body .frame-video{object-fit:contain!important;object-position:center center!important;background:#000!important}
+  html body .lp-hero__bg img,html body .lp-hero__bg video{object-fit:contain!important;object-position:center center!important;background:#000!important}
+  html body .infinity-frame[style*="--bg"]{background-position:center center!important;background-size:contain!important;background-repeat:no-repeat!important;background-color:#000!important}
+  html body .process-frame{background-position:center center!important;background-size:contain!important;background-repeat:no-repeat!important;background-color:#000!important}
 
   /* 3) Brand ledger: logos only, swipeable, auto-rotating */
   html body .infinity-frame.clients-ledger .cl-wrap{flex-direction:column!important;height:min(78%,560px)!important;width:calc(100% - 32px)!important}
@@ -13680,7 +13695,7 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
 <main class="page">
   <nav class="nav" id="nav">
     <div class="wrap nav-inner">
-      <a class="brand" href="#top" aria-label="AOTC home">
+      <a class="brand" href="#top" aria-label="AOTC home" onclick="event.preventDefault(); window.scrollTo({top:0,behavior:'smooth'});">
         <div class="brand-mark"><img src="aotc_final.gif" alt="AOTC — Ads of the Century mobile LED billboard advertising, Chicago" /></div>
         <div class="brand-copy">
           <strong>AOTC</strong>
@@ -13802,10 +13817,10 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
 
   <section class="lp-statement" aria-label="About AOTC">
     <p class="lp-statement__eyebrow">Who we are</p>
-    <h2 class="lp-statement__head">We believe attention<br>is won <em>in the real world.</em></h2>
-    <p class="lp-statement__body">The feed is rented, skipped, and forgotten. The street is not. AOTC puts the most premium mobile LED inventory on the routes that actually matter &mdash; grand openings, packed events, and the busiest corridors across Chicago, Northwest Indiana, and now Michigan. Full-motion, GPS-verified, impossible to ignore. Real routes, real eyes, real proof.</p>
-    <p class="lp-statement__tag">What can we say? We like to <b>#OwnTheStreet.</b></p>
-    <button class="lp-btn lp-btn--primary lp-statement__btn" type="button" onclick="if(window.innerWidth<=900){if(window.openAOTCPanel){window.openAOTCPanel();}else{var t=document.getElementById('panel-trigger'); if(t) t.click();}}else{var s=document.getElementById('journey'); if(s) s.scrollIntoView({behavior:'smooth'});}">Own The Street <span aria-hidden="true">&gt;</span></button>
+    <h2 class="lp-statement__head">The last channel<br>they <em>can't skip.</em></h2>
+    <p class="lp-statement__body">Reach is rented. Attention is rationed. Recall is everything. AOTC turns the street into media your audience can't block, skip, or scroll &mdash; full-motion LED engineered around the routes, dayparts, and moments that move a market. It's how the sharpest brands manufacture presence on demand and walk away with the recall their competitors paid for and never got.</p>
+    <p class="lp-statement__tag">Engineer the moment. <b>#OwnTheStreet.</b></p>
+    <button class="lp-btn lp-btn--primary lp-statement__btn" type="button" onclick="if(window.openAOTCPanel){window.openAOTCPanel();}else{var t=document.getElementById('panel-trigger'); if(t) t.click();}">Own The Street <span aria-hidden="true">&gt;</span></button>
   </section>
 
   <section class="infinity-stage" id="journey" aria-label="AOTC infinity scroll campaign story">
@@ -13829,8 +13844,8 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
             <div class="cl-left">
               <div class="cl-head">
                 <span class="cl-kicker">Client Spotlight</span>
-                <strong class="cl-title">In good company.</strong>
-                <p class="cl-sub">National brands, unions, agencies, and institutions have all put this fleet to work &mdash; every route GPS-verified, every delivery documented. This is the company your brand gets judged by. One slot is still open.</p>
+                <strong class="cl-title">Good company,<br>in abundance.</strong>
+                <p class="cl-sub">Restaurants, unions, radio, retail, causes &mdash; no two briefs alike, no two goals the same. AOTC bends to each one and delivers the same verdict every time: a campaign the street could not ignore. Different brands. Different asks. One unmistakable result.</p>
               </div>
               <div class="cl-list" id="clLedgerList" aria-label="Client roster"></div>
             </div>
@@ -13857,7 +13872,7 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
             <div class="process-proof">
               <span>Everything included &mdash; nothing rented</span>
               <strong>Tell us the goal.<br>We put it<br>on the street.</strong>
-              <p>You bring the ambition; we bring the 213 sq ft. Guaranteed placement, creative on us, 100% share of voice, plus bonus retargeting and social. Four steps and your brand owns the block.</p>
+              <p>The brands that win don't wait to be noticed &mdash; they engineer it. Hand us the objective and we turn 213 sq ft of full-motion LED into the moment your market can't scroll past. Placement guaranteed, creative on us, delivery you can prove. Your move.</p>
               <button class="mobile-book-cta" type="button" onclick="if(window.openAOTCPanel){window.openAOTCPanel();}else{var t=document.getElementById('panel-trigger'); if(t) t.click();} setTimeout(function(){var n=document.getElementById('name'); if(n){n.focus();} var b=document.getElementById('panelBody'); if(b){b.scrollTop=0;}},350);">Book Your Route <span aria-hidden="true">&gt;</span></button>
             </div>
             <div class="process-action process-walk" aria-label="Walk through an easy AOTC booking">
@@ -13913,40 +13928,37 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
 
         <article class="story-step active" data-place="right-tight">
           <div class="num">03 / Street Reach</div>
-          <h2>Reach that<br>can't be<br><em>skipped.</em></h2>
-          <p>The feed forgets you in a second. The street doesn't. Your message rolls through the exact corridors your buyers already drive &mdash; full attention, zero skip, no wasted spend.</p>
+          <h2>The channel<br>they can't<br><em>opt out of.</em></h2>
+          <p>No ad blocker. No skip button. No banked impression that never got seen. Your brand moves through the exact corridors your buyers already drive &mdash; full attention, in the real world, every mile accounted for.</p>
           <span class="memory">100% viewable. 100% share of voice.</span>
         </article>
-        <article class="story-step" data-place="right-tight">
+        <article class="story-step lp-alignleft" data-place="edge-left">
           <div class="num">04 / Brand Recall</div>
-          <h2>Be the brand<br>they <em>remember.</em></h2>
-          <p>People buy the name they already know. We keep yours in motion until it's the first one that comes to mind &mdash; and the easy yes the moment they're ready to spend.</p>
+          <h2>The brand<br>they reach for<br><em>first.</em></h2>
+          <p>Markets aren't won by the loudest brand &mdash; they're won by the most available one. We keep yours in motion until it's the reflex, the default, the name they say before they think.</p>
           <span class="memory">Mental availability is market share.</span>
         </article>
-        <article class="story-step" data-place="edge-left">
+        <article class="story-step lp-alignleft" data-place="edge-left">
           <div class="num">05 / Targeted Pressure</div>
-          <h2>Show up where<br>decisions get<br><em>made.</em></h2>
-          <p>For advocacy, labor, and public affairs, presence beats impressions. We station your message ward by ward, precinct by precinct &mdash; visible to the people who actually move the outcome.</p>
+          <h2>Presence where<br>the decision<br><em>gets made.</em></h2>
+          <p>Advocacy, labor, public affairs &mdash; minds move on presence, not impressions. We place your message ward by ward, precinct by precinct, in front of the exact people who tip the outcome.</p>
           <span class="memory">Presence changes the room.</span>
         </article>
         <article class="story-step" data-place="brand-left">
           <div class="num">06 / Brand Proof</div>
-          <h2>Brands that<br>refuse to go<br><em>unnoticed.</em></h2>
+          <h2>The names<br>that moved<br><em>first.</em></h2>
           <span class="memory">Trusted by brands, agencies, and institutions.</span>
         </article>
         <article class="story-step" data-place="right-tight">
           <div class="num">07 / The Plan</div>
-          <h2>A media plan,<br>not a truck <em>rental.</em></h2>
-          <p>Name the outcome. We handle route design, dayparting, creative, and GPS-verified proof-of-play. You get a campaign you can report on &mdash; and repeat.</p>
-          <span class="memory">Guaranteed placement. Free creative. Verified delivery.</span>
+          <h2>A media plan.<br>Not a truck <em>rental.</em></h2>
+          <p>Name the outcome. We engineer the route, the dayparts, the creative, and GPS-verified proof-of-play &mdash; a campaign you can measure, report, and run back the moment it works.</p>
+          <span class="memory">Guaranteed placement. Free creative.<br>Verified delivery.</span>
           <div class="choice-grid">
-            <button class="journey-choice" type="button" data-outcome="events" data-title="Sell out <em>faster.</em>" data-context="Events. Venues, festivals, game days, last-minute pushes." data-submit="Start My Event Push >">Events</button>
-            <button class="journey-choice" type="button" data-outcome="retail" data-title="Move the <em>inventory.</em>" data-context="Retail and auto. Promotions, launches, dealership weekends." data-submit="Move My Inventory >">Retail</button>
-            <button class="journey-choice" type="button" data-outcome="agency" data-title="White-label <em>motion.</em>" data-context="Agencies and partners. Multi-market routing and reporting." data-submit="Build My Media Plan >">Agency</button>
           </div>
         </article>
         <article class="story-step process-step" data-place="edge-left">
-          <h2>Fast to book.<br>Easy to start.<br><em>Built to move.</em></h2>
+          <h2>Fast to book.<br>Simple to run.<br><em>Impossible to ignore.</em></h2>
         </article>
       </div>
 
