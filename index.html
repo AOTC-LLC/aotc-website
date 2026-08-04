@@ -1086,26 +1086,27 @@ img{display:block;max-width:100%}
   inset:0;
   display:flex;
   flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
-  padding:16px;
-  text-align:center;
+  align-items:flex-start;
+  justify-content:flex-end;
+  gap:9px;
+  padding:20px;
+  text-align:left;
+  background:linear-gradient(180deg,rgba(6,7,8,.15) 0%,rgba(6,7,8,.55) 55%,rgba(6,7,8,.9) 100%);
 }
 .truck-live-placeholder .live-pill{
   display:inline-flex;
   align-items:center;
   gap:7px;
   min-height:22px;
-  padding:0 9px;
+  padding:0 10px;
   border-radius:999px;
-  background:rgba(0,0,0,.52);
-  border:1px solid rgba(255,255,255,.13);
-  color:var(--accent);
+  background:rgba(217,0,13,.16);
+  border:1px solid rgba(217,0,13,.5);
+  color:#fff;
   font-family:var(--fm);
   font-size:8px;
   font-weight:900;
-  letter-spacing:.16em;
+  letter-spacing:.2em;
   text-transform:uppercase;
 }
 .truck-live-placeholder .live-pill::before{
@@ -1119,19 +1120,23 @@ img{display:block;max-width:100%}
 }
 .truck-live-placeholder strong{
   font-family:var(--fh);
-  font-size:24px;
-  line-height:.9;
+  font-weight:800;
+  font-size:clamp(20px,2.4vw,28px);
+  line-height:.94;
   text-transform:uppercase;
+  letter-spacing:-.01em;
   color:#fff;
+  text-shadow:0 2px 18px rgba(0,0,0,.6);
 }
+.truck-live-placeholder strong em{font-style:normal;color:var(--red2)}
 .truck-live-placeholder p{
-  max-width:24ch;
-  font-family:var(--fm);
-  font-size:9px;
-  line-height:1.35;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  color:rgba(255,255,255,.62);
+  max-width:34ch;
+  font-family:var(--fb);
+  font-size:11.5px;
+  line-height:1.45;
+  letter-spacing:.01em;
+  text-transform:none;
+  color:rgba(255,255,255,.72);
 }
 @keyframes livePreviewSweep{
   0%,46%{background-position:-120% 0,0 0}
@@ -13235,7 +13240,7 @@ body{
 #book-panel .field input{min-height:44px}
 #book-panel .panel-foot{margin-top:2px}
 #book-panel .truck-live{margin-top:12px}
-#book-panel .truck-live-frame{aspect-ratio:4/3;height:auto!important;min-height:0!important}
+#book-panel .truck-live-frame{aspect-ratio:16/9;height:auto!important;min-height:0!important}
 #book-panel .panel-outcomes{display:flex;flex-direction:column;gap:5px;margin-top:12px}
 #book-panel .panel-outcomes div{display:flex;align-items:baseline;gap:8px;border-left:2px solid var(--red);background:linear-gradient(90deg,rgba(217,0,13,.1),transparent 70%);padding:7px 10px}
 #book-panel .panel-outcomes strong{font-family:var(--fh);font-weight:800;font-size:16px;line-height:1;text-transform:uppercase;letter-spacing:.02em;color:var(--text);white-space:nowrap}
@@ -13703,22 +13708,6 @@ html body .process-frame.active .walk-step label.file-control{display:flex!impor
 html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!important;min-width:0!important}
 </style>
 
-<style id="asfCss">
-.aotc-seo-footer{background:#070708;color:#c9c3b9;border-top:1px solid rgba(255,255,255,.09);padding:clamp(40px,6vw,72px) clamp(20px,5vw,80px) 40px;font-family:var(--fb)}
-.asf-wrap{max-width:1180px;margin:0 auto}
-.aotc-seo-footer h2{font-family:var(--fh);font-weight:800;text-transform:uppercase;letter-spacing:-.005em;font-size:clamp(24px,3vw,38px);color:#fff;margin:0 0 6px}
-.asf-tag{font-family:var(--fm);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--red2);margin:0 0 20px}
-.aotc-seo-footer p{font-size:13.5px;line-height:1.6;margin:0 0 14px;max-width:80ch}
-.asf-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin:30px 0;padding:28px 0;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}
-.aotc-seo-footer h3{font-family:var(--fh);font-weight:800;text-transform:uppercase;font-size:14px;letter-spacing:.02em;color:#fff;margin:0 0 12px}
-.asf-col ul{list-style:none;margin:0;padding:0}
-.asf-col li{font-size:12.5px;line-height:1.9;color:#a49d92}
-.aotc-seo-footer a{color:#d7d2c9;text-decoration:none;border-bottom:1px solid rgba(217,0,13,.5)}
-.aotc-seo-footer a:hover{color:#fff;border-bottom-color:var(--red2)}
-.asf-clients p{font-size:12.5px;color:#8f887e;line-height:1.7}
-.asf-legal{font-size:11px;color:#6f6a61;margin-top:24px;line-height:1.6}
-@media(max-width:768px){.asf-cols{grid-template-columns:1fr;gap:20px}}
-</style>
 </head>
 <body>
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#0b0b0b"/><rect x="30" y="34" width="40" height="26" rx="3" fill="#111" stroke="#333"/><rect x="33" y="37" width="30" height="18" fill="#d9000d"/><text x="48" y="49" text-anchor="middle" font-family="Arial Black,Arial" font-weight="900" font-size="9" fill="#fff">AOTC</text><circle cx="40" cy="64" r="4" fill="#0a0a0a" stroke="#444"/><circle cx="60" cy="64" r="4" fill="#0a0a0a" stroke="#444"/></svg></template>
@@ -13851,8 +13840,8 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
         <div class="truck-live-frame" id="truckLiveFrame">
           <div class="truck-live-placeholder" id="truckLivePlaceholder">
             <span class="live-pill">Live truck feed</span>
-            <strong>Check Back Soon!</strong>
-            <p>When the truck is broadcasting, paste the link here and the street view goes live.</p>
+            <strong>The street's about to <em>light up.</em></strong>
+            <p>Front-row from the driver's seat &mdash; the moment AOTC rolls live, it lands right here.</p>
           </div>
         </div>
       </div>
@@ -14197,56 +14186,6 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
   </div>
 </section>
 
-<footer class="aotc-seo-footer" id="aotc-listing-copy">
-  <div class="asf-wrap">
-    <div class="asf-brand">
-      <h2>AOTC &mdash; Ads of the Century</h2>
-      <p class="asf-tag">Mobile Digital Billboard Advertising &middot; Chicago, Northwest Indiana &amp; New Buffalo, MI</p>
-      <p>AOTC (Ads of the Century) is a premium mobile digital billboard company based in Chicago, Illinois. We operate high-definition LED billboard trucks that deliver exclusive share of voice &mdash; your brand owns every screen, with no competing ads. Every campaign includes creative design, real-time creative changes and day-parting, external sound, and GPS-verified proof-of-play reporting on every route.</p>
-      <p>Our trucks run GPS-tracked routes through downtown Chicago and The Loop, the Magnificent Mile, River North, the West Loop, Fulton Market, Wicker Park, and Lincoln Park &mdash; plus high-impact event coverage around Wrigley Field, the United Center, and McCormick Place. We also serve the Chicagoland suburbs, Northwest Indiana (Hammond, Gary, the Region), and New Buffalo, Michigan.</p>
-      <p>Best for grand openings, product launches, festivals and game-day activations, retail and restaurant promotions, real estate, labor and advocacy campaigns, and political and public-affairs messaging. AOTC turns the street into out-of-home (OOH / DOOH) media your audience cannot skip, block, or scroll past.</p>
-    </div>
-    <div class="asf-cols">
-      <div class="asf-col">
-        <h3>Services</h3>
-        <ul>
-          <li>Mobile LED billboard advertising</li>
-          <li>Digital billboard truck advertising</li>
-          <li>Out-of-home (OOH) &amp; digital out-of-home (DOOH)</li>
-          <li>Experiential &amp; guerrilla marketing</li>
-          <li>Event &amp; venue advertising</li>
-          <li>Grand-opening advertising</li>
-          <li>Advocacy &amp; political advertising</li>
-        </ul>
-      </div>
-      <div class="asf-col">
-        <h3>Service Area</h3>
-        <ul>
-          <li>Chicago, IL &amp; The Loop</li>
-          <li>Magnificent Mile &middot; River North</li>
-          <li>West Loop &middot; Wrigleyville</li>
-          <li>Chicagoland suburbs</li>
-          <li>Northwest Indiana (Hammond, Gary)</li>
-          <li>New Buffalo, Michigan</li>
-        </ul>
-      </div>
-      <div class="asf-col">
-        <h3>Contact</h3>
-        <ul>
-          <li>Phone / Text: <a href="tel:+17737081400">(773) 708-1400</a></li>
-          <li>Email: <a href="mailto:info@adsofthecentury.net">info@adsofthecentury.net</a></li>
-          <li>Web: <a href="https://adsofthecentury.net/">adsofthecentury.net</a></li>
-          <li>Hours: 24/7 by appointment</li>
-        </ul>
-      </div>
-    </div>
-    <div class="asf-clients">
-      <h3>Client Campaigns</h3>
-      <p>AOTC has planned and delivered mobile LED billboard campaigns for brands, organizations, and institutions across Chicago, Northwest Indiana, and Michigan &mdash; including Wendy's (grand-opening launch), United Steel Workers (USW) Local Union 7-1 (labor &amp; public affairs), Uncle Sam's Fireworks (seasonal retail), Realty of America (real estate), FAB 94.5 The Hitz (radio launch), Hammond Hermits (youth sports), American Precision Services (industrial B2B), Agudath Israel of Illinois (community outreach), Belmont Cragin Vintage Market (neighborhood retail), HCDS Mental Health (nonprofit awareness), Summer's End Smokeout (event attendance), Elevated Exotics (exotic rentals), Lakefront Nutrition &amp; Fitness (health &amp; wellness), DJ GloBoy (entertainment), Makako's Auto Repair (automotive), the Festival of the Lakes (Northwest Indiana), and New Buffalo, Michigan partnerships.</p>
-    </div>
-    <p class="asf-legal">&copy; <span id="asfYear">2026</span> AOTC &mdash; Ads of the Century. Premium mobile digital billboard trucks in Chicago. Exclusive share of voice, HD LED, creative included, GPS-verified routes. Serving Chicago, Chicagoland, Northwest Indiana &amp; New Buffalo, MI. &middot; <a href="disclosures.html">Disclosures &amp; Privacy</a></p>
-  </div>
-</footer>
 </main>
 
 <script>
@@ -14336,13 +14275,52 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
 
   function wireLivePrompt(){ return; }
 
-  var LIVE_PLACEHOLDER_HTML = '<div class="truck-live-placeholder" id="truckLivePlaceholder"><span class="live-pill">Live truck feed</span><strong>Check Back Soon!</strong><p>When the truck is broadcasting, paste the link here and the street view goes live.</p></div>';
+  var LIVE_PLACEHOLDER_HTML = '<div class="truck-live-placeholder" id="truckLivePlaceholder"><span class="live-pill">Live truck feed</span><strong>The street\'s about to <em>light up.</em></strong><p>Front-row from the driver\'s seat &mdash; the moment AOTC rolls live, it lands right here.</p></div>';
+
+  // YouTube channel to auto-embed when @AOTC-media goes live. Set YT_CHANNEL_ID to the UC... id.
+  var YT_CHANNEL_ID = "UCgTUpC2UONjNq0FSXbietkg";
+  function tryYouTubeLive(){
+    var frame = document.getElementById("truckLiveFrame");
+    if(!frame || !YT_CHANNEL_ID) return false;
+    function start(){
+      if(!window.YT || !window.YT.Player){ setTimeout(start, 400); return; }
+      var host = document.createElement("div");
+      host.id = "ytLiveHost";
+      host.style.cssText = "position:absolute;inset:0;opacity:0;transition:opacity .5s";
+      frame.appendChild(host);
+      var live = false;
+      var player = new YT.Player("ytLiveHost", {
+        width:"100%", height:"100%",
+        playerVars:{ channel:YT_CHANNEL_ID, autoplay:1, mute:1, playsinline:1, rel:0 },
+        events:{
+          onStateChange:function(e){
+            if(e.data === YT.PlayerState.PLAYING){
+              live = true;
+              var ph = document.getElementById("truckLivePlaceholder");
+              if(ph) ph.style.display = "none";
+              host.style.opacity = "1";
+            }
+          },
+          onError:function(){ /* not live / no broadcast — keep cliffhanger */ }
+        }
+      });
+      // load the channel live stream
+      setTimeout(function(){ try{ player.loadPlaylist({list:YT_CHANNEL_ID, listType:"user_uploads"}); }catch(x){} }, 50);
+    }
+    if(!document.getElementById("ytapi")){
+      var s=document.createElement("script"); s.id="ytapi"; s.src="https://www.youtube.com/iframe_api";
+      document.head.appendChild(s);
+    }
+    start();
+    return true;
+  }
 
   function initTruckLive(){
     var live = document.getElementById("truckLive");
     var frame = document.getElementById("truckLiveFrame");
     if(!live || !frame) return;
     frame.innerHTML = LIVE_PLACEHOLDER_HTML;
+    // 1) manual override file wins if present
     fetch("live-stream.txt?cb=" + Date.now(), {cache:"no-store"})
       .then(function(r){ return r.ok ? r.text() : ""; })
       .then(function(txt){
@@ -14350,8 +14328,25 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
         var urlLine = "";
         for(var i=0;i<lines.length;i++){ var l = lines[i].trim(); if(l && l.charAt(0) !== "#"){ urlLine = l; break; } }
         if(urlLine){ renderLiveStream(urlLine); }
+        else { renderYouTubeChannelLive(); }
       })
-      .catch(function(){});
+      .catch(function(){ renderYouTubeChannelLive(); });
+  }
+
+  function renderYouTubeChannelLive(){
+    var frame = document.getElementById("truckLiveFrame");
+    if(!frame || !YT_CHANNEL_ID) return;
+    // live_stream embed: plays the active broadcast when live; stays on cliffhanger otherwise
+    var probe = document.createElement("iframe");
+    probe.title = "AOTC live truck stream";
+    probe.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+    probe.allowFullscreen = true;
+    probe.style.cssText = "position:absolute;inset:0;width:100%;height:100%;border:0;opacity:0;transition:opacity .5s;z-index:2";
+    probe.src = "https://www.youtube.com/embed/live_stream?channel=" + YT_CHANNEL_ID + "&autoplay=1&mute=1&playsinline=1&rel=0";
+    frame.appendChild(probe);
+    // reveal shortly after; if the channel is offline YouTube shows its own idle card,
+    // so we only reveal when a live broadcast is detected via the IFrame API path above.
+    tryYouTubeLive();
   }
 
   function ensureMoreTitle(){
