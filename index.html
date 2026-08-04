@@ -13703,6 +13703,22 @@ html body .process-frame.active .walk-step label.file-control{display:flex!impor
 html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!important;min-width:0!important}
 </style>
 
+<style id="asfCss">
+.aotc-seo-footer{background:#070708;color:#c9c3b9;border-top:1px solid rgba(255,255,255,.09);padding:clamp(40px,6vw,72px) clamp(20px,5vw,80px) 40px;font-family:var(--fb)}
+.asf-wrap{max-width:1180px;margin:0 auto}
+.aotc-seo-footer h2{font-family:var(--fh);font-weight:800;text-transform:uppercase;letter-spacing:-.005em;font-size:clamp(24px,3vw,38px);color:#fff;margin:0 0 6px}
+.asf-tag{font-family:var(--fm);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--red2);margin:0 0 20px}
+.aotc-seo-footer p{font-size:13.5px;line-height:1.6;margin:0 0 14px;max-width:80ch}
+.asf-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin:30px 0;padding:28px 0;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}
+.aotc-seo-footer h3{font-family:var(--fh);font-weight:800;text-transform:uppercase;font-size:14px;letter-spacing:.02em;color:#fff;margin:0 0 12px}
+.asf-col ul{list-style:none;margin:0;padding:0}
+.asf-col li{font-size:12.5px;line-height:1.9;color:#a49d92}
+.aotc-seo-footer a{color:#d7d2c9;text-decoration:none;border-bottom:1px solid rgba(217,0,13,.5)}
+.aotc-seo-footer a:hover{color:#fff;border-bottom-color:var(--red2)}
+.asf-clients p{font-size:12.5px;color:#8f887e;line-height:1.7}
+.asf-legal{font-size:11px;color:#6f6a61;margin-top:24px;line-height:1.6}
+@media(max-width:768px){.asf-cols{grid-template-columns:1fr;gap:20px}}
+</style>
 </head>
 <body>
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#0b0b0b"/><rect x="30" y="34" width="40" height="26" rx="3" fill="#111" stroke="#333"/><rect x="33" y="37" width="30" height="18" fill="#d9000d"/><text x="48" y="49" text-anchor="middle" font-family="Arial Black,Arial" font-weight="900" font-size="9" fill="#fff">AOTC</text><circle cx="40" cy="64" r="4" fill="#0a0a0a" stroke="#444"/><circle cx="60" cy="64" r="4" fill="#0a0a0a" stroke="#444"/></svg></template>
@@ -13814,6 +13830,14 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
       <div class="field">
         <label for="phone">Contact</label>
         <input id="phone" autocomplete="tel" name="phone" inputmode="tel" placeholder="Phone or email" />
+      </div>
+      <div class="field">
+        <label for="dates">Desired Dates of Service</label>
+        <input id="dates" name="dates" placeholder="e.g. Aug 15–22, weekends, grand opening week" />
+      </div>
+      <div class="field">
+        <label for="brief">Target Audience, Location &amp; Outcome</label>
+        <textarea id="brief" name="brief" rows="3" placeholder="Where should the truck run, who are you trying to reach, and what does a win look like?"></textarea>
       </div>
       <div class="field">
         <label for="creativeFile">Image / Logo Optional</label>
@@ -13949,6 +13973,19 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
     .lp-statement__body{max-width:60ch;font-family:var(--fb);font-size:clamp(15px,1.4vw,20px);line-height:1.6;color:#cfc9bf;margin:0 0 20px;}
     .lp-statement__tag{font-family:var(--fh);font-weight:800;text-transform:uppercase;font-size:clamp(18px,2vw,28px);color:#fff;margin:0 0 30px;}
     .lp-statement__tag b{color:var(--red);}
+    .lp-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);max-width:820px;margin:8px 0 34px}
+    .lp-metric{background:#0b0b0c;padding:22px 20px;position:relative;overflow:hidden;display:flex;flex-direction:column;gap:0}
+    .lp-m-key{font-family:var(--fm);font-size:clamp(9px,.8vw,10.5px);letter-spacing:.22em;text-transform:uppercase;color:var(--red2);margin-bottom:10px}
+    .lp-metric-num{display:block;font-family:"Barlow Condensed",var(--fh);font-weight:900;font-size:clamp(40px,5vw,68px);line-height:.86;color:#fff;letter-spacing:-.01em}
+    .lp-m-desc{display:block;margin-top:12px;font-family:var(--fb);font-size:clamp(11px,1vw,13.5px);line-height:1.4;color:#c9c3b9}
+    .lp-m-bench{display:block;margin-top:auto;padding-top:12px;font-family:var(--fm);font-size:clamp(8.5px,.78vw,10px);letter-spacing:.08em;text-transform:uppercase;color:#6f6a61}
+    .lp-m-key,.lp-metric-num,.lp-m-desc,.lp-m-bench{transition:opacity .4s ease,transform .4s ease}
+    .lp-metric.flip .lp-m-key,.lp-metric.flip .lp-metric-num,.lp-metric.flip .lp-m-desc,.lp-metric.flip .lp-m-bench{opacity:0;transform:translateY(-6px)}
+    .lp-metric--inf .lp-metric-num{color:var(--red);text-shadow:0 0 30px rgba(217,0,13,.6);animation:lpInfPulse 2.4s ease-in-out infinite}
+    .lp-metric::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--red);transition:width 1.4s cubic-bezier(.16,1,.3,1)}
+    .lp-metrics.in .lp-metric::after{width:100%}
+    @keyframes lpInfPulse{0%,100%{transform:scale(1);opacity:.92}50%{transform:scale(1.09);opacity:1}}
+    @media(max-width:720px){.lp-metrics{grid-template-columns:1fr;max-width:none}.lp-metric{padding:16px 18px}}
     .lp-statement__btn{margin-top:4px;}
     .lp-scrollcue{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:2;font-family:var(--fm);font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;color:#a49d92;display:flex;flex-direction:column;align-items:center;gap:6px;animation:lpCue 2.2s ease-in-out infinite;}
     @keyframes lpCue{0%,100%{transform:translateX(-50%) translateY(0);opacity:.7}50%{transform:translateX(-50%) translateY(6px);opacity:1}}
@@ -14000,10 +14037,21 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
     <h2 class="lp-statement__head">The last channel<br>they <em>can't skip.</em></h2>
     <p class="lp-statement__body">Reach is rented. Attention is rationed. Recall is everything. AOTC turns the street into media your audience can't block, skip, or scroll &mdash; full-motion LED engineered around the routes, dayparts, and moments that move a market. It's how the sharpest brands manufacture presence on demand and walk away with the recall their competitors paid for and never got.</p>
     <p class="lp-statement__tag">Engineer the moment. <b>#OwnTheStreet.</b></p>
+    <div class="lp-metrics" id="lpMetrics" aria-label="OOH campaign metrics">
+      <div class="lp-metric" data-rotor='[["SOV","100%","You own every screen — no competing ads share the frame","vs. ~26% avg. digital SOV"],["CPM","$4–7","Premium attention at efficient cost per 1,000 impressions","vs. $10–30 social video CPM"],["Dayparting","24/7","Target by hour, route, and neighborhood","Full schedule control"]]'>
+        <span class="lp-m-key">SOV</span><b class="lp-metric-num">100%</b><span class="lp-m-desc">You own every screen — no competing ads share the frame</span><span class="lp-m-bench">vs. ~26% avg. digital SOV</span>
+      </div>
+      <div class="lp-metric" data-rotor='[["Reach & Frequency","213 sq ft","High-impact canvas building reach × frequency block by block","GRP on the street"],["Viewability","100%","Always in-view, full-motion — no below-the-fold waste","vs. ~57% digital viewability"],["CTR / CVR","QR","Scans, promo codes & calls turn views into conversions","Trackable response"]]'>
+        <span class="lp-m-key">Reach &amp; Frequency</span><b class="lp-metric-num">213 sq ft</b><span class="lp-m-desc">High-impact canvas building reach × frequency block by block</span><span class="lp-m-bench">GRP on the street</span>
+      </div>
+      <div class="lp-metric lp-metric--inf" data-rotor='[["Impressions","∞","Unlimited route, unlimited reach — no impression cap","Uncapped by design"],["ROI / ROAS","Proven","Attribution-ready: measure return on every route","QR, promo & lift"],["Ad-block loss","0","No blockers, no bots, no skips — 100% delivered","vs. ~40% blocked digital"]]'>
+        <span class="lp-m-key">Impressions</span><b class="lp-metric-num">&#8734;</b><span class="lp-m-desc">Unlimited route, unlimited reach — no impression cap</span><span class="lp-m-bench">Uncapped by design</span>
+      </div>
+    </div>
     <button class="lp-btn lp-btn--primary lp-statement__btn" type="button" onclick="if(window.openAOTCPanel){window.openAOTCPanel();}else{var t=document.getElementById('panel-trigger'); if(t) t.click();}">Own The Street <span aria-hidden="true">&gt;</span></button>
   </section>
 
-  <section class="infinity-stage" id="journey" aria-label="AOTC infinity scroll campaign story">
+    <section class="infinity-stage" id="journey" aria-label="AOTC infinity scroll campaign story">
     <div class="infinity-sticky" id="top" data-place="left-low">
       <div class="infinity-bg-wrap" id="infinityBgWrap">
 
@@ -14017,6 +14065,10 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
         </article>
         <article class="infinity-frame has-video" style="--pos:78% center;">
           <video class="frame-video" src="section5.mp4" style="object-position:78% center;" autoplay muted loop playsinline preload="auto"></video>
+          <div class="frame-shade"></div>
+        </article>
+        <article class="infinity-frame has-video" style="--pos:38% center;">
+          <video class="frame-video" src="section7.mp4" style="object-position:38% center;" autoplay muted loop playsinline preload="auto"></video>
           <div class="frame-shade"></div>
         </article>
         <article class="infinity-frame clients-ledger">
@@ -14043,102 +14095,38 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
             </div>
           </div>
         </article>
-        <article class="infinity-frame has-video" style="--pos:38% center;">
-          <video class="frame-video" src="section7.mp4" style="object-position:38% center;" autoplay muted loop playsinline preload="auto"></video>
-          <div class="frame-shade"></div>
-        </article>
-        <article class="infinity-frame process-frame">
-          <div class="process-lab" aria-label="Simple AOTC booking process">
-            <div class="process-proof">
-              <span>Everything included &mdash; nothing rented</span>
-              <strong>Tell us the goal.<br>We put it<br>on the street.</strong>
-              <p>The brands that win don't wait to be noticed &mdash; they engineer it. Hand us the objective and we turn 213 sq ft of full-motion LED into the moment your market can't scroll past. Placement guaranteed, creative on us, delivery you can prove. Your move.</p>
-              <button class="mobile-book-cta" type="button" onclick="if(window.openAOTCPanel){window.openAOTCPanel();}else{var t=document.getElementById('panel-trigger'); if(t) t.click();} setTimeout(function(){var n=document.getElementById('name'); if(n){n.focus();} var b=document.getElementById('panelBody'); if(b){b.scrollTop=0;}},350);">Book Your Route <span aria-hidden="true">&gt;</span></button>
-            </div>
-            <div class="process-action process-walk" aria-label="Walk through an easy AOTC booking">
-              <section class="walk-step">
-                <div class="walk-copy"><span>01</span><strong>Creative</strong><small>Got art? Send it. If not, we make it &mdash; free.</small></div>
-                <label class="walk-control file-control">
-                  <input id="quickCreative" type="file" accept="image/*,.pdf" />
-                  <em>Upload creative</em>
-                  <b>Choose file</b>
-                </label>
-              </section>
-              <section class="walk-step">
-                <div class="walk-copy"><span>02</span><strong>Outcome</strong><small>Name the win. We reverse-engineer the route.</small></div>
-                <label class="walk-field">
-                  <em>Desired result</em>
-                  <textarea id="quickOutcome" class="walk-control" rows="3" placeholder="Calls, walk-ins, showings, turnout..."></textarea>
-                </label>
-                <div class="outcome-chips" aria-label="Common desired outcomes">
-                  <button type="button" data-outcome-pick="More calls">Calls</button>
-                  <button type="button" data-outcome-pick="More walk-ins">Walk-ins</button>
-                  <button type="button" data-outcome-pick="More showings">Showings</button>
-                  <button type="button" data-outcome-pick="More event turnout">Turnout</button>
-                </div>
-              </section>
-              <section class="walk-step">
-                <div class="walk-copy"><span>03</span><strong>Timing</strong><small>Pick the day you want to own.</small></div>
-                <label class="walk-field">
-                  <em>Date(s) of service</em>
-                  <input id="quickDate" class="walk-control" type="date" />
-                </label>
-                <label class="walk-field" style="display:none">
-                  <em>Time / notes</em>
-                  <input id="quickTiming" class="walk-control" placeholder="Afternoon, evening, event hours..." />
-                </label>
-              </section>
-              <section class="walk-step final">
-                <div class="walk-copy"><span>04</span><strong>Call</strong><small>We build the route, creative, and proof.</small></div>
-                <button class="quick-submit walk-control" id="quickSubmit" type="button">Put me on the street <span class="arr">></span></button>
-              </section>
-            </div>
-          </div>
-        </article>
-      </div>
+      </div></new_string>
 
-      <div class="infinity-tunnel" id="infinityTunnel" aria-hidden="true">
-        <div class="tunnel-ring r1"></div>
-        <div class="tunnel-ring r2"></div>
-        <div class="tunnel-ring r3"></div>
-        <div class="tunnel-ring r4"></div>
-      </div>
 
       <div class="infinity-copy">
-
         <article class="story-step active" data-place="right-tight">
           <div class="num">03 / Street Reach</div>
           <h2>The channel<br>they can't<br><em>opt out of.</em></h2>
-          <p>No ad blocker. No skip button. No banked impression that never got seen. Your brand moves through the exact corridors your buyers already drive &mdash; full attention, in the real world, every mile accounted for.</p>
-          <span class="memory">100% viewable. 100% share of voice.</span>
+          <p>No ad blocker. No bot traffic. No impression that billed but never rendered. Your message runs the corridors your audience actually travels &mdash; fully viewable, brand-safe, delivered in the real world.</p>
+          <span class="memory">100% viewability. Full-motion. Zero waste.</span>
         </article>
         <article class="story-step lp-alignleft" data-place="edge-left">
           <div class="num">04 / Brand Recall</div>
           <h2>The brand<br>they reach for<br><em>first.</em></h2>
-          <p>Markets aren't won by the loudest brand &mdash; they're won by the most available one. We keep yours in motion until it's the reflex, the default, the name they say before they think.</p>
-          <span class="memory">Mental availability is market share.</span>
+          <p>Categories aren't won by the loudest brand &mdash; they're won by the most mentally available one. Sustained street-level frequency keeps yours top-of-mind until it's the default choice at the moment of purchase.</p>
+          <span class="memory">Mental availability compounds into market share.</span>
         </article>
         <article class="story-step lp-alignleft" data-place="edge-left">
           <div class="num">05 / Targeted Pressure</div>
           <h2>Presence where<br>the decision<br><em>gets made.</em></h2>
-          <p>Advocacy, labor, public affairs &mdash; minds move on presence, not impressions. We place your message ward by ward, precinct by precinct, in front of the exact people who tip the outcome.</p>
+          <p>Advocacy, labor, public affairs &mdash; outcomes turn on presence, not served impressions. We target your message ward by ward, precinct by precinct, against the exact audience that decides the result.</p>
           <span class="memory">Presence changes the room.</span>
-        </article>
-        <article class="story-step" data-place="brand-left">
-          <div class="num">06 / Brand Proof</div>
-          <h2>The names<br>that moved<br><em>first.</em></h2>
-          <span class="memory">Trusted by brands, agencies, and institutions.</span>
         </article>
         <article class="story-step" data-place="right-tight">
           <div class="num">07 / The Plan</div>
           <h2>A media plan.<br>Not a truck <em>rental.</em></h2>
-          <p>Name the outcome. We engineer the route, the dayparts, the creative, and GPS-verified proof-of-play &mdash; a campaign you can measure, report, and run back the moment it works.</p>
-          <span class="memory">Guaranteed placement. Free creative.<br>Verified delivery.</span>
-          <div class="choice-grid">
-          </div>
+          <p>Name the KPI. We build the route, the dayparts, the creative, and GPS-verified proof-of-play &mdash; a campaign your team can measure, report up, and renew the moment it performs.</p>
+          <span class="memory">Engineered routing. Creative included.<br>Verified proof-of-play.</span>
         </article>
-        <article class="story-step process-step" data-place="edge-left">
-          <h2>Fast to book.<br>Simple to run.<br><em>Impossible to ignore.</em></h2>
+        <article class="story-step" data-place="brand-left">
+          <div class="num">06 / Brand Proof</div>
+          <h2>The names<br>that moved<br><em>first.</em></h2>
+          <span class="memory">The brands, agencies, and institutions already on the route.</span>
         </article>
       </div>
 
@@ -14147,43 +14135,149 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
   </section>
 </main>
 
-<div hidden aria-hidden="true" id="aotc-listing-copy" style="display:none !important">
-  <!-- Google Business Profile / OOH directory description — canonical copy for off-page listings (BillboardsIn, Outdoor Advertising.com, Google Business Profile, Bing Places). Not shown to site visitors; present for crawlers and for staff to copy verbatim. -->
-  <h2>AOTC — Ads of the Century | Mobile Digital Billboard Advertising in Chicago</h2>
-  <p>AOTC (Ads of the Century) is a premium mobile digital billboard company based in Chicago, Illinois. We operate high-definition LED billboard trucks that deliver 100% exclusive share of voice — your brand owns every screen, with no competing ads. Campaigns include creative design, real-time creative changes and day-parting, external sound, and GPS-verified proof-of-play reporting on every route.</p>
-  <p>Our mobile billboard trucks run GPS-tracked routes through downtown Chicago and The Loop, the Magnificent Mile, River North, the West Loop, Fulton Market, Wicker Park, and Lincoln Park, plus high-impact event coverage around Wrigley Field, the United Center, and McCormick Place. We also serve Chicagoland suburbs, Northwest Indiana (Hammond, Gary, the Region), and New Buffalo, Michigan.</p>
-  <p>Best for grand openings, product launches, festivals and game-day activations, retail and restaurant promotions, real estate, labor and advocacy campaigns, and political and public-affairs messaging. AOTC turns the street into out-of-home (OOH / DOOH) media your audience cannot skip, block, or scroll past.</p>
-  <p><strong>Services:</strong> Mobile LED billboard advertising, digital billboard truck advertising, out-of-home (OOH) advertising, digital out-of-home (DOOH), experiential and guerrilla marketing, event and venue advertising, grand-opening advertising, advocacy and political advertising.</p>
-  <p><strong>Categories:</strong> Advertising agency, Outdoor advertising agency, Marketing agency, Media company.</p>
-  <p><strong>Service area:</strong> Chicago, IL; The Loop; Magnificent Mile; Wrigleyville; River North; West Loop; Chicagoland; Northwest Indiana; New Buffalo, MI.</p>
-  <p><strong>Contact:</strong> AOTC — Ads of the Century. Phone/Text: (773) 708-1400. Email: info@adsofthecentury.net. Website: https://adsofthecentury.net/. Hours: 24/7 by appointment.</p>
-  <p><strong>Short description (160 characters):</strong> Premium mobile digital billboard trucks in Chicago. Exclusive share of voice, HD LED, creative included, GPS-verified routes. Call (773) 708-1400.</p>
-  <p><strong>Primary keywords:</strong> mobile billboards Chicago, mobile digital billboards Chicago, LED billboard truck Chicago, digital LED truck advertising, out-of-home advertising Chicago, DOOH Chicago, billboard truck advertising, mobile billboard company Chicago.</p>
-  <h3>AOTC client campaigns &amp; case studies</h3>
-  <p>AOTC has planned and delivered mobile LED billboard campaigns for a wide range of brands, organizations, and institutions across Chicago, Northwest Indiana, and Michigan. Representative work includes:</p>
-  <ul>
-    <li><strong>Wendy's</strong> — grand-opening mobile billboard campaign driving launch-day awareness and foot traffic in Chicago.</li>
-    <li><strong>United Steel Workers (USW) Local Union 7-1</strong> — labor and public-affairs mobile billboard campaign; AOTC lands new agreement with USW Local 7-1.</li>
-    <li><strong>Uncle Sam's Fireworks</strong> — seasonal retail mobile billboard campaign adapting to audience travel-pattern shifts across the Region.</li>
-    <li><strong>Realty of America</strong> — real-estate listings and brand-awareness LED truck advertising.</li>
-    <li><strong>FAB 94.5 The Hitz</strong> — radio station launch and audience-growth mobile billboard campaign.</li>
-    <li><strong>Hammond Hermits</strong> — youth-sports season signup awareness in Northwest Indiana.</li>
-    <li><strong>American Precision Services</strong> — industrial B2B brand awareness campaign.</li>
-    <li><strong>Agudath Israel of Illinois</strong> — community outreach and awareness campaign.</li>
-    <li><strong>Belmont Cragin Vintage Market</strong> — neighborhood retail and market-day promotion.</li>
-    <li><strong>HCDS Mental Health</strong> — nonprofit awareness campaign.</li>
-    <li><strong>Summer's End Smokeout</strong> — event ticket-push and attendance campaign.</li>
-    <li><strong>Elevated Exotics</strong> — exotic-rental brand awareness in Chicago.</li>
-    <li><strong>Lakefront Nutrition &amp; Fitness</strong> — health and wellness community campaign in Indiana.</li>
-    <li><strong>DJ GloBoy</strong> — entertainment and bookings promotion.</li>
-    <li><strong>Makako's Auto Repair, LLC</strong> — local automotive service awareness in Indiana.</li>
-    <li><strong>Festival of the Lakes</strong> — AOTC expands its premium footprint in Northwest Indiana during the Festival of the Lakes.</li>
-    <li><strong>New Buffalo, Michigan</strong> — AOTC expands its footprint to Michigan through New Buffalo partnerships.</li>
-  </ul>
-  <p><strong>Related searches:</strong> AOTC, Ads of the Century, AOTC Media, AOTC mobile billboards, AOTC Chicago, Wendy's mobile billboard, USW Local 7-1 advertising, Uncle Sam's Fireworks advertising, Festival of the Lakes advertising, mobile billboard advertising near me, advertisement trucks, ad trucks Chicago, LED advertising truck, digital billboard truck rental.</p>
-</div>
+<style id="lpCloseCss">
+  .lp-close{position:relative;min-height:calc(100svh - var(--nav-h,64px));height:auto;display:flex;align-items:center;background:#080809;color:#fff;padding:clamp(40px,6vh,72px) clamp(20px,5vw,80px);overflow:hidden;border-top:1px solid rgba(255,255,255,.07)}
+  .lp-close__grid{position:absolute;inset:0;z-index:0;display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:1fr;gap:6px;opacity:.5}
+  .lp-close__grid > *{position:relative;overflow:hidden;background:#111}
+  .lp-close__grid img,.lp-close__grid video{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(.35) contrast(1.04)}
+  .lp-close__grid .tall{grid-row:span 2}
+  .lp-close::after{content:"";position:absolute;inset:0;z-index:1;background:radial-gradient(ellipse 90% 90% at 50% 46%,rgba(8,8,9,.62),rgba(8,8,9,.9) 78%),linear-gradient(0deg,rgba(8,8,9,.96),transparent 40%,rgba(8,8,9,.55))}
+  .lp-close__inner{position:relative;z-index:2;max-width:920px;margin:0 auto;text-align:center;display:flex;flex-direction:column;align-items:center;padding-right:clamp(0px,20vw,300px)}
+  @media(max-width:1100px){.lp-close__inner{padding-right:0}}
+  .lp-testi{position:relative;z-index:5;max-width:660px;margin:0 auto clamp(20px,3vh,30px);text-align:center;pointer-events:none;padding:0}
+  .lp-testi__text{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:clamp(15px,1.4vw,19px);line-height:1.5;color:#f2eee6;margin:0;min-height:3em}
+  .lp-testi__text .hl{font-style:normal;font-weight:800;color:#fff;letter-spacing:.01em}
+  .lp-testi__text .cur{display:inline-block;width:2px;height:1.05em;background:var(--red2);margin-left:1px;vertical-align:-2px;animation:testiCur .8s steps(1) infinite}
+  @keyframes testiCur{0%,50%{opacity:1}50.01%,100%{opacity:0}}
+  .lp-testi__who{margin:10px 0 0;font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--red2);min-height:1.2em;opacity:0;transition:opacity .4s}
+  .lp-testi__who.show{opacity:1}
+  .lp-close__head{font-family:var(--fh);font-weight:800;text-transform:uppercase;line-height:.9;letter-spacing:-.005em;font-size:clamp(34px,5vw,72px);margin:0 0 clamp(14px,2vh,20px);text-wrap:balance}
+  .lp-close__head em{font-style:normal;color:var(--red);text-shadow:0 0 40px rgba(217,0,13,.5);white-space:nowrap}
+  .lp-close__sub{font-family:var(--fb);font-size:clamp(13px,1.25vw,17px);line-height:1.5;color:#d7d2c9;margin:0 auto clamp(18px,2.6vh,30px);max-width:58ch}
+  .lp-close__cta{cursor:pointer;font-family:var(--fh);font-weight:800;text-transform:uppercase;letter-spacing:.03em;font-size:clamp(16px,1.6vw,20px);padding:18px 38px;border:0;color:#fff;background:linear-gradient(#ff2a34,#d9000d);border-radius:12px;box-shadow:0 8px 0 #7a0007,0 12px 26px rgba(0,0,0,.5);transition:transform .1s,box-shadow .1s;display:inline-flex;align-items:center;gap:10px}
+  .lp-close__cta:active{transform:translateY(5px);box-shadow:0 3px 0 #7a0007,0 5px 12px rgba(0,0,0,.5)}
+  .lp-close__note{margin-top:16px;font-family:var(--fm);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:#7f7a71}
+  .lp-close__offer{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:0 0 clamp(18px,2.6vh,30px)}
+  .lp-close__offer span{font-family:var(--fm);font-size:clamp(9px,.85vw,11px);letter-spacing:.1em;text-transform:uppercase;color:#e9e4da;padding:8px 14px;border:1px solid rgba(255,255,255,.16);border-left:2px solid var(--red);background:rgba(255,255,255,.03)}
+  @media(max-width:768px){
+    .lp-close{padding:16px 16px 20px;min-height:auto;height:auto}
+    .lp-close__inner{padding-right:0;max-width:520px;margin:0 auto}
+    .lp-close__grid{grid-template-columns:repeat(2,1fr);opacity:.34;gap:6px;margin-bottom:14px}.lp-close__grid .m-hide{display:none}
+    .lp-close__eyebrow{margin-bottom:8px;font-size:9.5px}
+    .lp-close__head{font-size:clamp(24px,7.5vw,36px);margin-bottom:9px;line-height:1}
+    .lp-close__sub{font-size:12px;line-height:1.38;margin-bottom:11px}
+    .lp-testi{margin-bottom:12px}
+    .lp-testi__text{font-size:12.5px;min-height:4.2em;line-height:1.4}
+    .lp-testi__who{font-size:9.5px}
+    .lp-close__cta{padding:12px 20px;font-size:14px}
+    .lp-close__note{margin-top:9px;font-size:9px}
+  }
+</style>
+<section class="lp-close" aria-label="Why brands run with AOTC">
+  <div class="lp-close__grid" aria-hidden="true">
+    <div class="tall"><video src="section4.mp4" autoplay muted loop playsinline preload="auto"></video></div>
+    <div><img src="wendys-grand-opening.jpg" alt="" /></div>
+    <div><img src="bp-lockout.jpg" alt="" /></div>
+    <div class="tall"><video src="section3.mp4" autoplay muted loop playsinline preload="auto"></video></div>
+    <div class="m-hide"><img src="rent-this-space.jpg" alt="" /></div>
+    <div class="m-hide tall"><video src="section5.mp4" autoplay muted loop playsinline preload="auto"></video></div>
+    <div class="m-hide"><img src="uncle-sam-fireworks.jpg" alt="" /></div>
+    <div><img src="smokeout.jpg" alt="" /></div>
+    <div class="m-hide"><video src="section7.mp4" autoplay muted loop playsinline preload="auto"></video></div>
+  </div>
+  <div class="lp-close__inner">
+    <h2 class="lp-close__head">The feed forgets.<br><em>The streets remember.</em></h2>
+    <p class="lp-close__sub">Wendy's, USW Local 7-1, and Uncle Sam's Fireworks each briefed a different objective &mdash; and each got the same thing: measured reach and frequency on 360 degrees of full-motion LED, a route engineered to their audience, creative built in-house, and GPS-verified proof it ran. That's a managed OOH campaign with receipts.</p>
+    <div class="lp-testi" id="lpTesti" aria-live="polite">
+      <p class="lp-testi__text" id="lpTestiText"></p>
+      <p class="lp-testi__who" id="lpTestiWho"></p>
+    </div>
+    <button class="lp-close__cta" type="button" onclick="(function(){var isM=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);if(isM){var sep=/iPhone|iPad|iPod|Mac/i.test(navigator.userAgent)?'&amp;':'?';window.location.href='sms:+17737081400'+sep+'body='+encodeURIComponent('GET A ROUTE PLAN & QUOTE, please and thank you!');}else{window.location.href='mailto:info@adsofthecentury.net?subject='+encodeURIComponent('Get a Route Plan & Quote')+'&body='+encodeURIComponent('GET A ROUTE PLAN & QUOTE, please and thank you!');}})();">Get a route plan &amp; quote <span aria-hidden="true">&gt;</span></button>
+    <p class="lp-close__note">The route's open. We double-dog dare you to own it.</p>
+  </div>
+</section>
+
+<footer class="aotc-seo-footer" id="aotc-listing-copy">
+  <div class="asf-wrap">
+    <div class="asf-brand">
+      <h2>AOTC &mdash; Ads of the Century</h2>
+      <p class="asf-tag">Mobile Digital Billboard Advertising &middot; Chicago, Northwest Indiana &amp; New Buffalo, MI</p>
+      <p>AOTC (Ads of the Century) is a premium mobile digital billboard company based in Chicago, Illinois. We operate high-definition LED billboard trucks that deliver exclusive share of voice &mdash; your brand owns every screen, with no competing ads. Every campaign includes creative design, real-time creative changes and day-parting, external sound, and GPS-verified proof-of-play reporting on every route.</p>
+      <p>Our trucks run GPS-tracked routes through downtown Chicago and The Loop, the Magnificent Mile, River North, the West Loop, Fulton Market, Wicker Park, and Lincoln Park &mdash; plus high-impact event coverage around Wrigley Field, the United Center, and McCormick Place. We also serve the Chicagoland suburbs, Northwest Indiana (Hammond, Gary, the Region), and New Buffalo, Michigan.</p>
+      <p>Best for grand openings, product launches, festivals and game-day activations, retail and restaurant promotions, real estate, labor and advocacy campaigns, and political and public-affairs messaging. AOTC turns the street into out-of-home (OOH / DOOH) media your audience cannot skip, block, or scroll past.</p>
+    </div>
+    <div class="asf-cols">
+      <div class="asf-col">
+        <h3>Services</h3>
+        <ul>
+          <li>Mobile LED billboard advertising</li>
+          <li>Digital billboard truck advertising</li>
+          <li>Out-of-home (OOH) &amp; digital out-of-home (DOOH)</li>
+          <li>Experiential &amp; guerrilla marketing</li>
+          <li>Event &amp; venue advertising</li>
+          <li>Grand-opening advertising</li>
+          <li>Advocacy &amp; political advertising</li>
+        </ul>
+      </div>
+      <div class="asf-col">
+        <h3>Service Area</h3>
+        <ul>
+          <li>Chicago, IL &amp; The Loop</li>
+          <li>Magnificent Mile &middot; River North</li>
+          <li>West Loop &middot; Wrigleyville</li>
+          <li>Chicagoland suburbs</li>
+          <li>Northwest Indiana (Hammond, Gary)</li>
+          <li>New Buffalo, Michigan</li>
+        </ul>
+      </div>
+      <div class="asf-col">
+        <h3>Contact</h3>
+        <ul>
+          <li>Phone / Text: <a href="tel:+17737081400">(773) 708-1400</a></li>
+          <li>Email: <a href="mailto:info@adsofthecentury.net">info@adsofthecentury.net</a></li>
+          <li>Web: <a href="https://adsofthecentury.net/">adsofthecentury.net</a></li>
+          <li>Hours: 24/7 by appointment</li>
+        </ul>
+      </div>
+    </div>
+    <div class="asf-clients">
+      <h3>Client Campaigns</h3>
+      <p>AOTC has planned and delivered mobile LED billboard campaigns for brands, organizations, and institutions across Chicago, Northwest Indiana, and Michigan &mdash; including Wendy's (grand-opening launch), United Steel Workers (USW) Local Union 7-1 (labor &amp; public affairs), Uncle Sam's Fireworks (seasonal retail), Realty of America (real estate), FAB 94.5 The Hitz (radio launch), Hammond Hermits (youth sports), American Precision Services (industrial B2B), Agudath Israel of Illinois (community outreach), Belmont Cragin Vintage Market (neighborhood retail), HCDS Mental Health (nonprofit awareness), Summer's End Smokeout (event attendance), Elevated Exotics (exotic rentals), Lakefront Nutrition &amp; Fitness (health &amp; wellness), DJ GloBoy (entertainment), Makako's Auto Repair (automotive), the Festival of the Lakes (Northwest Indiana), and New Buffalo, Michigan partnerships.</p>
+    </div>
+    <p class="asf-legal">&copy; <span id="asfYear">2026</span> AOTC &mdash; Ads of the Century. Premium mobile digital billboard trucks in Chicago. Exclusive share of voice, HD LED, creative included, GPS-verified routes. Serving Chicago, Chicagoland, Northwest Indiana &amp; New Buffalo, MI. &middot; <a href="disclosures.html">Disclosures &amp; Privacy</a></p>
+  </div>
+</footer>
 </main>
 
+<script>
+(function(){
+  var box=document.getElementById("lpMetrics");
+  if(!box)return;
+  var run=function(){
+    box.classList.add("in");
+    box.querySelectorAll(".lp-metric[data-rotor]").forEach(function(cell,ci){
+      var sets;try{sets=JSON.parse(cell.getAttribute("data-rotor"));}catch(e){return;}
+      if(!sets||sets.length<2)return;
+      var num=cell.querySelector(".lp-metric-num"),key=cell.querySelector(".lp-m-key"),desc=cell.querySelector(".lp-m-desc"),bench=cell.querySelector(".lp-m-bench"),i=0;
+      setInterval(function(){
+        i=(i+1)%sets.length;
+        cell.classList.add("flip");
+        setTimeout(function(){
+          if(key)key.textContent=sets[i][0];
+          if(num)num.textContent=sets[i][1];
+          if(desc)desc.textContent=sets[i][2];
+          if(bench)bench.textContent=sets[i][3]||"";
+          cell.classList.remove("flip");
+        },400);
+      },3200+ci*1100);
+    });
+  };
+  if("IntersectionObserver" in window){
+    var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){run();io.disconnect();}});},{threshold:.4});
+    io.observe(box);
+  }else{run();}
+})();
+</script>
 <script>
 (function(){
   var panel = document.getElementById("book-panel");
@@ -14633,6 +14727,8 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
       "Fast Start Follow Up": quickCampaign.ready || "(not specified)",
       "Name": name.value.trim(),
       "Contact": phone.value.trim(),
+      "Desired Dates of Service": (document.getElementById("dates")&&document.getElementById("dates").value.trim())||"(not specified)",
+      "Target Audience / Location / Outcome": (document.getElementById("brief")&&document.getElementById("brief").value.trim())||"(not specified)",
       "Artwork File Name": creativeFile && creativeFile.files && creativeFile.files.length ? creativeFile.files[0].name : "(not uploaded)",
       "Submitted At": new Date().toLocaleString("en-US",{timeZone:"America/Chicago"}) + " CT",
       "Page URL": window.location.href
@@ -15042,10 +15138,10 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
     var zoom = 1 + visualLocal * (isHandheld ? .12 : .18);
     var driftX = (visualP - .5) * (isHandheld ? -3 : -8);
     var driftY = (visualP - .5) * (isHandheld ? 1.5 : 3);
-    bgWrap.style.transform = "translate3d(" + driftX + "vw," + driftY + "vh,0) scale(" + zoom + ")";
-    tunnel.style.transform = "scale(" + (1 + visualP * 1.35) + ") rotate(" + (visualP * 36) + "deg)";
-    tunnel.style.opacity = isFinalStep ? 0 : Math.max(.08,.36 - visualP * .12);
-    progress.style.width = (p * 100) + "%";
+    if(bgWrap) bgWrap.style.transform = "translate3d(" + driftX + "vw," + driftY + "vh,0) scale(" + zoom + ")";
+    if(tunnel){ tunnel.style.transform = "scale(" + (1 + visualP * 1.35) + ") rotate(" + (visualP * 36) + "deg)";
+    tunnel.style.opacity = isFinalStep ? 0 : Math.max(.08,.36 - visualP * .12); }
+    if(progress) progress.style.width = (p * 100) + "%";
     frames.forEach(function(frame,i){frame.classList.toggle("active",i === active);});
     frames.forEach(function(frame){
       var v = frame.querySelector(".frame-video");
@@ -15290,6 +15386,53 @@ html body .process-frame.active .walk-step label.file-control b{flex:1 1 auto!im
   else document.addEventListener("DOMContentLoaded", kickVideos);
   window.addEventListener("load", kickVideos);
   setInterval(kickVideos, 1500);
+})();
+</script>
+<script>
+(function(){
+  var T=document.getElementById('lpTestiText'),W=document.getElementById('lpTestiWho');
+  if(!T||!W)return;
+  var Q=[
+    ["We had a GREAT EXPERIENCE with this company! They have EXCELLENT CUSTOMER SERVICE and the truck is AMAZING!","USW Local 1 Board Member"],
+    ["AOTC MEANS BUSINESS! The team PULLS UP and gets STRAIGHT TO WORK. They go ABOVE AND BEYOND to satisfy their clients and DELIVER GREAT VALUE.","Elevated Exotics Marketing Director"],
+    ["Would HIGHLY RECOMMEND for any billboard or event needs. Be sure to BOOK WELL IN ADVANCE — AOTC is sure to have a busy year.","Summer's End Smokeout Event Director"],
+    ["We will DEFINITELY use AOTC AGAIN!","Uncle Sam's Fireworks Marketing Director"],
+    ["10/10 SERVICE! They ARRIVED EARLY, GOT TO WORK, and managed their station in a RESPONSIBLE and RESPECTFUL manner. They're ALWAYS ON POINT!","Hammond Hermits League Director"]
+  ];
+  function toTokens(txt){
+    var out=[],re=/([A-Z][A-Z0-9'\/&]{1,}(?:\s+[A-Z0-9'\/&]{2,})*)/g,last=0,m;
+    while((m=re.exec(txt))){
+      if(m.index>last)out.push({t:txt.slice(last,m.index),b:false});
+      out.push({t:m[0],b:true});last=m.index+m[0].length;
+    }
+    if(last<txt.length)out.push({t:txt.slice(last),b:false});
+    return out;
+  }
+  var qi=0,started=false;
+  function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+  function typeQuote(txt,who,done){
+    var toks=toTokens(txt),full=[];toks.forEach(function(tk){for(var c=0;c<tk.t.length;c++)full.push({ch:tk.t.charAt(c),b:tk.b});});
+    W.classList.remove('show');W.textContent=who;
+    var i=0;
+    (function step(){
+      if(i<full.length){
+        i++;
+        var html='',run='',runB=false;
+        function flush(){if(run){html+=runB?('<b class="hl">'+esc(run)+'</b>'):esc(run);run='';}}
+        for(var k=0;k<i;k++){var f=full[k];if(f.b!==runB){flush();runB=f.b;}run+=f.ch;}
+        flush();
+        T.innerHTML=html+'<span class="cur"></span>';
+        setTimeout(step,full[i-1].ch===' '?34:24+Math.random()*32);
+      } else {
+        T.innerHTML=T.innerHTML.replace('<span class="cur"></span>','');
+        W.classList.add('show');setTimeout(done,4400);
+      }
+    })();
+  }
+  function cycle(){var q=Q[qi%Q.length];qi++;typeQuote(q[0],q[1],function(){if(Q.length>1)cycle();});}
+  var sec=document.querySelector('.lp-close');
+  if('IntersectionObserver' in window&&sec){var io=new IntersectionObserver(function(e){e.forEach(function(en){if(en.isIntersecting&&!started){started=true;cycle();io.disconnect();}});},{threshold:.3});io.observe(sec);}
+  else{cycle();}
 })();
 </script>
 </body>
