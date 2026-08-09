@@ -1,6 +1,0 @@
-/* AOTC case-study shared enhancement — consistent look across all case studies */
-:root{--aotc-accent:#d9000d;--aotc-accent2:#ff1520;--aotc-ghost:rgba(255,255,255,.05)}
-.aotc-ghost{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;display:flex;align-items:center;justify-content:center;mix-blend-mode:overlay}
-.aotc-ghost b{font-family:"Anton","Barlow Condensed",Impact,sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.01em;line-height:.82;text-align:center;font-size:clamp(90px,26vw,420px);color:var(--aotc-ghost);white-space:nowrap;transition:opacity .5s ease,transform .5s ease;will-change:transform,opacity}
-.aotc-hl{color:var(--aotc-accent2)!important;font-weight:800!important}
-.aotc-accentbar{position:fixed;left:0;top:0;height:3px;width:0;background:linear-gradient(90deg,var(--aotc-accent),var(--aotc-accent2));z-index:100000;transition:width .1s linear;pointer-events:none}
