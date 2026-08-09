@@ -1,0 +1,4 @@
+# AOTC live stream control file.
+# Paste ONE stream link below (YouTube, Twitch, Facebook, Instagram, or TikTok) to make it
+# play for every visitor. Leave it empty (or with only these # comment lines) to show
+# "Check Back Soon!" for everyone. Lines starting with # are ignored.
