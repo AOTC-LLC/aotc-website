@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AOTC Sales Console — Route Booking Form (Internal)</title>
+<meta name="description" content="Internal AOTC route booking form for sales staff." />
+<meta name="robots" content="noindex, nofollow, noarchive" />
+<link rel="icon" type="image/gif" href="AOTC_Infinity_assets/aotc_final.gif" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+/* AOTC unified navigation — single source of truth for every page */
+/* the host container must always show the menu, whatever the page's own CSS says */
+.nav-links.aotc-host{
+  display:flex!important; visibility:visible!important; opacity:1!important;
+  align-items:center; gap:10px; min-width:0; position:static;
+}
+
+.aotc-nav{
+  --an-red:#d9000d; --an-red2:#ff1520;
+  --an-fh:"Barlow Condensed",Impact,sans-serif;
+  --an-fm:"IBM Plex Mono",ui-monospace,monospace;
+  --an-ease:cubic-bezier(.16,1,.3,1);
+  display:flex; align-items:center; gap:12px; position:relative; z-index:2147483000;
+}
+.aotc-nav *{box-sizing:border-box}
+
+/* ---- the single tab: clean marquee plate ---- */
+.aotc-tab{
+  appearance:none; cursor:pointer; position:relative;
+  display:inline-flex; align-items:center; gap:11px;
+  height:44px; padding:0 18px 0 15px;
+  border:1px solid rgba(255,255,255,.18); border-radius:6px;
+  background:linear-gradient(180deg,#17171a,#0a0a0c);
+  color:#fff; line-height:1;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 4px 12px rgba(0,0,0,.45);
+  transition:border-color .22s var(--an-ease),box-shadow .25s var(--an-ease),transform .15s var(--an-ease);
+}
+.aotc-tab::after{
+  content:""; position:absolute; left:12px; right:12px; bottom:5px; height:2px; border-radius:2px;
+  background:linear-gradient(90deg,transparent,var(--an-red2),transparent);
+  opacity:.8; animation:aotcPulse 2.6s ease-in-out infinite;
+}
+@keyframes aotcPulse{0%,100%{opacity:.4;transform:scaleX(.65)}50%{opacity:1;transform:scaleX(1)}}
+.aotc-lab{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding-bottom:3px}
+.aotc-lab b{
+  font-family:var(--an-fh); font-weight:900; font-size:17px; letter-spacing:.08em;
+  text-transform:uppercase; white-space:nowrap;
+}
+.aotc-lab i{
+  font-style:normal; font-family:var(--an-fm); font-size:7.5px; font-weight:600;
+  letter-spacing:.24em; text-transform:uppercase; color:#a49d92; white-space:nowrap;
+}
+.aotc-tab:hover{border-color:rgba(255,21,32,.6);transform:translateY(-1px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 8px 20px rgba(0,0,0,.5),0 0 24px rgba(217,0,13,.35)}
+.aotc-tab:hover .aotc-lab i{color:var(--an-red2)}
+.aotc-tab:focus-visible{outline:2px solid var(--an-red2);outline-offset:2px}
+.aotc-nav.open .aotc-tab,.aotc-nav:focus-within .aotc-tab{
+  border-color:var(--an-red2);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 0 28px rgba(217,0,13,.5);
+}
+.aotc-nav.open .aotc-tab .aotc-lab i,.aotc-nav:focus-within .aotc-tab .aotc-lab i{color:var(--an-red2)}
+.aotc-bars{position:relative;width:17px;height:12px;flex:0 0 auto;filter:drop-shadow(0 0 6px rgba(255,21,32,.55))}
+.aotc-bars i{
+  position:absolute; left:0; width:100%; height:2px; background:linear-gradient(90deg,var(--an-red2),#fff); border-radius:2px;
+  transition:transform .32s var(--an-ease),opacity .2s var(--an-ease),width .32s var(--an-ease);
+}
+.aotc-bars i:nth-child(1){top:0}
+.aotc-bars i:nth-child(2){top:5px;width:70%}
+.aotc-bars i:nth-child(3){top:10px}
+.aotc-tab:hover .aotc-bars i:nth-child(2){width:100%}
+.aotc-nav.open .aotc-bars i:nth-child(1){transform:translateY(5px) rotate(45deg)}
+.aotc-nav.open .aotc-bars i:nth-child(2){opacity:0;width:0}
+.aotc-nav.open .aotc-bars i:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
+
+/* ---- phone CTA beside the tab ---- */
+a.aotc-call{
+  display:inline-flex; align-items:center; gap:8px; height:44px; padding:0 15px;
+  border:1px solid rgba(255,255,255,.14); border-radius:5px;
+  font-family:var(--an-fm); font-size:10.5px; font-weight:600; letter-spacing:.14em;
+  text-transform:uppercase; color:#c9c3b9; text-decoration:none; white-space:nowrap;
+  transition:color .2s,border-color .2s,background .2s;
+}
+a.aotc-call::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--an-red2);box-shadow:0 0 10px var(--an-red2);flex:0 0 auto}
+a.aotc-call:hover{color:#fff;border-color:rgba(255,21,32,.5);background:rgba(217,0,13,.1)}
+@media(max-width:820px){a.aotc-call span{display:none}a.aotc-call{padding:0 12px}}
+
+/* ---- the panel ---- */
+.aotc-panel{
+  position:absolute; top:calc(100% + 14px); right:0; z-index:2147483000;
+  width:min(660px,calc(100vw - 32px));
+  display:grid; grid-template-columns:1fr 1fr; gap:0;
+  border:1px solid rgba(255,255,255,.13); border-radius:8px; overflow:hidden;
+  background:linear-gradient(160deg,#101012,#070708);
+  box-shadow:0 30px 80px rgba(0,0,0,.66),0 0 44px rgba(217,0,13,.16);
+  opacity:0; visibility:hidden; transform:translateY(-10px) scale(.985);
+  transition:opacity .26s var(--an-ease),transform .32s var(--an-ease),visibility .26s;
+}
+.aotc-panel::before{
+  content:""; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg,transparent,var(--an-red),var(--an-red2),var(--an-red),transparent);
+}
+.aotc-nav.open .aotc-panel,
+.aotc-nav:focus-within .aotc-panel{opacity:1;visibility:visible;transform:translateY(0) scale(1)}
+@media(hover:hover){.aotc-nav:hover .aotc-panel{opacity:1;visibility:visible;transform:translateY(0) scale(1)}}
+.aotc-col{padding:22px 22px 20px;min-width:0}
+.aotc-col + .aotc-col{border-left:1px solid rgba(255,255,255,.07)}
+.aotc-col.wide{grid-column:1 / -1;border-left:0;border-top:1px solid rgba(255,255,255,.07);padding-top:18px}
+.aotc-h{
+  display:flex; align-items:center; gap:9px; margin:0 0 12px;
+  font-family:var(--an-fm); font-size:9px; font-weight:600; letter-spacing:.26em;
+  text-transform:uppercase; color:var(--an-red2);
+}
+.aotc-h::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(255,21,32,.35),transparent)}
+.aotc-col + .aotc-col .aotc-h{color:#8b847a}
+.aotc-col + .aotc-col .aotc-h::after{background:linear-gradient(90deg,rgba(255,255,255,.14),transparent)}
+.aotc-list{display:flex;flex-direction:column;gap:2px}
+a.aotc-item{
+  display:flex; align-items:baseline; gap:10px;
+  padding:9px 11px; border-radius:4px; text-decoration:none;
+  color:#c9c3b9; font-family:var(--an-fh); font-weight:700; font-size:19px;
+  letter-spacing:.01em; text-transform:uppercase; line-height:1.1;
+  transition:color .18s,background .18s,padding-left .22s var(--an-ease);
+}
+a.aotc-item .d{
+  font-family:var(--an-fm); font-weight:400; font-size:9.5px; letter-spacing:.12em;
+  text-transform:uppercase; color:#6f6a61; margin-left:auto; white-space:nowrap;
+  transition:color .18s;
+}
+a.aotc-item:hover,a.aotc-item:focus-visible{
+  color:#fff; background:linear-gradient(90deg,rgba(217,0,13,.2),rgba(255,255,255,.03));
+  padding-left:16px; outline:none;
+}
+a.aotc-item:hover .d{color:var(--an-red2)}
+a.aotc-item[aria-current="page"]{color:#fff}
+a.aotc-item[aria-current="page"]::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--an-red2);box-shadow:0 0 9px var(--an-red2);align-self:center;flex:0 0 auto;margin-right:-4px}
+/* compact social row */
+.aotc-social{display:flex;flex-wrap:wrap;gap:6px}
+a.aotc-chip{
+  display:inline-flex; align-items:center; padding:7px 11px; border-radius:999px;
+  border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.03);
+  font-family:var(--an-fm); font-size:9.5px; letter-spacing:.12em; text-transform:uppercase;
+  color:#a49d92; text-decoration:none; transition:color .18s,border-color .18s,background .18s,transform .18s var(--an-ease);
+}
+a.aotc-chip:hover{color:#fff;border-color:rgba(255,21,32,.5);background:rgba(217,0,13,.12);transform:translateY(-2px)}
+/* book CTA inside panel */
+a.aotc-book{
+  display:flex; align-items:center; justify-content:center; gap:9px; margin-top:14px;
+  padding:14px 18px; border-radius:6px; text-decoration:none;
+  background:linear-gradient(#ff2a34,#d9000d); color:#fff;
+  font-family:var(--an-fh); font-weight:800; font-size:17px; letter-spacing:.04em; text-transform:uppercase;
+  box-shadow:0 5px 0 #7a0007,0 8px 20px rgba(0,0,0,.45);
+  transition:transform .1s,box-shadow .1s;
+}
+a.aotc-book:active{transform:translateY(4px);box-shadow:0 1px 0 #7a0007,0 3px 9px rgba(0,0,0,.45)}
+
+/* scrim removed: position:fixed misbehaves inside the nav's backdrop-filter */
+.aotc-scrim{display:none}
+
+@media(max-width:720px){
+  .aotc-panel{
+    position:absolute; top:calc(100% + 12px); bottom:auto; left:auto; right:0;
+    width:min(94vw,420px); grid-template-columns:1fr; border-radius:8px;
+    max-height:min(72vh,560px); overflow:auto;
+  }
+  .aotc-col{padding:18px 18px 16px}
+  .aotc-col + .aotc-col{border-left:0;border-top:1px solid rgba(255,255,255,.07)}
+  .aotc-col.wide{border-top:1px solid rgba(255,255,255,.07)}
+  a.aotc-item{font-size:20px;padding:11px 12px;min-height:44px;align-items:center}
+  a.aotc-chip{padding:10px 13px}
+  a.aotc-book{min-height:48px}
+}
+@media(prefers-reduced-motion:reduce){
+  .aotc-panel,.aotc-tab,.aotc-bars i,a.aotc-item{transition-duration:.01ms}
+}
+
+/* ---- very narrow phones: keep the tab + phone chip on one row ---- */
+@media(max-width:430px){
+  .nav-links.aotc-host{gap:7px}
+  .aotc-nav{gap:7px}
+  .aotc-tab{height:42px;padding:0 12px 0 11px;gap:8px}
+  .aotc-lab b{font-size:15px;letter-spacing:.05em}
+  .aotc-lab i{display:none}
+  .aotc-lab{padding-bottom:0}
+  .aotc-tab::after{bottom:4px;left:9px;right:9px}
+  a.aotc-call{height:42px;padding:0 11px}
+}
+@media(max-width:400px){
+  .aotc-panel{width:calc(100vw - 20px);right:-6px}
+}
+
+</style>
+
+
+<style>
+  :root{--red:#d9000d;--red2:#ff1520;--gold:#ffd23f;--ink:#08080a;--line:rgba(255,255,255,.1);
+    --fh:"Barlow Condensed",Impact,sans-serif;--fd:"Anton",Impact,sans-serif;--fb:"Barlow",system-ui,sans-serif;--fm:"IBM Plex Mono",monospace}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;scroll-padding-top:80px}
+  body{background:var(--ink);color:#e8e4dc;font-family:var(--fb);-webkit-font-smoothing:antialiased;overflow-x:hidden;
+    transition:background .6s ease}
+  a{color:var(--red2);text-decoration:none}
+  a:hover{color:#fff}
+  button,input,select,textarea{font:inherit}
+  button{cursor:pointer}
+  img{display:block;max-width:100%}
+  ::selection{background:var(--red);color:#fff}
+  .wrap{width:min(1040px,calc(100% - 40px));margin:0 auto}
+
+  .nav{position:sticky;top:0;z-index:99999;background:rgba(8,8,10,.93);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .nav-in{height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,4vw,40px)}
+  .brand{display:flex;align-items:center;gap:11px}
+  .brand span.m{width:40px;height:40px;background:#f4f1ea;border-radius:6px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .brand span.m img{width:100%;height:100%;object-fit:contain;padding:2px}
+  .brand strong{font-family:var(--fh);font-weight:800;font-size:17px;letter-spacing:.02em;text-transform:uppercase;color:#fff;line-height:1;display:block}
+  .brand small{display:block;font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:#8b847a;margin-top:3px}
+  .nav-links{display:flex;align-items:center;gap:clamp(14px,2.2vw,26px)}
+  .staff{font-family:var(--fm);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#ffd23f;
+    border:1px solid rgba(255,210,63,.4);border-radius:3px;padding:6px 10px;background:rgba(255,210,63,.08)}
+
+  .hd{border-bottom:1px solid var(--line);padding:clamp(26px,4.4vw,46px) 0 clamp(20px,3vw,32px);
+    background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(217,0,13,.16),transparent 62%),linear-gradient(180deg,#121014,#08080a)}
+  .kick{display:inline-flex;align-items:center;gap:10px;font-family:var(--fm);font-size:10.5px;letter-spacing:.27em;text-transform:uppercase;color:var(--red2);margin-bottom:14px}
+  .kick:before{content:"";width:24px;height:1px;background:var(--red)}
+  h1{font-family:var(--fd);font-weight:400;text-transform:uppercase;line-height:.9;letter-spacing:.4px;font-size:clamp(30px,5.4vw,60px);color:#fff;margin-bottom:12px}
+  h1 em{font-style:normal;color:var(--red2)}
+  .hd p{max-width:74ch;font-size:clamp(13.5px,1.4vw,16px);line-height:1.6;color:#c9c3b9;text-wrap:pretty}
+
+  section.blk{border-bottom:1px solid var(--line);padding:clamp(28px,4.2vw,54px) 0}
+  .sn{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+  .sn b{font-family:var(--fd);font-size:clamp(22px,3vw,32px);color:rgba(255,21,32,.3);line-height:1}
+  .sn span{font-family:var(--fm);font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--red2)}
+  h2{font-family:var(--fh);font-weight:800;text-transform:uppercase;line-height:.98;font-size:clamp(24px,3.6vw,40px);color:#fff;margin-bottom:12px;max-width:28ch}
+  .lead{max-width:74ch;font-size:clamp(13.5px,1.35vw,16px);line-height:1.6;color:#c9c3b9;margin-bottom:24px;text-wrap:pretty}
+  .lead b{color:#fff}
+
+  /* ---------- contact ---------- */
+  .fields{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:820px}
+  .f-full{grid-column:1/-1}
+  label.fl{display:block;font-family:var(--fm);font-size:9.5px;letter-spacing:.17em;text-transform:uppercase;color:#8b847a;margin-bottom:7px}
+  label.fl i{font-style:normal;color:var(--red2)}
+  input[type=text],input[type=email],input[type=tel],select,textarea{width:100%;background:rgba(255,255,255,.05);
+    border:1px solid var(--line);border-radius:4px;color:#fff;padding:13px 14px;font-size:15px;transition:border-color .18s,background .18s}
+  input:focus,select:focus,textarea:focus{outline:0;border-color:rgba(255,21,32,.66);background:rgba(255,255,255,.08)}
+  select option{background:#141317;color:#fff}
+  textarea{min-height:92px;resize:vertical;line-height:1.5}
+
+  /* ---------- service table ---------- */
+  .tbl{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:5px;overflow:hidden;
+    background:rgba(255,255,255,.025)}
+  .tbl caption{caption-side:top;text-align:left;font-family:var(--fm);font-size:9.5px;letter-spacing:.18em;
+    text-transform:uppercase;color:#8b847a;padding-bottom:11px;line-height:1.7}
+  .tbl caption b{color:var(--gold)}
+  .tbl th,.tbl td{text-align:left;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.07);vertical-align:top}
+  .tbl tr:last-child th,.tbl tr:last-child td{border-bottom:0}
+  .tbl th{width:32%;font-family:var(--fh);font-weight:800;text-transform:uppercase;letter-spacing:.02em;
+    font-size:15px;color:#fff;background:rgba(255,255,255,.03);white-space:nowrap}
+  .tbl th span{display:block;font-family:var(--fm);font-weight:400;font-size:9px;letter-spacing:.14em;color:#7d776f;margin-top:4px}
+  .tbl td{font-size:14px;line-height:1.55;color:#c2bcb2;text-wrap:pretty}
+  .tbl td b{color:#fff;font-weight:600}
+  .tbl td em{font-style:normal;color:var(--gold)}
+  .tbl tr:nth-child(even) td,.tbl tr:nth-child(even) th{background:rgba(255,255,255,.014)}
+
+  /* ---------- budget ---------- */
+  .quote{display:grid;grid-template-columns:1.02fr .98fr;gap:16px;margin-bottom:20px}
+  .qbox{border:1px solid var(--line);border-radius:5px;background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.015));padding:clamp(18px,2.4vw,26px);transition:border-color .5s,background .5s}
+  .qbox.hero{border-left:3px solid var(--red)}
+  #goldBadge{display:inline-block;font-family:var(--fm);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:#241a00;background:var(--gold);border-radius:3px;padding:6px 10px;margin-bottom:12px}
+  .qtag{font-family:var(--fm);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#8b847a;margin-bottom:10px}
+  .qpkg{font-family:var(--fh);font-weight:800;text-transform:uppercase;font-size:clamp(18px,2.2vw,24px);color:#fff;letter-spacing:.01em;margin-bottom:6px}
+  .qprice{font-family:var(--fd);font-size:clamp(42px,7vw,76px);line-height:.84;color:#fff;letter-spacing:.5px}
+  .qprice span{color:var(--red2);font-size:.42em;letter-spacing:.02em}
+  .qper{font-family:var(--fh);font-weight:800;text-transform:uppercase;font-size:clamp(16px,1.9vw,21px);color:var(--gold);margin-top:12px}
+  .qsub{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:14px;font-family:var(--fm);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#8b847a}
+  .qsub b{color:#fff;font-weight:500}
+  .qdesc{font-size:14px;line-height:1.6;color:#c2bcb2;text-wrap:pretty}
+  .qdesc b{color:#fff}
+  .qexcl{margin-top:14px;display:flex;flex-direction:column;gap:7px}
+  .qexcl i{font-style:normal;position:relative;padding-left:17px;font-size:13px;line-height:1.45;color:#cdc7bd}
+  .qexcl i:before{content:"";position:absolute;left:0;top:6px;width:6px;height:6px;border-radius:50%;background:var(--red)}
+
+  .sl-wrap{border:1px solid var(--line);border-radius:5px;background:rgba(255,255,255,.03);padding:clamp(16px,2.2vw,24px)}
+  .sl-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-family:var(--fm);font-size:10px;letter-spacing:.17em;text-transform:uppercase;color:#8b847a;margin-bottom:14px}
+  .sl-top b{color:#fff;font-weight:500}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:34px;background:transparent;cursor:grab}
+  input[type=range]:active{cursor:grabbing}
+  input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;background:linear-gradient(90deg,#4a1216,#d9000d 74%,#ffd23f);border:1px solid rgba(255,255,255,.13)}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;margin-top:-10px;border-radius:5px;
+    background:linear-gradient(#fff,#cfc9bf);border:1px solid #6b665e;box-shadow:0 3px 0 rgba(0,0,0,.55),0 6px 16px rgba(0,0,0,.5)}
+  input[type=range]::-moz-range-track{height:8px;border-radius:4px;background:linear-gradient(90deg,#4a1216,#d9000d 74%,#ffd23f);border:1px solid rgba(255,255,255,.13)}
+  input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:5px;background:linear-gradient(#fff,#cfc9bf);border:1px solid #6b665e}
+  input[type=range]:focus-visible{outline:2px solid var(--red2);outline-offset:6px}
+  .sl-ticks{display:flex;justify-content:space-between;font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#6f6a62;margin-top:2px}
+  .tick-ult{color:var(--gold)}
+
+  /* ---------- gold / exclusive ---------- */
+  body.gold{background:#120d02}
+  body.gold .qbox.hero{border-left-color:var(--gold);background:linear-gradient(160deg,rgba(255,210,63,.14),rgba(255,210,63,.03))}
+  body.gold .qprice span,body.gold .sn span,body.gold .kick{color:var(--gold)}
+  body.gold .qper{color:#fff}
+  body.gold input[type=range]::-webkit-slider-runnable-track{background:linear-gradient(90deg,#4a3a02,#d99b00 70%,#ffe98a)}
+  body.gold input[type=range]::-moz-range-track{background:linear-gradient(90deg,#4a3a02,#d99b00 70%,#ffe98a)}
+  body.gold input[type=range]::-webkit-slider-thumb{background:radial-gradient(circle at 34% 28%,#fff8d8,#ffd23f 46%,#c08e00);
+    border-color:#8a6200;border-radius:50%;box-shadow:0 0 24px rgba(255,210,63,.85),0 3px 0 rgba(0,0,0,.5);
+    clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+  body.gold input[type=range]::-moz-range-thumb{background:radial-gradient(circle at 34% 28%,#fff8d8,#ffd23f 46%,#c08e00);
+    border-color:#8a6200;clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+  body.gold .qexcl i:before{background:var(--gold)}
+  body.gold .recap{border-left-color:var(--gold)}
+  body.gold .day.start{background:#c08e00;border-color:var(--gold);box-shadow:0 0 18px rgba(255,210,63,.5)}
+  body.gold .day.span{background:rgba(255,210,63,.24);border-color:rgba(255,210,63,.36)}
+  body.gold .day.end{background:rgba(255,210,63,.46);border-color:var(--gold)}
+  body.gold .send{background:linear-gradient(#ffd23f,#c08e00);color:#241a00;box-shadow:0 5px 0 #6b4d00,0 10px 22px rgba(0,0,0,.5)}
+
+  /* ---------- calendar ---------- */
+  .cal-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:16px}
+  .cal{border:1px solid var(--line);border-radius:5px;background:rgba(255,255,255,.03);padding:clamp(16px,2.2vw,22px)}
+  .cal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .cal-hd strong{font-family:var(--fh);font-weight:800;text-transform:uppercase;font-size:19px;color:#fff;letter-spacing:.02em}
+  .cal-nav{display:flex;gap:6px}
+  .cal-nav button{width:32px;height:32px;border:1px solid var(--line);background:transparent;color:#cdc7bd;border-radius:4px;font-size:14px;transition:all .18s}
+  .cal-nav button:hover:not([disabled]){border-color:rgba(255,255,255,.4);color:#fff;background:rgba(255,255,255,.06)}
+  .cal-nav button[disabled]{opacity:.28;cursor:not-allowed}
+  .dow{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px}
+  .dow span{text-align:center;font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#6f6a62}
+  .days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+  .day{aspect-ratio:1;min-height:38px;border:1px solid var(--line);background:rgba(255,255,255,.02);color:#cdc7bd;border-radius:4px;
+    font-family:var(--fm);font-size:12.5px;display:flex;align-items:center;justify-content:center;transition:all .16s}
+  .day:hover:not([disabled]){border-color:rgba(255,21,32,.6);color:#fff;background:rgba(217,0,13,.16)}
+  .day[disabled]{opacity:.22;cursor:not-allowed}
+  .day.pad{border:0;background:transparent;pointer-events:none}
+  .day.start{background:var(--red);border-color:var(--red2);color:#fff;font-weight:600;box-shadow:0 0 18px rgba(217,0,13,.5)}
+  .day.span{background:rgba(217,0,13,.26);border-color:rgba(255,21,32,.36);color:#fff}
+  .day.end{background:rgba(217,0,13,.5);border-color:var(--red2);color:#fff}
+  .cal-note{margin-top:12px;font-family:var(--fm);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#6f6a62;line-height:1.7}
+
+  .recap{border:1px solid var(--line);border-left:3px solid var(--red);border-radius:5px;background:rgba(255,255,255,.03);padding:clamp(18px,2.2vw,24px);align-self:start;transition:border-color .5s}
+  .rrow{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:13.5px}
+  .rrow:last-child{border-bottom:0}
+  .rrow span{font-family:var(--fm);font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;color:#8b847a;flex:0 0 auto;padding-top:3px}
+  .rrow b{color:#fff;text-align:right;font-weight:600}
+  .tsel{margin-top:16px}
+  .auto{margin-top:12px;font-family:var(--fm);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);line-height:1.6}
+
+  /* ---------- submit ---------- */
+  .submit-bar{display:flex;flex-wrap:wrap;align-items:center;gap:16px;padding:clamp(26px,4vw,44px) 0}
+  .send{font-family:var(--fh);font-weight:800;text-transform:uppercase;letter-spacing:.05em;font-size:clamp(16px,1.9vw,20px);
+    padding:17px 40px;border:0;border-radius:4px;color:#fff;background:linear-gradient(var(--red2),#a80009);
+    box-shadow:0 5px 0 #6d0006,0 10px 22px rgba(0,0,0,.5);transition:transform .09s,box-shadow .09s,filter .2s}
+  .send:hover:not([disabled]){filter:brightness(1.08)}
+  .send:active:not([disabled]){transform:translateY(5px);box-shadow:0 0 0 #6d0006,0 4px 10px rgba(0,0,0,.5)}
+  .send[disabled]{background:#2a282c;color:#6f6a62;box-shadow:none;cursor:not-allowed;filter:none}
+  .send-note{font-family:var(--fm);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#7d776f;line-height:1.8}
+  .send-note b{color:#cdc7bd;font-weight:500}
+
+  /* ---------- confirmation ---------- */
+  .ty{position:fixed;inset:0;z-index:2147483000;display:none;align-items:center;justify-content:center;padding:24px;
+    background:rgba(5,5,7,.94);backdrop-filter:blur(10px)}
+  .ty.on{display:flex}
+  .ty-in{max-width:620px;background:linear-gradient(168deg,#15131a,#0b0a0d);border:1px solid rgba(255,255,255,.14);
+    border-left:3px solid var(--gold);border-radius:5px;padding:clamp(24px,3.6vw,38px);
+    animation:rise .5s cubic-bezier(.2,.8,.25,1) both}
+  @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+  .ty-in .k{font-family:var(--fm);font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:#8fd08f;margin-bottom:12px}
+  .ty h3{font-family:var(--fd);text-transform:uppercase;font-size:clamp(26px,4.4vw,42px);line-height:.92;color:#fff;margin-bottom:16px}
+  .ty h3 em{font-style:normal;color:var(--gold)}
+  .ty ol{list-style:none;counter-reset:t;display:flex;flex-direction:column;gap:14px;margin-bottom:22px}
+  .ty li{counter-increment:t;position:relative;padding-left:38px;font-size:14.5px;line-height:1.55;color:#cdc7bd;text-wrap:pretty}
+  .ty li:before{content:counter(t);position:absolute;left:0;top:-1px;width:26px;height:26px;border-radius:3px;
+    display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:14px;color:#241a00;background:var(--gold)}
+  .ty li b{color:#fff}
+  .ty-acts{display:flex;flex-wrap:wrap;gap:10px}
+  .ty-acts a,.ty-acts button{font-family:var(--fh);font-weight:800;text-transform:uppercase;letter-spacing:.04em;font-size:15px;
+    padding:13px 22px;border-radius:4px;border:1px solid rgba(255,255,255,.2);background:transparent;color:#e8e4dc;transition:all .18s}
+  .ty-acts a.p{background:linear-gradient(var(--red2),#a80009);border-color:transparent;color:#fff}
+  .ty-acts a:hover,.ty-acts button:hover{border-color:#fff;color:#fff}
+
+  .foot{padding:24px 0;text-align:center;font-family:var(--fm);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#6f6a62;line-height:1.9}
+
+  @media(max-width:900px){
+    .quote,.cal-grid,.fields{grid-template-columns:1fr}
+    .tbl th{width:38%;white-space:normal}
+  }
+  @media(max-width:620px){
+    .brand small{display:none}
+    .qprice{font-size:clamp(38px,13vw,54px)}
+    .day{min-height:34px}
+    .tbl,.tbl tbody,.tbl tr,.tbl th,.tbl td{display:block;width:100%}
+    .tbl tr{border-bottom:1px solid rgba(255,255,255,.09)}
+    .tbl th{border-bottom:0;padding-bottom:4px;white-space:normal}
+    .tbl td{padding-top:0}
+    .send{width:100%}
+  }
+</style>
+<style>
+/* AOTC — shared responsive safety net.
+   Loaded last on every page. Fixes the small-screen issues that recur across
+   pages without touching each page's own layout rules. */
+
+/* 1. never allow sideways scroll, and stop iOS inflating text on rotate */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html,body{max-width:100%;overflow-x:clip}
+
+/* 2. media and embeds must never exceed their column */
+img,video,iframe,canvas,svg,table{max-width:100%}
+img,video{height:auto}
+
+/* 3. long unbroken strings (emails, URLs, GPS strings) must wrap */
+p,li,td,th,dd,dt,figcaption,blockquote,h1,h2,h3,h4,h5,h6{overflow-wrap:break-word}
+
+/* 4. respect the notch / home indicator on phones */
+@supports(padding:max(0px)){
+  body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+}
+
+/* 5. touch targets: anything tappable gets a real hit area on phones */
+@media(hover:none) and (pointer:coarse){
+  a[href^="tel"],a[href^="sms"],a[href^="mailto"],button,input[type="button"],input[type="submit"],
+  .btn,.go,.send,.chip,.day,.cal-nav button{min-height:44px}
+  .day{min-height:42px}
+}
+
+/* 6. inputs must not zoom the viewport on iOS (needs >=16px) */
+@media(max-width:768px){
+  input[type="text"],input[type="email"],input[type="tel"],input[type="password"],
+  input[type="search"],input[type="number"],select,textarea{font-size:16px}
+}
+
+/* 7. tiny phones: give every page's gutter a floor and pull display type in */
+@media(max-width:400px){
+  .wrap,.narrow,.pw{width:calc(100% - 26px)!important}
+}
+@media(max-width:360px){
+  h1{font-size:clamp(28px,10vw,40px)!important}
+}
+
+/* 8. landscape phones: stop full-height heroes from swallowing the screen */
+@media(max-height:520px) and (orientation:landscape){
+  .lp-hero,.hero,.ph{min-height:0!important}
+}
+
+/* 9. print: never carry the dark canvas onto paper */
+@media print{
+  html,body{background:#fff!important;overflow:visible!important}
+}
+
+</style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-in">
+      <a class="brand" href="index.html" aria-label="AOTC home"><span class="m"><img src="AOTC_Infinity_assets/aotc_final.gif" alt="AOTC" /></span><span><strong>AOTC</strong><small>Sales Console</small></span></a>
+      <span class="nav-links aotc-host">
+        <span class="staff">Internal &mdash; staff only</span>
+        <div class="aotc-nav">
+          <button class="aotc-tab" type="button" aria-label="Open menu" aria-expanded="false" aria-haspopup="true" aria-controls="aotcPanel">
+            <span class="aotc-bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="aotc-lab"><b>Got Ads?</b><i>We do &mdash; look inside</i></span>
+          </button>
+          <a class="aotc-call" href="sms:+17737081400?&amp;body=LET%27S%20MAKE%20MONEY" aria-label="Text AOTC"><span>(773) 708-1400</span></a>
+          <button class="aotc-scrim" type="button" tabindex="-1" aria-hidden="true"></button>
+          <div class="aotc-panel" id="aotcPanel" role="menu" aria-label="Site menu">
+            <div class="aotc-col">
+              <p class="aotc-h">Explore</p>
+              <div class="aotc-list">
+                <a class="aotc-item" href="index.html" role="menuitem">Home<span class="d">Start here</span></a>
+                <a class="aotc-item" href="proof.html" role="menuitem">Proof<span class="d">13 case studies</span></a>
+                <a class="aotc-item" href="faq.html" role="menuitem">FAQ<span class="d">16 answers</span></a>
+                <a class="aotc-item" href="disclosures.html" role="menuitem">Disclosures<span class="d">Legal</span></a>
+              </div>
+            </div>
+            <div class="aotc-col">
+              <p class="aotc-h">Promos</p>
+              <div class="aotc-list">
+                <a class="aotc-item" href="https://www.instagram.com/reel/Da8ZqD-v0Mo/?utm_source=ig_web_button_share_sheet&amp;igsh=MzRlODBiNWFlZA==" target="_blank" rel="noopener" role="menuitem">GTA 6 Giveaway<span class="d">Watch the reel</span></a>
+              </div>
+              <p class="aotc-h" style="margin-top:18px">Contact Us</p>
+              <div class="aotc-list">
+                <a class="aotc-item" href="sms:+17737081400?&amp;body=LET%27S%20MAKE%20MONEY" role="menuitem">Text 24/7<span class="d">(773) 708-1400</span></a>
+                <a class="aotc-item" href="mailto:info@adsofthecentury.net" role="menuitem">Email 24/7<span class="d">info@adsofthecentury.net</span></a>
+              </div>
+            </div>
+            <div class="aotc-col wide">
+              <p class="aotc-h">Follow</p>
+              <div class="aotc-social">
+                <a class="aotc-chip" href="https://www.instagram.com/aotc.media/" target="_blank" rel="noopener">Instagram</a>
+                <a class="aotc-chip" href="https://www.facebook.com/profile.php?id=61591701875497" target="_blank" rel="noopener">Facebook</a>
+                <a class="aotc-chip" href="https://www.threads.com/@aotc.media" target="_blank" rel="noopener">Threads</a>
+                <a class="aotc-chip" href="https://linkedin.com/company/advertisements-of-the-century" target="_blank" rel="noopener">LinkedIn</a>
+                <a class="aotc-chip" href="https://www.tiktok.com/@adsofthecentury" target="_blank" rel="noopener">TikTok</a>
+                <a class="aotc-chip" href="https://linktr.ee/AOTC" target="_blank" rel="noopener">Linktree</a>
+              </div>
+              <a class="aotc-book" href="sms:+17737081400?&amp;body=LET%27S%20MAKE%20MONEY" role="menuitem">Book a campaign &rarr;</a>
+            </div>
+          </div>
+        </div>
+      </span>
+    </div>
+  </nav>
+
+  <header class="hd">
+    <div class="wrap">
+      <span class="kick">Route booking &mdash; sales console</span>
+      <h1>Build the deal <em>on the call.</em></h1>
+      <p>Fill this in while you have the client on the line. Everything below scrolls freely, the quote updates live as you move the slider, and the whole record emails to <b>info@adsofthecentury.net</b> the moment you submit.</p>
+    </div>
+  </header>
+
+  <!-- 01 CONTACT -->
+  <section class="blk">
+    <div class="wrap">
+      <div class="sn"><b>01</b><span>Client contact</span></div>
+      <h2>Who is on the phone?</h2>
+      <p class="lead">Name, company, email, and phone are required. Everything else helps whoever picks this up next.</p>
+      <div class="fields">
+        <div><label class="fl" for="fName">Name <i>*</i></label><input type="text" id="fName" autocomplete="name" placeholder="First and last" /></div>
+        <div><label class="fl" for="fCo">Company / Organization <i>*</i></label><input type="text" id="fCo" autocomplete="organization" placeholder="Business, union, campaign, venue" /></div>
+        <div><label class="fl" for="fEmail">Email <i>*</i></label><input type="email" id="fEmail" autocomplete="email" placeholder="client@company.com" /></div>
+        <div><label class="fl" for="fPhone">Phone <i>*</i></label><input type="tel" id="fPhone" autocomplete="tel" placeholder="(773) 000-0000" /></div>
+        <div><label class="fl" for="fRep">AOTC rep on the call</label><input type="text" id="fRep" placeholder="Your name" /></div>
+        <div><label class="fl" for="fIndustry">Client industry</label><input type="text" id="fIndustry" placeholder="For industry exclusivity check" /></div>
+        <div class="f-full"><label class="fl" for="fNotes">Call notes &mdash; objective, target audience, route ideas, creative status</label><textarea id="fNotes" placeholder="What are they trying to accomplish? Who are they trying to reach? Any route or placement they named? Do they have creative already?"></textarea></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 WHAT'S INCLUDED -->
+  <section class="blk">
+    <div class="wrap">
+      <div class="sn"><b>02</b><span>What they get</span></div>
+      <h2>Included in every service.</h2>
+      <p class="lead">Read from this on the call. These terms apply to all standard route bookings &mdash; <b>Exclusive Coverage and Private Events are quoted separately</b> and are not bound by the rotation, SOV, or RPM figures below.</p>
+      <table class="tbl">
+        <caption>Standard route inclusions &middot; <b>Exclusive Coverage &amp; Private Events excluded</b></caption>
+        <tbody>
+          <tr><th>Route<span>Coverage area</span></th><td>Single market with district rotation &mdash; <b>determine the route with the client</b>. Check the <em>Route Coverage PDF</em> for current route activations before committing.</td></tr>
+          <tr><th>Prioritized Premium Placement<span>Positioning</span></th><td>Included. <b>We optimize for the client's target audience</b> &mdash; ask who they are trying to reach before you promise a corner.</td></tr>
+          <tr><th>Share Of Voice<span>SOV</span></th><td>Varies &mdash; <b>100% maximum, ~15% minimum</b>. Longer runs and fewer co-riders push it up; a full rotation pushes it toward the floor.</td></tr>
+          <tr><th>Rotations Per Minute<span>RPM</span></th><td>Varies &mdash; <b>6 maximum, 1 minimum</b>, driven by how many companies share the rotation.</td></tr>
+          <tr><th>Display Rotation<span>Loop structure</span></th><td>Balanced content rotation &mdash; <b>10-second rotations, up to 6 companies per route</b>. Nobody is buried at the back of the loop.</td></tr>
+          <tr><th>Industry Exclusivity<span>Competitive protection</span></th><td><b>Guaranteed.</b> No competing companies within the rotation &mdash; their category is theirs for the run.</td></tr>
+          <tr><th>Display<span>Hardware</span></th><td><b>4 LED billboards with full-motion</b> capability.</td></tr>
+          <tr><th>Sound<span>Audio</span></th><td>Sound is available and <b>turns the ad into a mobile commercial</b>. Note clearly: <em>AOTC does not provide audio</em> &mdash; the client supplies it.</td></tr>
+          <tr><th>Proof of Performance<span>Reporting</span></th><td>Start &amp; end of service notice, <b>GPS-verified route</b>, and frequent content coverage throughout the run.</td></tr>
+          <tr><th>Creative Design Fee<span>Production</span></th><td><b>Still images included</b> in the cost. Motion content design is <em>$150</em>.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 03 BUDGET -->
+  <section class="blk">
+    <div class="wrap">
+      <div class="sn"><b>03</b><span>Length &amp; investment</span></div>
+      <h2>Move the slider while they talk.</h2>
+      <p class="lead">Every stop is a real, bookable price &mdash; two hours to a full-month exclusive. The date panel below updates itself as you move.</p>
+
+      <div class="quote">
+        <div class="qbox hero">
+          <div id="goldBadge" hidden><b>&#9733; Ultimate unlocked</b> &mdash; the truck is theirs alone</div>
+          <div class="qtag" id="qTag">Rate</div>
+          <div class="qpkg" id="qPkg">The Month</div>
+          <div class="qprice" id="qPrice">$50<span>/HR</span></div>
+          <div class="qper" id="qPer">$400 per day</div>
+          <div class="qsub"><span>Total <b id="qTotal">$12,000</b></span><span><b id="qDays">30 days</b></span><span><b id="qHours">240 service hours</b></span></div>
+        </div>
+        <div class="qbox">
+          <div class="qtag">Talk track</div>
+          <p class="qdesc" id="qDesc"></p>
+          <div class="qexcl" id="qExcl" hidden>
+            <i>100% share of voice &mdash; the truck comes off the market for their month</i>
+            <i>Their route, drawn to their objective, premium placement at every stop</i>
+            <i>Unlimited creative changes, same day, as many times as they want</i>
+            <i>All 213 square feet answering only to them</i>
+          </div>
+        </div>
+      </div>
+
+      <div class="sl-wrap">
+        <div class="sl-top"><span>Length of service &mdash; <b id="qDays2">30 days</b></span><span>Drag, scroll, or use arrow keys</span></div>
+        <input type="range" id="slider" min="1" max="37" step="1" value="36" aria-label="Length of service" aria-describedby="qDesc" />
+        <div class="sl-ticks"><span>2 hrs</span><span>1 day</span><span>3</span><span>7</span><span>14</span><span>21</span><span>30 days</span><span class="tick-ult">&#9733;</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 DATES -->
+  <section class="blk">
+    <div class="wrap">
+      <div class="sn"><b>04</b><span>Dates of service</span></div>
+      <h2>When does it roll?</h2>
+      <p class="lead" id="s2lead">Pick the first day of service. The last day sets itself from the length above.</p>
+
+      <div class="cal-grid">
+        <div class="cal">
+          <div class="cal-hd">
+            <strong id="calTitle">Month</strong>
+            <div class="cal-nav"><button type="button" id="calPrev" aria-label="Previous month">&#9664;</button><button type="button" id="calNext" aria-label="Next month">&#9654;</button></div>
+          </div>
+          <div class="dow"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div>
+          <div class="days" id="calDays"></div>
+          <div class="cal-note">Minimum 3 days lead time for creative and routing &middot; Rush dates: confirm with dispatch</div>
+        </div>
+
+        <div class="recap">
+          <div class="qtag" style="margin-bottom:4px">Investment overview</div>
+          <div class="rrow"><span>Package</span><b id="r2Pkg">&mdash;</b></div>
+          <div class="rrow"><span>Investment</span><b id="r2Price">&mdash;</b></div>
+          <div class="rrow"><span>Rate</span><b id="r2Rate">&mdash;</b></div>
+          <div class="rrow"><span>Service hours</span><b id="r2Hours">&mdash;</b></div>
+          <div class="rrow"><span>First day</span><b id="r2Start">Select a date</b></div>
+          <div class="rrow"><span>Last day</span><b id="r2End">&mdash;</b></div>
+          <div class="tsel" id="timeSel" hidden>
+            <label class="fl" for="startTime">Start time on route</label>
+            <select id="startTime"></select>
+            <div class="auto" id="autoEnd"></div>
+          </div>
+          <div class="auto" id="autoSpan" hidden></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap submit-bar">
+    <button class="send" type="button" id="send" disabled>Submit booking</button>
+    <div class="send-note" id="sendNote"><b>Required:</b> name, company, email, phone, and a first day of service</div>
+  </div>
+
+  <div class="foot">AOTC &mdash; Ads of the Century &middot; Internal sales console &middot; Not for client distribution</div>
+
+  <div class="ty" id="ty" role="alertdialog" aria-live="polite">
+    <div class="ty-in">
+      <p class="k">&#10003; Submitted to info@adsofthecentury.net</p>
+      <h3>Booking sent. <em>Three things, now.</em></h3>
+      <ol>
+        <li><b>Email the client for creative.</b> Ask them to reply with their files &mdash; MP4, MOV, JPG, PNG, PDF, AI, PSD, whatever they have.</li>
+        <li><b>No creative yet? Get their ideas in writing.</b> A paragraph on what they want the screen to say is enough to start production the same day. Do not hang up without one or the other.</li>
+        <li><b>Call the CEO to confirm this submission.</b> The booking is not confirmed until that call happens.</li>
+      </ol>
+      <div class="ty-acts">
+        <a class="p" id="tyMail" href="#">Email the client now</a>
+        <a href="tel:+17737081400">Call CEO</a>
+        <button type="button" id="tyClose">Start another booking</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  /* ================= pricing ================= */
+  /* stops 1-7 = 2..8 service hours in a single day \u00b7 stops 8-36 = 2..30 days \u00b7 stop 37 = exclusive */
+  var HR=[0,0,150,140,130,120,110,105,100];
+  var ANCH=[[1,800],[2,1300],[3,1600],[7,3400],[14,6600],[30,12000]];
+  function hpd(){ return 8; }
+  function priceFor(d){
+    if(d>=28) return d*8*50;
+    for(var i=0;i<ANCH.length-1;i++){
+      var a=ANCH[i],c=ANCH[i+1];
+      if(d>=a[0]&&d<=c[0]){
+        var t=(d-a[0])/(c[0]-a[0]);
+        return Math.round((a[1]+(c[1]-a[1])*t)/50)*50;
+      }
+    }
+    return ANCH[ANCH.length-1][1];
+  }
+  function money(n){ return "$"+n.toLocaleString("en-US"); }
+  function model(v){
+    if(v<=7){
+      var hrs=v+1;
+      return {mode:"hour",days:1,hours:hrs,hpd:hrs,price:Math.round(hrs*HR[hrs]/5)*5,pkg:hrs+" Hours \u2014 Single Day"};
+    }
+    if(v>=37) return {mode:"ult",days:30,hours:240,hpd:8,price:36000,pkg:"The Ultimate \u2014 Exclusive Month"};
+    var d=v-6, h=d*hpd();
+    var nm = d===3?"The 3-Day":(d===7?"The Week":(d===30?"The Month":
+      (d<=7?d+"-Day Run":(d<=20?d+"-Day Flight":d+"-Day Presence"))));
+    return {mode:"day",days:d,hours:h,hpd:hpd(),price:priceFor(d),pkg:nm};
+  }
+  function descFor(m,rate){
+    if(m.mode==="ult") return "Thirty-six thousand takes the truck <b>off the market</b>. Nobody books around them, nobody shares a frame, and for a full month all 213 square feet answer only to their objective. Their route. Premium placement at every stop. Unlimited same-day creative changes. This is what we build when the goal is to <b>own a market outright</b>, not to appear in it.";
+    if(m.mode==="hour"){
+      if(m.hours<=3) return m.hours+" hours is a <b>strike, not a campaign</b> \u2014 right for one thing: parked where a crowd already is, at the hour it peaks. A gate, a game let-out, a ribbon cutting. Be clear-eyed about the ceiling. Every hour added costs less than the one before it.";
+      if(m.hours>=6) return m.hours+" hours is a <b>full working day on the street</b> \u2014 morning commute, lunch rush, school pickup, and drive home in one shift. Rate is down to "+money(HR[m.hours])+" an hour, and a full eight-hour day lands at <b>$800 flat</b>. The honest floor for a single-day event, and where a second day starts paying for itself.";
+      return m.hours+" hours covers a real slice of somebody\u2019s day \u2014 a lunch rush into an afternoon, or a whole evening on one strip. "+money(HR[m.hours])+" an hour and falling. <b>A full eight-hour day is $800</b> \u2014 $100 an hour \u2014 and it turns a moment into a day.";
+    }
+    var d=m.days;
+    if(d>=28) return "The number the whole offer is built around: <b>"+money(rate)+" an hour</b>, "+money(Math.round(m.price/d))+" a day. At this length they stop advertising to a market and become part of it \u2014 eight hours a day, "+d+" days, hundreds of miles of street. Clients who run this long stop describing results in impressions and start describing them in phone calls.";
+    if(d>=21) return "At "+d+" days they are a fixture, and the rate is down to <b>"+money(rate)+" an hour</b> \u2014 the lowest tier before the exclusive. Long enough to rotate creative, long enough for people to expect them on their block.";
+    if(d>=8) return "At "+d+" days they are no longer an event, they are part of the landscape. Long enough for recognition to compound and to change creative mid-flight. <b>\u201cI keep seeing your truck everywhere\u201d</b> starts showing up around here. "+money(rate)+" an hour.";
+    if(d>=4) return "A "+d+"-day run catches the same neighborhood at every hour of its day. Rate is "+money(rate)+" an hour and recall is climbing at the same time. <b>The shortest run where clients stop asking whether anyone saw it.</b>";
+    if(d>=2) return "Two or three days is where recognition actually begins. The same commuters pass twice, the same block sees them at two different hours, and <b>it is the second sighting that sticks</b>. The smallest run we would honestly call a campaign.";
+    return "Eight hundred buys eight hours and one shot \u2014 genuinely right for a moment: a grand opening, a game day, a festival gate. Be straight about the ceiling. If being <b>known</b> is the objective, keep moving the slider.";
+  }
+
+  var slider=document.getElementById("slider");
+  var state={days:30,price:12000,hours:240,rate:50,hpd:8,mode:"day",pkg:"The Month",
+             start:null,end:null,startTime:null,endTime:null};
+
+  var MN=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var today=new Date(); today.setHours(0,0,0,0);
+  var minDate=new Date(today.getTime()); minDate.setDate(minDate.getDate()+3);
+  var view=new Date(minDate.getFullYear(),minDate.getMonth(),1);
+  var pick=null;
+
+  function fmt(dt){ return dt.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"}); }
+  function endOf(s){ var e=new Date(s.getTime()); e.setDate(e.getDate()+state.days-1); return e; }
+  function label(mins){
+    var h=Math.floor(mins/60)%24, mm=mins%60;
+    var ap=h>=12?"PM":"AM", hh=h%12; if(hh===0) hh=12;
+    return hh+":"+(mm<10?"0":"")+mm+" "+ap;
+  }
+
+  function paint(){
+    var v=parseInt(slider.value,10), m=model(v), r=Math.round(m.price/m.hours);
+    state.days=m.days; state.price=m.price; state.hours=m.hours; state.rate=r;
+    state.pkg=m.pkg; state.hpd=m.hpd; state.mode=m.mode;
+
+    document.getElementById("qPkg").textContent=m.pkg;
+    document.getElementById("qPrice").innerHTML=money(r)+"<span>/HR</span>";
+    document.getElementById("qPer").textContent=(m.mode==="hour")
+      ? money(m.price)+" for "+m.hours+(m.hours===1?" hour":" hours")
+      : money(Math.round(m.price/m.days))+" per day";
+    document.getElementById("qTotal").textContent=money(m.price);
+    document.getElementById("qDays").textContent=(m.mode==="hour")?"One day":(m.days+(m.days===1?" day":" days"));
+    document.getElementById("qHours").textContent=m.hours+(m.hours===1?" service hour":" service hours");
+    document.getElementById("qDays2").textContent=(m.mode==="hour")
+      ? m.hours+" hours \u00b7 one day"
+      : (m.mode==="ult"?"30 days \u00b7 exclusive":m.days+(m.days===1?" day":" days"));
+    document.getElementById("qDesc").innerHTML=descFor(m,r);
+    document.getElementById("qExcl").hidden=(m.mode!=="ult");
+    var ult=(m.mode==="ult");
+    document.body.classList.toggle("gold",ult);
+    document.getElementById("qTag").textContent=ult?"Exclusive rate":"Rate";
+    document.getElementById("goldBadge").hidden=!ult;
+
+    syncDates();
+    gate();
+  }
+
+  /* live investment overview + date span, no locking */
+  function syncDates(){
+    document.getElementById("r2Pkg").textContent=state.pkg;
+    document.getElementById("r2Price").textContent=money(state.price);
+    document.getElementById("r2Rate").textContent=money(state.rate)+"/hr";
+    document.getElementById("r2Hours").textContent=state.hours+" hrs"+(state.mode==="hour"?" (one day)":" ("+state.hpd+"/day)");
+
+    var single=(state.mode==="hour"||state.days===1);
+    document.getElementById("s2lead").innerHTML=single
+      ? "Pick the day, then the hour they want us rolling \u2014 their "+state.hours+(state.hours===1?" hour runs":" hours run")+" from there and the end time sets itself."
+      : "Pick the <b>first</b> day of service. The last day sets itself \u2014 "+state.days+" consecutive days from there.";
+
+    var timeSel=document.getElementById("timeSel"), autoSpan=document.getElementById("autoSpan");
+    if(!pick){
+      document.getElementById("r2Start").textContent="Select a date";
+      document.getElementById("r2End").textContent="\u2014";
+      timeSel.hidden=true; autoSpan.hidden=true;
+      state.start=null; state.end=null;
+      renderCal();
+      return;
+    }
+    state.start=fmt(pick);
+    document.getElementById("r2Start").textContent=fmt(pick);
+    if(single){
+      state.end=fmt(pick);
+      document.getElementById("r2End").textContent="Same day";
+      autoSpan.hidden=true;
+      timeSel.hidden=false;
+      buildTimes();
+    }else{
+      var e=endOf(pick);
+      state.end=fmt(e);
+      document.getElementById("r2End").textContent=fmt(e);
+      timeSel.hidden=true;
+      state.startTime=null; state.endTime=null;
+      autoSpan.hidden=false;
+      autoSpan.innerHTML=state.days+" consecutive days of service, "+state.hpd+" hours each day. Daily route windows set on the confirmation call.";
+    }
+    renderCal();
+  }
+
+  function buildTimes(){
+    var sel=document.getElementById("startTime");
+    var keep=sel.value;
+    sel.innerHTML='<option value="">Choose a start time</option>';
+    var dur=state.hours;
+    for(var m=8*60;m<=20*60;m+=30){
+      if(m+dur*60>23*60) break;
+      var o=document.createElement("option");
+      o.value=String(m);
+      o.textContent=label(m)+"  \u2192  ends "+label(m+dur*60);
+      sel.appendChild(o);
+    }
+    if(keep && sel.querySelector('option[value="'+keep+'"]')){
+      sel.value=keep;
+      var mm=parseInt(keep,10);
+      state.startTime=label(mm); state.endTime=label(mm+dur*60);
+      document.getElementById("autoEnd").textContent="End of service: "+state.endTime+" \u2014 "+dur+" hours from start.";
+    }else{
+      state.startTime=null; state.endTime=null;
+      document.getElementById("autoEnd").textContent="";
+    }
+  }
+
+  function renderCal(){
+    document.getElementById("calTitle").textContent=MN[view.getMonth()]+" "+view.getFullYear();
+    var first=new Date(view.getFullYear(),view.getMonth(),1);
+    var last=new Date(view.getFullYear(),view.getMonth()+1,0);
+    var host=document.getElementById("calDays");
+    host.innerHTML="";
+    for(var p=0;p<first.getDay();p++){
+      var pd=document.createElement("div"); pd.className="day pad"; host.appendChild(pd);
+    }
+    var single=(state.mode==="hour"||state.days===1);
+    var sEnd=(pick&&!single)?endOf(pick):null;
+    for(var n=1;n<=last.getDate();n++){
+      var dt=new Date(view.getFullYear(),view.getMonth(),n);
+      var b=document.createElement("button");
+      b.type="button"; b.className="day"; b.textContent=n;
+      if(dt<minDate) b.disabled=true;
+      if(pick){
+        if(dt.getTime()===pick.getTime()) b.classList.add("start");
+        else if(sEnd&&dt>pick&&dt<sEnd) b.classList.add("span");
+        else if(sEnd&&dt.getTime()===sEnd.getTime()) b.classList.add("end");
+      }
+      b.setAttribute("aria-label",fmt(dt));
+      (function(d0){ b.addEventListener("click",function(){ pick=d0; syncDates(); gate(); }); })(dt);
+      host.appendChild(b);
+    }
+    document.getElementById("calPrev").disabled=(view.getFullYear()===minDate.getFullYear()&&view.getMonth()===minDate.getMonth());
+  }
+  document.getElementById("calPrev").addEventListener("click",function(){ view.setMonth(view.getMonth()-1); renderCal(); });
+  document.getElementById("calNext").addEventListener("click",function(){ view.setMonth(view.getMonth()+1); renderCal(); });
+  document.getElementById("startTime").addEventListener("change",function(){
+    var ae=document.getElementById("autoEnd");
+    if(!this.value){ ae.textContent=""; state.startTime=null; state.endTime=null; return; }
+    var m=parseInt(this.value,10);
+    state.startTime=label(m); state.endTime=label(m+state.hours*60);
+    ae.textContent="End of service: "+state.endTime+" \u2014 "+state.hours+" hours from start.";
+  });
+  slider.addEventListener("input",paint);
+
+  /* ================= submit ================= */
+  var f={name:"fName",co:"fCo",email:"fEmail",phone:"fPhone",rep:"fRep",industry:"fIndustry",notes:"fNotes"};
+  function val(k){ var el=document.getElementById(f[k]); return el?el.value.trim():""; }
+  function digits(s){ return (s||"").replace(/\D/g,""); }
+  function valid(){
+    return val("name").length>1 && val("co").length>0 &&
+           /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(val("email")) &&
+           digits(val("phone")).length>=10 && !!pick;
+  }
+  var sendBtn=document.getElementById("send"), sendNote=document.getElementById("sendNote");
+  function gate(){
+    var ok=valid();
+    sendBtn.disabled=!ok;
+    sendNote.innerHTML=ok
+      ? "<b>Ready.</b> Sends the full record to info@adsofthecentury.net"
+      : "<b>Required:</b> name, company, email, phone, and a first day of service";
+  }
+  Object.keys(f).forEach(function(k){
+    var el=document.getElementById(f[k]);
+    if(el) el.addEventListener("input",gate);
+  });
+
+  var sending=false;
+  sendBtn.addEventListener("click",function(){
+    if(!valid()||sending) return;
+    sending=true;
+    sendBtn.textContent="Sending\u2026";
+    sendBtn.disabled=true;
+
+    var fd=new FormData();
+    fd.append("_subject","ROUTE BOOKING \u2014 "+state.pkg+" \u2014 "+(val("co")||val("name")));
+    fd.append("_captcha","false");
+    fd.append("_template","table");
+    fd.append("Client name",val("name"));
+    fd.append("Company",val("co"));
+    fd.append("Email",val("email"));
+    fd.append("Phone",val("phone"));
+    fd.append("AOTC rep",val("rep")||"\u2014");
+    fd.append("Client industry",val("industry")||"\u2014");
+    fd.append("Call notes",val("notes")||"\u2014");
+    fd.append("Package",state.pkg);
+    fd.append("Investment",money(state.price));
+    fd.append("Effective rate",money(state.rate)+"/hr");
+    fd.append("Length",state.mode==="hour"?(state.hours+" hours, one day"):(state.mode==="ult"?"30 days (exclusive)":state.days+" days"));
+    fd.append("Service hours",state.hours+" hrs @ "+state.hpd+" hrs/day");
+    fd.append("First day of service",state.start||"");
+    fd.append("Last day of service",state.end||"");
+    fd.append("Start time",state.startTime||"Set on confirmation call");
+    fd.append("End time",state.endTime||"Set on confirmation call");
+    fd.append("Submitted from","Sales console \u2014 book.html");
+
+    fetch("https://formsubmit.co/info@adsofthecentury.net",{method:"POST",body:fd})
+      .then(done).catch(fallback);
+
+    function fallback(){
+      var body=[
+        "ROUTE BOOKING \u2014 AOTC sales console","",
+        "Client: "+val("name"),"Company: "+val("co"),
+        "Email: "+val("email"),"Phone: "+val("phone"),
+        "AOTC rep: "+(val("rep")||"\u2014"),"Industry: "+(val("industry")||"\u2014"),
+        "","Package: "+state.pkg,"Investment: "+money(state.price),
+        "Rate: "+money(state.rate)+"/hr","Service hours: "+state.hours,
+        "First day: "+(state.start||""),"Last day: "+(state.end||""),
+        "Start time: "+(state.startTime||"TBD"),"End time: "+(state.endTime||"TBD"),
+        "","Notes: "+(val("notes")||"\u2014")
+      ].join("\n");
+      try{
+        window.location.href="mailto:info@adsofthecentury.net?subject="+
+          encodeURIComponent("Route booking \u2014 "+state.pkg)+"&body="+encodeURIComponent(body);
+      }catch(e){}
+      done();
+    }
+
+    function done(){
+      var subj="AOTC \u2014 creative for your "+state.pkg+" campaign";
+      var body="Hi "+val("name")+",\n\nGreat speaking with you. To get production moving today, please reply to this email with either:\n\n1. Your creative files \u2014 MP4, MOV, JPG, PNG, PDF, AI or PSD, whatever you have.\n2. Or, if you don't have creative yet, a short paragraph on what you want the screen to say and who you're trying to reach. We design in-house and can build from that.\n\nYour dates: "+(state.start||"")+(state.end&&state.end!==state.start?(" through "+state.end):"")+".\n\nThanks,\nAOTC \u2014 Ads of the Century\n(773) 708-1400";
+      document.getElementById("tyMail").href="mailto:"+encodeURIComponent(val("email"))+
+        "?subject="+encodeURIComponent(subj)+"&body="+encodeURIComponent(body);
+      document.getElementById("ty").classList.add("on");
+      document.documentElement.style.overflow="hidden";
+    }
+  });
+  document.getElementById("tyClose").addEventListener("click",function(){
+    window.location.reload();
+  });
+
+  paint();
+})();
+</script>
+<script>
+/* AOTC click & drop — every click mints a chip that falls off the screen.
+   Skipped on form controls only. */
+(function () {
+  if (window.__aotcClickFx) return;
+  window.__aotcClickFx = 1;
+
+  if (!document.getElementById("aotcFxCss")) {
+    var st = document.createElement("style");
+    st.id = "aotcFxCss";
+    st.textContent =
+      ".drop-chip{position:fixed;z-index:9990;pointer-events:none;font-family:'IBM Plex Mono',monospace;font-size:10px;" +
+      "font-weight:600;letter-spacing:.14em;padding:7px 11px;color:#fff;background:linear-gradient(135deg,#e2000f,#9d000a);" +
+      "border:1px solid rgba(255,255,255,.35);box-shadow:0 0 14px rgba(217,0,13,.55),inset 0 1px 0 rgba(255,255,255,.3);" +
+      "text-transform:uppercase;white-space:nowrap}" +
+      ".drop-px{position:fixed;z-index:9990;pointer-events:none;width:5px;height:5px;background:#ffd52e;" +
+      "box-shadow:0 0 8px rgba(255,213,46,.8)}";
+    document.head.appendChild(st);
+  }
+
+  var WORDS = ["REACH", "RECALL", "AOTC", "VERIFIED", "ON ROUTE", "BRAND LIFT", "UNSKIPPABLE", "BOOKED"];
+  var wi = 0;
+
+  document.addEventListener("click", function (e) {
+    var t = e.target;
+    if (t && t.closest && t.closest("input,select,textarea,label,.cl-row")) return;
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion:reduce)").matches) return;
+    if (!e.clientX && !e.clientY) return;   /* keyboard activation */
+
+    var chip = document.createElement("div");
+    chip.className = "drop-chip";
+    chip.textContent = WORDS[wi++ % WORDS.length];
+    chip.style.left = e.clientX + "px";
+    chip.style.top = e.clientY + "px";
+    chip.style.transform = "translate(-50%,-50%)";
+    document.body.appendChild(chip);
+
+    var drift = (Math.random() * 160 - 80), spin = (Math.random() * 260 - 130);
+    chip.animate([
+      { transform: "translate(-50%,-50%) scale(.4) rotate(0deg)", opacity: 0 },
+      { transform: "translate(-50%,-90%) scale(1.08) rotate(" + (spin * .12) + "deg)", opacity: 1, offset: .18 },
+      { transform: "translate(calc(-50% + " + drift * .3 + "px),-70%) scale(1) rotate(" + (spin * .3) + "deg)", opacity: 1, offset: .42 },
+      { transform: "translate(calc(-50% + " + drift + "px)," + (window.innerHeight - e.clientY + 120) + "px) scale(.92) rotate(" + spin + "deg)", opacity: .9 }
+    ], { duration: 1250, easing: "cubic-bezier(.3,.6,.6,1)" }).onfinish = function () { chip.remove(); };
+
+    for (var i = 0; i < 5; i++) {
+      var px = document.createElement("div");
+      px.className = "drop-px";
+      px.style.left = e.clientX + "px";
+      px.style.top = e.clientY + "px";
+      document.body.appendChild(px);
+      var a = Math.random() * Math.PI * 2, d = 26 + Math.random() * 40;
+      px.animate([
+        { transform: "translate(-50%,-50%)", opacity: 1 },
+        { transform: "translate(" + (Math.cos(a) * d - 3) + "px," + (Math.sin(a) * d + 60) + "px)", opacity: 0 }
+      ], { duration: 600 + Math.random() * 300, easing: "cubic-bezier(.2,.7,.6,1)" })
+        .onfinish = function () { this.effect.target.remove(); };
+    }
+  }, true);
+})();
+
+</script>
+<script>
+/* AOTC — internal booking-form gate.
+   The booking form is a sales tool, not a public page: it is not in the nav.
+   To open it: double-click the AOTC logo, then enter the passphrase.
+   Access is per-page-load only — leaving or reloading the page re-locks it. */
+(function () {
+  var PASS = "drowssap";
+  var DEST = "book.html";
+  var clicks = 0, timer = null, box = null;
+
+  /* book.html itself: refuse to render unless this load was granted a token */
+  if (/book\.html(\?|#|$)/i.test(location.pathname + location.search + location.hash)) {
+    var ok = false;
+    try { ok = sessionStorage.getItem("aotc_gate_once") === "1"; } catch (e) {}
+    if (ok) { try { sessionStorage.removeItem("aotc_gate_once"); } catch (e) {} }
+    else { location.replace("index.html"); return; }
+  }
+
+  function css() {
+    if (document.getElementById("aotcGateCss")) return;
+    var s = document.createElement("style");
+    s.id = "aotcGateCss";
+    s.textContent =
+      ".gate-scrim{position:fixed;inset:0;z-index:2147483200;display:flex;align-items:center;justify-content:center;padding:20px;" +
+        "background:rgba(4,4,6,.9);backdrop-filter:blur(8px);opacity:0;transition:opacity .25s ease}" +
+      ".gate-scrim.on{opacity:1}" +
+      ".gate{width:min(380px,100%);background:linear-gradient(168deg,#15131a,#0b0a0d);border:1px solid rgba(255,255,255,.14);" +
+        "border-radius:4px;box-shadow:0 30px 90px rgba(0,0,0,.8);padding:26px;font-family:'Barlow',system-ui,sans-serif;" +
+        "transform:translateY(14px) scale(.98);transition:transform .3s cubic-bezier(.2,.8,.25,1)}" +
+      ".gate-scrim.on .gate{transform:none}" +
+      ".gate p.k{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:#ff3b48;margin:0 0 12px}" +
+      ".gate h4{font-family:'Barlow Condensed',Impact,sans-serif;font-weight:800;text-transform:uppercase;font-size:23px;" +
+        "letter-spacing:.02em;color:#fff;margin:0 0 6px;line-height:1}" +
+      ".gate p.s{font-size:12.5px;line-height:1.5;color:#8b847a;margin:0 0 18px}" +
+      ".gate input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:3px;color:#fff;" +
+        "padding:13px 14px;font:inherit;font-size:15px;letter-spacing:.12em;box-sizing:border-box}" +
+      ".gate input:focus{outline:0;border-color:rgba(255,21,32,.7);background:rgba(255,255,255,.09)}" +
+      ".gate input.bad{border-color:#ff1520;animation:gshake .32s}" +
+      "@keyframes gshake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}" +
+      ".gate-row{display:flex;gap:9px;margin-top:14px}" +
+      ".gate-row button{flex:1;font-family:'Barlow Condensed',Impact,sans-serif;font-weight:800;text-transform:uppercase;" +
+        "letter-spacing:.05em;font-size:15px;padding:13px;border:0;border-radius:3px;cursor:pointer;color:#fff;" +
+        "background:linear-gradient(#ff1520,#b30009)}" +
+      ".gate-row button.g{background:transparent;border:1px solid rgba(255,255,255,.2);color:#b8b2a8;flex:0 0 auto;padding:13px 18px}" +
+      ".gate small{display:block;margin-top:14px;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.14em;" +
+        "text-transform:uppercase;color:#6f6a62;line-height:1.7}";
+    document.head.appendChild(s);
+  }
+
+  function prompt() {
+    if (box) return;
+    css();
+    box = document.createElement("div");
+    box.className = "gate-scrim";
+    box.innerHTML =
+      '<div class="gate" role="dialog" aria-modal="true" aria-label="Internal access">' +
+        '<p class="k">AOTC internal</p>' +
+        '<h4>Sales console</h4>' +
+        '<p class="s">Booking form access. Staff only.</p>' +
+        '<input type="password" id="gatePass" placeholder="Passphrase" autocomplete="off" autocapitalize="off" spellcheck="false" />' +
+        '<div class="gate-row"><button type="button" id="gateGo">Unlock</button>' +
+        '<button type="button" class="g" id="gateNo">Cancel</button></div>' +
+        '<small>Access expires when this page is closed</small>' +
+      '</div>';
+    document.body.appendChild(box);
+    void box.offsetWidth;
+    box.classList.add("on");
+
+    var inp = box.querySelector("#gatePass");
+    setTimeout(function () { try { inp.focus(); } catch (e) {} }, 260);
+
+    function bail() {
+      if (!box) return;
+      box.classList.remove("on");
+      var b = box; box = null;
+      setTimeout(function () { b.remove(); }, 260);
+    }
+    function tryIt() {
+      if (inp.value.trim() === PASS) {
+        try { sessionStorage.setItem("aotc_gate_once", "1"); } catch (e) {}
+        window.location.href = DEST;
+      } else {
+        inp.classList.remove("bad");
+        void inp.offsetWidth;
+        inp.classList.add("bad");
+        inp.select();
+      }
+    }
+    box.querySelector("#gateGo").addEventListener("click", tryIt);
+    box.querySelector("#gateNo").addEventListener("click", bail);
+    inp.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { e.preventDefault(); tryIt(); }
+      if (e.key === "Escape") bail();
+    });
+    box.addEventListener("click", function (e) { if (e.target === box) bail(); });
+  }
+
+  /* two clicks on the logo inside 700ms */
+  function arm() {
+    var logo = document.querySelector(".brand");
+    if (!logo) return;
+    logo.addEventListener("click", function (e) {
+      clicks++;
+      if (clicks === 1) {
+        timer = setTimeout(function () { clicks = 0; }, 700);
+        return;   /* first click still navigates home as normal */
+      }
+      e.preventDefault();
+      e.stopPropagation();
+      clearTimeout(timer);
+      clicks = 0;
+      prompt();
+    });
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", arm);
+  else arm();
+})();
+
+</script>
+<script>
+/* AOTC unified navigation — one canonical menu, rendered into every page */
+(function () {
+  var ITEMS = [
+    ["index.html","Home","Start here"],
+    ["proof.html","Proof","13 case studies"],
+    ["faq.html","FAQ","16 answers"],
+    ["disclosures.html","Disclosures","Legal"]
+  ];
+  var SOCIAL = [
+    ["https://www.instagram.com/aotc.media/","Instagram"],
+    ["https://www.facebook.com/profile.php?id=61591701875497","Facebook"],
+    ["https://www.threads.com/@aotc.media","Threads"],
+    ["https://linkedin.com/company/advertisements-of-the-century","LinkedIn"],
+    ["https://www.tiktok.com/@adsofthecentury","TikTok"],
+    ["https://linktr.ee/AOTC","Linktree"]
+  ];
+  var GTA = "https://www.instagram.com/reel/Da8ZqD-v0Mo/?utm_source=ig_web_button_share_sheet&igsh=MzRlODBiNWFlZA==";
+
+  function here() {
+    var p = (location.pathname || "").split("/").pop();
+    return (!p || p === "" || p === "index.html") ? "index.html" : p;
+  }
+  function panelHTML() {
+    var cur = here(), out = "";
+    out += '<div class="aotc-col"><p class="aotc-h">Explore</p><div class="aotc-list">';
+    ITEMS.forEach(function (it) {
+      out += '<a class="aotc-item" href="' + it[0] + '"' + (it[0] === cur ? ' aria-current="page"' : '') +
+             ' role="menuitem">' + it[1] + '<span class="d">' + it[2] + '</span></a>';
+    });
+    out += '</div></div>';
+    out += '<div class="aotc-col"><p class="aotc-h">Promos</p><div class="aotc-list">' +
+           '<a class="aotc-item" href="' + GTA + '" target="_blank" rel="noopener" role="menuitem">GTA 6 Giveaway<span class="d">Watch the reel</span></a>' +
+           '</div><p class="aotc-h" style="margin-top:18px">Contact Us</p><div class="aotc-list">' +
+           '<a class="aotc-item" href="sms:+17737081400?&body=LET%27S%20MAKE%20MONEY" role="menuitem">Text 24/7<span class="d">(773) 708-1400</span></a>' +
+           '<a class="aotc-item" href="mailto:info@adsofthecentury.net" role="menuitem">Email 24/7<span class="d">info@adsofthecentury.net</span></a>' +
+           '</div></div>';
+    out += '<div class="aotc-col wide"><p class="aotc-h">Follow</p><div class="aotc-social">';
+    SOCIAL.forEach(function (s) {
+      out += '<a class="aotc-chip" href="' + s[0] + '" target="_blank" rel="noopener">' + s[1] + '</a>';
+    });
+    out += '</div><a class="aotc-book" href="book.html" role="menuitem">Book a campaign &rarr;</a></div>';
+    return out;
+  }
+
+  function wire(wrap) {
+    if (!wrap || wrap.dataset.aotcWired) return;
+    wrap.dataset.aotcWired = "1";
+
+    var tab = wrap.querySelector(".aotc-tab");
+    var scrim = wrap.querySelector(".aotc-scrim");
+    var panel = wrap.querySelector(".aotc-panel");
+    if (!tab || !panel) return;
+
+    panel.innerHTML = panelHTML();   /* every page gets the identical menu */
+
+    function clamp() {
+      panel.style.left = ""; panel.style.right = "";
+      var rc = panel.getBoundingClientRect(), wr = wrap.getBoundingClientRect();
+      if (rc.left < 16) { panel.style.right = "auto"; panel.style.left = (16 - wr.left) + "px"; }
+      else if (rc.right > innerWidth - 16) { panel.style.left = "auto"; panel.style.right = (wr.right - (innerWidth - 16)) + "px"; }
+    }
+    function open() { wrap.classList.add("open"); tab.setAttribute("aria-expanded", "true"); clamp(); }
+    function close() { wrap.classList.remove("open"); tab.setAttribute("aria-expanded", "false"); }
+    function toggle() { wrap.classList.contains("open") ? close() : open(); }
+
+    var hoverDevice = window.matchMedia("(hover: hover) and (min-width: 721px)").matches;
+    tab.addEventListener("click", function (e) {
+      e.stopPropagation();
+      if (hoverDevice) open(); else toggle();
+    });
+    if (scrim) scrim.addEventListener("click", close);
+    panel.addEventListener("click", function (e) { e.stopPropagation(); });
+    document.addEventListener("click", function () { if (wrap.classList.contains("open")) close(); });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && wrap.classList.contains("open")) { close(); tab.focus(); }
+    });
+    window.addEventListener("resize", function () { if (wrap.classList.contains("open")) clamp(); });
+
+    if (hoverDevice) {
+      var t;
+      wrap.addEventListener("mouseenter", function () { clearTimeout(t); open(); });
+      wrap.addEventListener("mouseleave", function () { t = setTimeout(close, 220); });
+    }
+  }
+
+  function init() {
+    var host = document.querySelector(".nav-links");
+    if (host) host.classList.add("aotc-host");
+    document.querySelectorAll(".aotc-nav").forEach(wire);
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+})();
+
+</script>
+</body>
+</html>
