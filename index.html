@@ -22,7 +22,7 @@
 <meta name="twitter:title" content="Mobile Billboard Advertising Chicago | AOTC" />
 <meta name="twitter:description" content="GPS-verified mobile LED billboard trucks across Chicago. Unskippable OOH advertising with proof-of-play reporting." />
 <meta name="twitter:image" content="https://adsofthecentury.net/wendys-grand-opening.jpg" />
-<link rel="icon" type="image/gif" href="aotc_final.gif" />
+<link rel="icon" type="image/gif" href="AOTC_Infinity_assets/aotc_final.gif" />
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -2907,7 +2907,7 @@ h1{
 /* Last section rebuild: real,simple{
   background-image:
     linear-gradient(90deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.48) 37%,rgba(0,0,0,.18) 64%,rgba(0,0,0,.72) 100%),
-    url("rent-this-space.jpg")!important;
+    url("AOTC_Infinity_assets/rent-this-space.jpg")!important;
   background-size:cover!important;
   background-position:42% center!important;
   overflow:hidden!important;
@@ -3502,8 +3502,249 @@ body{
 {"@type":"SiteNavigationElement","position":16,"name":"USW Local 7-1 Case Study","url":"https://adsofthecentury.net/case-usw-local-7-1.html"}
 ]}
 </script>
-<link rel="stylesheet" href="aotc-nav.css?v=7" />
-<script defer src="aotc-nav.js?v=7"></script>
+<style>
+/* AOTC unified navigation — single source of truth for every page */
+/* the host container must always show the menu, whatever the page's own CSS says */
+.nav-links.aotc-host{
+  display:flex!important; visibility:visible!important; opacity:1!important;
+  align-items:center; gap:10px; min-width:0; position:static;
+}
+
+.aotc-nav{
+  --an-red:#d9000d; --an-red2:#ff1520;
+  --an-fh:"Barlow Condensed",Impact,sans-serif;
+  --an-fm:"IBM Plex Mono",ui-monospace,monospace;
+  --an-ease:cubic-bezier(.16,1,.3,1);
+  display:flex; align-items:center; gap:12px; position:relative; z-index:2147483000;
+}
+.aotc-nav *{box-sizing:border-box}
+
+/* ---- the single tab: clean marquee plate ---- */
+.aotc-tab{
+  appearance:none; cursor:pointer; position:relative;
+  display:inline-flex; align-items:center; gap:11px;
+  height:44px; padding:0 18px 0 15px;
+  border:1px solid rgba(255,255,255,.18); border-radius:6px;
+  background:linear-gradient(180deg,#17171a,#0a0a0c);
+  color:#fff; line-height:1;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 4px 12px rgba(0,0,0,.45);
+  transition:border-color .22s var(--an-ease),box-shadow .25s var(--an-ease),transform .15s var(--an-ease);
+}
+.aotc-tab::after{
+  content:""; position:absolute; left:12px; right:12px; bottom:5px; height:2px; border-radius:2px;
+  background:linear-gradient(90deg,transparent,var(--an-red2),transparent);
+  opacity:.8; animation:aotcPulse 2.6s ease-in-out infinite;
+}
+@keyframes aotcPulse{0%,100%{opacity:.4;transform:scaleX(.65)}50%{opacity:1;transform:scaleX(1)}}
+.aotc-lab{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding-bottom:3px}
+.aotc-lab b{
+  font-family:var(--an-fh); font-weight:900; font-size:17px; letter-spacing:.08em;
+  text-transform:uppercase; white-space:nowrap;
+}
+.aotc-lab i{
+  font-style:normal; font-family:var(--an-fm); font-size:7.5px; font-weight:600;
+  letter-spacing:.24em; text-transform:uppercase; color:#a49d92; white-space:nowrap;
+}
+.aotc-tab:hover{border-color:rgba(255,21,32,.6);transform:translateY(-1px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 8px 20px rgba(0,0,0,.5),0 0 24px rgba(217,0,13,.35)}
+.aotc-tab:hover .aotc-lab i{color:var(--an-red2)}
+.aotc-tab:focus-visible{outline:2px solid var(--an-red2);outline-offset:2px}
+.aotc-nav.open .aotc-tab,.aotc-nav:focus-within .aotc-tab{
+  border-color:var(--an-red2);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 0 28px rgba(217,0,13,.5);
+}
+.aotc-nav.open .aotc-tab .aotc-lab i,.aotc-nav:focus-within .aotc-tab .aotc-lab i{color:var(--an-red2)}
+.aotc-bars{position:relative;width:17px;height:12px;flex:0 0 auto;filter:drop-shadow(0 0 6px rgba(255,21,32,.55))}
+.aotc-bars i{
+  position:absolute; left:0; width:100%; height:2px; background:linear-gradient(90deg,var(--an-red2),#fff); border-radius:2px;
+  transition:transform .32s var(--an-ease),opacity .2s var(--an-ease),width .32s var(--an-ease);
+}
+.aotc-bars i:nth-child(1){top:0}
+.aotc-bars i:nth-child(2){top:5px;width:70%}
+.aotc-bars i:nth-child(3){top:10px}
+.aotc-tab:hover .aotc-bars i:nth-child(2){width:100%}
+.aotc-nav.open .aotc-bars i:nth-child(1){transform:translateY(5px) rotate(45deg)}
+.aotc-nav.open .aotc-bars i:nth-child(2){opacity:0;width:0}
+.aotc-nav.open .aotc-bars i:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
+
+/* ---- phone CTA beside the tab ---- */
+a.aotc-call{
+  display:inline-flex; align-items:center; gap:8px; height:44px; padding:0 15px;
+  border:1px solid rgba(255,255,255,.14); border-radius:5px;
+  font-family:var(--an-fm); font-size:10.5px; font-weight:600; letter-spacing:.14em;
+  text-transform:uppercase; color:#c9c3b9; text-decoration:none; white-space:nowrap;
+  transition:color .2s,border-color .2s,background .2s;
+}
+a.aotc-call::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--an-red2);box-shadow:0 0 10px var(--an-red2);flex:0 0 auto}
+a.aotc-call:hover{color:#fff;border-color:rgba(255,21,32,.5);background:rgba(217,0,13,.1)}
+@media(max-width:820px){a.aotc-call span{display:none}a.aotc-call{padding:0 12px}}
+
+/* ---- the panel ---- */
+.aotc-panel{
+  position:absolute; top:calc(100% + 14px); right:0; z-index:2147483000;
+  width:min(660px,calc(100vw - 32px));
+  display:grid; grid-template-columns:1fr 1fr; gap:0;
+  border:1px solid rgba(255,255,255,.13); border-radius:8px; overflow:hidden;
+  background:linear-gradient(160deg,#101012,#070708);
+  box-shadow:0 30px 80px rgba(0,0,0,.66),0 0 44px rgba(217,0,13,.16);
+  opacity:0; visibility:hidden; transform:translateY(-10px) scale(.985);
+  transition:opacity .26s var(--an-ease),transform .32s var(--an-ease),visibility .26s;
+}
+.aotc-panel::before{
+  content:""; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg,transparent,var(--an-red),var(--an-red2),var(--an-red),transparent);
+}
+.aotc-nav.open .aotc-panel,
+.aotc-nav:focus-within .aotc-panel{opacity:1;visibility:visible;transform:translateY(0) scale(1)}
+@media(hover:hover){.aotc-nav:hover .aotc-panel{opacity:1;visibility:visible;transform:translateY(0) scale(1)}}
+.aotc-col{padding:22px 22px 20px;min-width:0}
+.aotc-col + .aotc-col{border-left:1px solid rgba(255,255,255,.07)}
+.aotc-col.wide{grid-column:1 / -1;border-left:0;border-top:1px solid rgba(255,255,255,.07);padding-top:18px}
+.aotc-h{
+  display:flex; align-items:center; gap:9px; margin:0 0 12px;
+  font-family:var(--an-fm); font-size:9px; font-weight:600; letter-spacing:.26em;
+  text-transform:uppercase; color:var(--an-red2);
+}
+.aotc-h::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(255,21,32,.35),transparent)}
+.aotc-col + .aotc-col .aotc-h{color:#8b847a}
+.aotc-col + .aotc-col .aotc-h::after{background:linear-gradient(90deg,rgba(255,255,255,.14),transparent)}
+.aotc-list{display:flex;flex-direction:column;gap:2px}
+a.aotc-item{
+  display:flex; align-items:baseline; gap:10px;
+  padding:9px 11px; border-radius:4px; text-decoration:none;
+  color:#c9c3b9; font-family:var(--an-fh); font-weight:700; font-size:19px;
+  letter-spacing:.01em; text-transform:uppercase; line-height:1.1;
+  transition:color .18s,background .18s,padding-left .22s var(--an-ease);
+}
+a.aotc-item .d{
+  font-family:var(--an-fm); font-weight:400; font-size:9.5px; letter-spacing:.12em;
+  text-transform:uppercase; color:#6f6a61; margin-left:auto; white-space:nowrap;
+  transition:color .18s;
+}
+a.aotc-item:hover,a.aotc-item:focus-visible{
+  color:#fff; background:linear-gradient(90deg,rgba(217,0,13,.2),rgba(255,255,255,.03));
+  padding-left:16px; outline:none;
+}
+a.aotc-item:hover .d{color:var(--an-red2)}
+a.aotc-item[aria-current="page"]{color:#fff}
+a.aotc-item[aria-current="page"]::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--an-red2);box-shadow:0 0 9px var(--an-red2);align-self:center;flex:0 0 auto;margin-right:-4px}
+/* compact social row */
+.aotc-social{display:flex;flex-wrap:wrap;gap:6px}
+a.aotc-chip{
+  display:inline-flex; align-items:center; padding:7px 11px; border-radius:999px;
+  border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.03);
+  font-family:var(--an-fm); font-size:9.5px; letter-spacing:.12em; text-transform:uppercase;
+  color:#a49d92; text-decoration:none; transition:color .18s,border-color .18s,background .18s,transform .18s var(--an-ease);
+}
+a.aotc-chip:hover{color:#fff;border-color:rgba(255,21,32,.5);background:rgba(217,0,13,.12);transform:translateY(-2px)}
+/* book CTA inside panel */
+a.aotc-book{
+  display:flex; align-items:center; justify-content:center; gap:9px; margin-top:14px;
+  padding:14px 18px; border-radius:6px; text-decoration:none;
+  background:linear-gradient(#ff2a34,#d9000d); color:#fff;
+  font-family:var(--an-fh); font-weight:800; font-size:17px; letter-spacing:.04em; text-transform:uppercase;
+  box-shadow:0 5px 0 #7a0007,0 8px 20px rgba(0,0,0,.45);
+  transition:transform .1s,box-shadow .1s;
+}
+a.aotc-book:active{transform:translateY(4px);box-shadow:0 1px 0 #7a0007,0 3px 9px rgba(0,0,0,.45)}
+
+/* scrim removed: position:fixed misbehaves inside the nav's backdrop-filter */
+.aotc-scrim{display:none}
+
+@media(max-width:720px){
+  .aotc-panel{
+    position:absolute; top:calc(100% + 12px); bottom:auto; left:auto; right:0;
+    width:min(94vw,420px); grid-template-columns:1fr; border-radius:8px;
+    max-height:min(72vh,560px); overflow:auto;
+  }
+  .aotc-col{padding:18px 18px 16px}
+  .aotc-col + .aotc-col{border-left:0;border-top:1px solid rgba(255,255,255,.07)}
+  .aotc-col.wide{border-top:1px solid rgba(255,255,255,.07)}
+  a.aotc-item{font-size:20px;padding:11px 12px;min-height:44px;align-items:center}
+  a.aotc-chip{padding:10px 13px}
+  a.aotc-book{min-height:48px}
+}
+@media(prefers-reduced-motion:reduce){
+  .aotc-panel,.aotc-tab,.aotc-bars i,a.aotc-item{transition-duration:.01ms}
+}
+
+/* ---- very narrow phones: keep the tab + phone chip on one row ---- */
+@media(max-width:430px){
+  .nav-links.aotc-host{gap:7px}
+  .aotc-nav{gap:7px}
+  .aotc-tab{height:42px;padding:0 12px 0 11px;gap:8px}
+  .aotc-lab b{font-size:15px;letter-spacing:.05em}
+  .aotc-lab i{display:none}
+  .aotc-lab{padding-bottom:0}
+  .aotc-tab::after{bottom:4px;left:9px;right:9px}
+  a.aotc-call{height:42px;padding:0 11px}
+}
+@media(max-width:400px){
+  .aotc-panel{width:calc(100vw - 20px);right:-6px}
+}
+
+</style>
+
+<style>
+  .lp-close__note .dare{font-style:normal;font-weight:800;color:#ff1520;cursor:pointer;display:inline-block;
+    transition:color .18s,text-shadow .18s}
+  .lp-close__note .dare:hover{color:#ff5a63;text-shadow:0 0 22px rgba(255,21,32,.8)}
+  .lp-close__note .dare:focus-visible{outline:2px solid #ff1520;outline-offset:3px}
+</style>
+
+<style>
+/* AOTC — shared responsive safety net.
+   Loaded last on every page. Fixes the small-screen issues that recur across
+   pages without touching each page's own layout rules. */
+
+/* 1. never allow sideways scroll, and stop iOS inflating text on rotate */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html,body{max-width:100%;overflow-x:clip}
+
+/* 2. media and embeds must never exceed their column */
+img,video,iframe,canvas,svg,table{max-width:100%}
+img,video{height:auto}
+
+/* 3. long unbroken strings (emails, URLs, GPS strings) must wrap */
+p,li,td,th,dd,dt,figcaption,blockquote,h1,h2,h3,h4,h5,h6{overflow-wrap:break-word}
+
+/* 4. respect the notch / home indicator on phones */
+@supports(padding:max(0px)){
+  body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+}
+
+/* 5. touch targets: anything tappable gets a real hit area on phones */
+@media(hover:none) and (pointer:coarse){
+  a[href^="tel"],a[href^="sms"],a[href^="mailto"],button,input[type="button"],input[type="submit"],
+  .btn,.go,.send,.chip,.day,.cal-nav button{min-height:44px}
+  .day{min-height:42px}
+}
+
+/* 6. inputs must not zoom the viewport on iOS (needs >=16px) */
+@media(max-width:768px){
+  input[type="text"],input[type="email"],input[type="tel"],input[type="password"],
+  input[type="search"],input[type="number"],select,textarea{font-size:16px}
+}
+
+/* 7. tiny phones: give every page's gutter a floor and pull display type in */
+@media(max-width:400px){
+  .wrap,.narrow,.pw{width:calc(100% - 26px)!important}
+}
+@media(max-width:360px){
+  h1{font-size:clamp(28px,10vw,40px)!important}
+}
+
+/* 8. landscape phones: stop full-height heroes from swallowing the screen */
+@media(max-height:520px) and (orientation:landscape){
+  .lp-hero,.hero,.ph{min-height:0!important}
+}
+
+/* 9. print: never carry the dark canvas onto paper */
+@media print{
+  html,body{background:#fff!important;overflow:visible!important}
+}
+
+</style>
 </head>
 <body>
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#0b0b0b"/><rect x="30" y="34" width="40" height="26" rx="3" fill="#111" stroke="#333"/><rect x="33" y="37" width="30" height="18" fill="#d9000d"/><text x="48" y="49" text-anchor="middle" font-family="Arial Black,Arial" font-weight="900" font-size="9" fill="#fff">AOTC</text><circle cx="40" cy="64" r="4" fill="#0a0a0a" stroke="#444"/><circle cx="60" cy="64" r="4" fill="#0a0a0a" stroke="#444"/></svg></template>
@@ -3667,7 +3908,7 @@ body{
   <nav class="nav" id="nav">
     <div class="wrap nav-inner">
       <a class="brand" href="#top" aria-label="AOTC home" onclick="event.preventDefault(); window.scrollTo({top:0,behavior:'smooth'});">
-        <div class="brand-mark"><img src="aotc_final.gif" alt="AOTC — Ads of the Century mobile LED billboard advertising, Chicago" /></div>
+        <div class="brand-mark"><img src="AOTC_Infinity_assets/aotc_final.gif" alt="AOTC — Ads of the Century mobile LED billboard advertising, Chicago" /></div>
         <div class="brand-copy">
           <strong>AOTC</strong>
           <span>Mobile LED advertising</span>
@@ -3681,39 +3922,39 @@ body{
       <a class="aotc-call" href="sms:+17737081400?&amp;body=LET%27S%20MAKE%20MONEY" aria-label="Text AOTC at (773) 708-1400"><span>(773) 708-1400</span></a>
       <button class="aotc-scrim" type="button" tabindex="-1" aria-hidden="true"></button>
       <div class="aotc-panel" id="aotcPanel" role="menu" aria-label="Site menu">
-        <div class="aotc-col">
-          <p class="aotc-h">Explore</p>
-          <div class="aotc-list">
-          <a class="aotc-item" href="index.html" aria-current="page" role="menuitem">Home<span class="d">Start here</span></a>
-          <a class="aotc-item" href="proof.html" role="menuitem">Proof<span class="d">13 case studies</span></a>
-          <a class="aotc-item" href="faq.html" role="menuitem">FAQ<span class="d">16 answers</span></a>
-          <a class="aotc-item" href="disclosures.html" role="menuitem">Disclosures<span class="d">Legal</span></a>
+            <div class="aotc-col">
+              <p class="aotc-h">Explore</p>
+              <div class="aotc-list">
+                <a class="aotc-item" href="index.html" role="menuitem">Home<span class="d">Start here</span></a>
+                <a class="aotc-item" href="proof.html" role="menuitem">Proof<span class="d">13 case studies</span></a>
+                <a class="aotc-item" href="faq.html" role="menuitem">FAQ<span class="d">16 answers</span></a>
+                <a class="aotc-item" href="disclosures.html" role="menuitem">Disclosures<span class="d">Legal</span></a>
+              </div>
+            </div>
+            <div class="aotc-col">
+              <p class="aotc-h">Promos</p>
+              <div class="aotc-list">
+                <a class="aotc-item" href="https://www.instagram.com/reel/Da8ZqD-v0Mo/?utm_source=ig_web_button_share_sheet&amp;igsh=MzRlODBiNWFlZA==" target="_blank" rel="noopener" role="menuitem">GTA 6 Giveaway<span class="d">Watch the reel</span></a>
+              </div>
+              <p class="aotc-h" style="margin-top:18px">Contact Us</p>
+              <div class="aotc-list">
+                <a class="aotc-item" href="sms:+17737081400?&amp;body=LET%27S%20MAKE%20MONEY" role="menuitem">Text 24/7<span class="d">(773) 708-1400</span></a>
+                <a class="aotc-item" href="mailto:info@adsofthecentury.net" role="menuitem">Email 24/7<span class="d">info@adsofthecentury.net</span></a>
+              </div>
+            </div>
+            <div class="aotc-col wide">
+              <p class="aotc-h">Follow</p>
+              <div class="aotc-social">
+                <a class="aotc-chip" href="https://www.instagram.com/aotc.media/" target="_blank" rel="noopener">Instagram</a>
+                <a class="aotc-chip" href="https://www.facebook.com/profile.php?id=61591701875497" target="_blank" rel="noopener">Facebook</a>
+                <a class="aotc-chip" href="https://www.threads.com/@aotc.media" target="_blank" rel="noopener">Threads</a>
+                <a class="aotc-chip" href="https://linkedin.com/company/advertisements-of-the-century" target="_blank" rel="noopener">LinkedIn</a>
+                <a class="aotc-chip" href="https://www.tiktok.com/@adsofthecentury" target="_blank" rel="noopener">TikTok</a>
+                <a class="aotc-chip" href="https://linktr.ee/AOTC" target="_blank" rel="noopener">Linktree</a>
+              </div>
+              <a class="aotc-book" href="sms:+17737081400?&amp;body=LET%27S%20MAKE%20MONEY" role="menuitem">Book a campaign &rarr;</a>
+            </div>
           </div>
-        </div>
-        <div class="aotc-col">
-          <p class="aotc-h">Promos</p>
-          <div class="aotc-list">
-          <a class="aotc-item" href="https://www.instagram.com/reel/Da8ZqD-v0Mo/?utm_source=ig_web_button_share_sheet&amp;igsh=MzRlODBiNWFlZA==" target="_blank" rel="noopener" role="menuitem">GTA 6 Giveaway<span class="d">Live</span></a>
-          </div>
-          <p class="aotc-h" style="margin-top:18px">Contact Us</p>
-          <div class="aotc-list">
-          <a class="aotc-item" href="sms:+17737081400?&amp;body=LET%27S%20MAKE%20MONEY" role="menuitem">Text 24/7<span class="d">(773) 708-1400</span></a>
-          <a class="aotc-item" href="mailto:info@adsofthecentury.net" role="menuitem">Email 24/7<span class="d">info@adsofthecentury.net</span></a>
-          </div>
-        </div>
-        <div class="aotc-col wide">
-          <p class="aotc-h">Follow</p>
-          <div class="aotc-social">
-            <a class="aotc-chip" href="https://www.instagram.com/aotc.media/" target="_blank" rel="noopener">Instagram</a>
-            <a class="aotc-chip" href="https://www.facebook.com/profile.php?id=61591701875497" target="_blank" rel="noopener">Facebook</a>
-            <a class="aotc-chip" href="https://www.threads.com/@aotc.media" target="_blank" rel="noopener">Threads</a>
-            <a class="aotc-chip" href="https://linkedin.com/company/advertisements-of-the-century" target="_blank" rel="noopener">LinkedIn</a>
-            <a class="aotc-chip" href="https://www.tiktok.com/@adsofthecentury" target="_blank" rel="noopener">TikTok</a>
-            <a class="aotc-chip" href="https://linktr.ee/AOTC" target="_blank" rel="noopener">Linktree</a>
-          </div>
-          <a class="aotc-book" href="index.html#book" role="menuitem">Book a campaign &rarr;</a>
-        </div>
-      </div>
     </div>
   </span>
       <div class="nav-actions">
@@ -3795,7 +4036,7 @@ body{
     }
   </style>
   <section class="lp-hero" aria-label="AOTC mobile LED billboard advertising">
-    <div class="lp-hero__bg"><video src="hero-video.mp4" autoplay muted loop playsinline preload="auto" aria-label="AOTC mobile LED billboard truck"></video></div>
+    <div class="lp-hero__bg"><video data-src="AOTC_Infinity_assets/hero-video.mp4" autoplay muted loop playsinline preload="none" aria-label="AOTC mobile LED billboard truck"></video></div>
     <div class="lp-hero__inner">
     </div>
     <a class="lp-hero-cue" href="#journey" onclick="event.preventDefault();var s=document.getElementById('journey');if(s)s.scrollIntoView({behavior:'smooth'});">
@@ -3841,19 +4082,19 @@ body{
       <div class="infinity-bg-wrap" id="infinityBgWrap">
 
         <article class="infinity-frame has-video" style="--pos:18% center;">
-          <video aria-label="AOTC LED billboard truck in city traffic — brand campaign footage" class="frame-video" src="section3.mp4" style="object-position:18% center;" autoplay muted loop playsinline preload="auto"></video>
+          <video aria-label="AOTC LED billboard truck in city traffic — brand campaign footage" class="frame-video" data-src="AOTC_Infinity_assets/section3.mp4" style="object-position:18% center;" autoplay muted loop playsinline preload="none"></video>
           <div class="frame-shade"></div>
         </article>
         <article class="infinity-frame has-video" style="--pos:20% center;">
-          <video aria-label="AOTC mobile billboard truck at night — high-definition LED display" class="frame-video" src="section4.mp4" style="object-position:20% center;" autoplay muted loop playsinline preload="auto"></video>
+          <video aria-label="AOTC mobile billboard truck at night — high-definition LED display" class="frame-video" data-src="AOTC_Infinity_assets/section4.mp4" style="object-position:20% center;" autoplay muted loop playsinline preload="none"></video>
           <div class="frame-shade"></div>
         </article>
         <article class="infinity-frame has-video" style="--pos:78% center;">
-          <video aria-label="AOTC billboard truck passing pedestrians — street-level advertising" class="frame-video" src="section5.mp4" style="object-position:78% center;" autoplay muted loop playsinline preload="auto"></video>
+          <video aria-label="AOTC billboard truck passing pedestrians — street-level advertising" class="frame-video" data-src="AOTC_Infinity_assets/section5.mp4" style="object-position:78% center;" autoplay muted loop playsinline preload="none"></video>
           <div class="frame-shade"></div>
         </article>
         <article class="infinity-frame has-video" style="--pos:38% center;">
-          <video aria-label="AOTC LED truck route footage — GPS-verified mobile advertising" class="frame-video" src="section7.mp4" style="object-position:38% center;" autoplay muted loop playsinline preload="auto"></video>
+          <video aria-label="AOTC LED truck route footage — GPS-verified mobile advertising" class="frame-video" data-src="AOTC_Infinity_assets/section7.mp4" style="object-position:38% center;" autoplay muted loop playsinline preload="none"></video>
           <div class="frame-shade"></div>
         </article>
         <article class="infinity-frame clients-ledger">
@@ -3957,15 +4198,15 @@ body{
 </style>
 <section class="lp-close" aria-label="Why brands run with AOTC">
   <div class="lp-close__grid" aria-hidden="true">
-    <div class="tall"><video aria-label="AOTC mobile billboard truck at night — high-definition LED display" src="section4.mp4" autoplay muted loop playsinline preload="auto"></video></div>
-    <div><img src="wendys-grand-opening.jpg" alt="Wendy's grand opening on the AOTC mobile LED billboard truck, Chicago" loading="lazy" /></div>
-    <div><img src="bp-lockout.jpg" alt="USW Local 7-1 BP lockout message on the AOTC LED billboard truck" loading="lazy" /></div>
-    <div class="tall"><video aria-label="AOTC LED billboard truck in city traffic — brand campaign footage" src="section3.mp4" autoplay muted loop playsinline preload="auto"></video></div>
-    <div class="m-hide"><img src="rent-this-space.jpg" alt="Rent this space — AOTC mobile billboard availability creative" loading="lazy" /></div>
-    <div class="m-hide tall"><video aria-label="AOTC billboard truck passing pedestrians — street-level advertising" src="section5.mp4" autoplay muted loop playsinline preload="auto"></video></div>
-    <div class="m-hide"><img src="uncle-sam-fireworks.jpg" alt="Uncle Sam's Fireworks campaign on the AOTC LED truck, Northwest Indiana" loading="lazy" /></div>
-    <div><img src="smokeout.jpg" alt="Summer's End Smokeout event promotion on the AOTC mobile billboard" loading="lazy" /></div>
-    <div class="m-hide"><video aria-label="AOTC LED truck route footage — GPS-verified mobile advertising" src="section7.mp4" autoplay muted loop playsinline preload="auto"></video></div>
+    <div class="tall"><video aria-label="AOTC mobile billboard truck at night — high-definition LED display" data-src="AOTC_Infinity_assets/section4.mp4" autoplay muted loop playsinline preload="none"></video></div>
+    <div><img src="AOTC_Infinity_assets/wendys-grand-opening.jpg" alt="Wendy's grand opening on the AOTC mobile LED billboard truck, Chicago" loading="lazy" /></div>
+    <div><img src="AOTC_Infinity_assets/bp-lockout.jpg" alt="USW Local 7-1 BP lockout message on the AOTC LED billboard truck" loading="lazy" /></div>
+    <div class="tall"><video aria-label="AOTC LED billboard truck in city traffic — brand campaign footage" data-src="AOTC_Infinity_assets/section3.mp4" autoplay muted loop playsinline preload="none"></video></div>
+    <div class="m-hide"><img src="AOTC_Infinity_assets/rent-this-space.jpg" alt="Rent this space — AOTC mobile billboard availability creative" loading="lazy" /></div>
+    <div class="m-hide tall"><video aria-label="AOTC billboard truck passing pedestrians — street-level advertising" data-src="AOTC_Infinity_assets/section5.mp4" autoplay muted loop playsinline preload="none"></video></div>
+    <div class="m-hide"><img src="AOTC_Infinity_assets/uncle-sam-fireworks.jpg" alt="Uncle Sam's Fireworks campaign on the AOTC LED truck, Northwest Indiana" loading="lazy" /></div>
+    <div><img src="AOTC_Infinity_assets/smokeout.jpg" alt="Summer's End Smokeout event promotion on the AOTC mobile billboard" loading="lazy" /></div>
+    <div class="m-hide"><video aria-label="AOTC LED truck route footage — GPS-verified mobile advertising" data-src="AOTC_Infinity_assets/section7.mp4" autoplay muted loop playsinline preload="none"></video></div>
   </div>
   <div class="lp-close__inner">
     <h2 class="lp-close__head">The feed forgets.<br><em>The streets remember.</em></h2>
@@ -3975,7 +4216,7 @@ body{
       <p class="lp-testi__who" id="lpTestiWho"></p>
     </div>
     <button class="lp-close__cta" type="button" onclick="(function(){var isM=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);if(isM){var sep=/iPhone|iPad|iPod|Mac/i.test(navigator.userAgent)?'&amp;':'?';window.location.href='sms:+17737081400'+sep+'body='+encodeURIComponent('GET A ROUTE PLAN & QUOTE, please and thank you!');}else{window.location.href='mailto:info@adsofthecentury.net?subject='+encodeURIComponent('Get a Route Plan & Quote')+'&body='+encodeURIComponent('GET A ROUTE PLAN & QUOTE, please and thank you!');}})();">Get a route plan &amp; quote <span aria-hidden="true">&gt;</span></button>
-    <p class="lp-close__note">The route's open. We double-dog dare you to own it.</p>
+    <p class="lp-close__note">The route's open. We <em class="dare">double-dog dare</em> you to own it.</p>
   </div>
 </section>
 
@@ -4113,7 +4354,7 @@ body{
     if(!live || !frame) return;
     frame.innerHTML = LIVE_PLACEHOLDER_HTML;
     // 1) manual override file wins if present
-    fetch("live-stream.txt?cb=" + Date.now(), {cache:"no-store"})
+    fetch("AOTC_Infinity_assets/live-stream.txt?cb=" + Date.now(), {cache:"no-store"})
       .then(function(r){ return r.ok ? r.text() : ""; })
       .then(function(txt){
         var lines = (txt || "").split(/\r?\n/);
@@ -4921,7 +5162,7 @@ body{
 <script>
 (function(){
   function caseUrl(){}
-  var A='';
+  var A='AOTC_Infinity_assets/';
   var R=[
     {u:'case-wendys.html',n:"Wendy's",s:A+'brand-wendys.png',m:'CHI',t:'Quick service \u00b7 Grand opening \u00b7 Chicago, IL',a:true},
     {u:'case-usw-local-7-1.html',n:'USW Oilworkers Local 7-1',s:A+'brand-usw-local-7-1.png',m:'IN',t:'Labor \u00b7 Member campaign \u00b7 Indiana'},
@@ -5026,40 +5267,7 @@ body{
 })();
 </script>
 <script>
-(function(){
-  /* ---- click & drop: every click mints a chip that falls off the screen ---- */
-  var WORDS=["REACH","RECALL","AOTC","VERIFIED","ON ROUTE","BRAND LIFT","UNSKIPPABLE","BOOKED"];
-  var wi=0;
-  document.addEventListener("click",function(e){
-    var t=e.target;
-    if(t.closest && t.closest("input,select,textarea,label,.cl-row")) return;
-    var chip=document.createElement("div");
-    chip.className="drop-chip";
-    chip.textContent=WORDS[wi++%WORDS.length];
-    chip.style.left=e.clientX+"px";chip.style.top=e.clientY+"px";
-    chip.style.transform="translate(-50%,-50%)";
-    document.body.appendChild(chip);
-    var drift=(Math.random()*160-80),spin=(Math.random()*260-130);
-    chip.animate([
-      {transform:"translate(-50%,-50%) scale(.4) rotate(0deg)",opacity:0},
-      {transform:"translate(-50%,-90%) scale(1.08) rotate("+(spin*.12)+"deg)",opacity:1,offset:.18},
-      {transform:"translate(calc(-50% + "+drift*.3+"px),-70%) scale(1) rotate("+(spin*.3)+"deg)",opacity:1,offset:.42},
-      {transform:"translate(calc(-50% + "+drift+"px),"+(window.innerHeight-e.clientY+120)+"px) scale(.92) rotate("+spin+"deg)",opacity:.9}
-    ],{duration:1250,easing:"cubic-bezier(.3,.6,.6,1)"}).onfinish=function(){chip.remove();};
-    for(var i=0;i<5;i++){
-      var px=document.createElement("div");
-      px.className="drop-px";
-      px.style.left=e.clientX+"px";px.style.top=e.clientY+"px";
-      document.body.appendChild(px);
-      var a=Math.random()*Math.PI*2,d=26+Math.random()*40;
-      px.animate([
-        {transform:"translate(-50%,-50%)",opacity:1},
-        {transform:"translate("+(Math.cos(a)*d-3)+"px,"+(Math.sin(a)*d+60)+"px)",opacity:0}
-      ],{duration:600+Math.random()*300,easing:"cubic-bezier(.2,.7,.6,1)"}).onfinish=function(ev){this.effect.target.remove();};
-    }
-  },true);
-
-  
+(function(){ /* click & drop now lives in aotc-click.js */
 })();
 </script>
 <script>
@@ -5197,6 +5405,309 @@ body{
   if('IntersectionObserver' in window&&sec){var io=new IntersectionObserver(function(e){e.forEach(function(en){if(en.isIntersecting&&!started){started=true;cycle();io.disconnect();}});},{threshold:.3});io.observe(sec);}
   else{cycle();}
 })();
+</script>
+
+<script id="aotcLazyVid">
+(function(){
+  function load(v){
+    if(v.dataset.src && !v.getAttribute('src')){ v.setAttribute('src', v.dataset.src); v.load(); }
+    v.muted = true;
+    var p = v.play(); if(p && p.catch) p.catch(function(){});
+  }
+  function init(){
+    var vids = [].slice.call(document.querySelectorAll('video[data-src]'));
+    if(!vids.length) return;
+    if(!('IntersectionObserver' in window)){ vids.forEach(load); return; }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting) load(e.target);
+        else if(e.target.getAttribute('src')){ try{ e.target.pause(); }catch(err){} }
+      });
+    }, {rootMargin:'300px 0px'});
+    vids.forEach(function(v){ io.observe(v); });
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+<script>
+/* AOTC click & drop — every click mints a chip that falls off the screen.
+   Skipped on form controls only. */
+(function () {
+  if (window.__aotcClickFx) return;
+  window.__aotcClickFx = 1;
+
+  if (!document.getElementById("aotcFxCss")) {
+    var st = document.createElement("style");
+    st.id = "aotcFxCss";
+    st.textContent =
+      ".drop-chip{position:fixed;z-index:9990;pointer-events:none;font-family:'IBM Plex Mono',monospace;font-size:10px;" +
+      "font-weight:600;letter-spacing:.14em;padding:7px 11px;color:#fff;background:linear-gradient(135deg,#e2000f,#9d000a);" +
+      "border:1px solid rgba(255,255,255,.35);box-shadow:0 0 14px rgba(217,0,13,.55),inset 0 1px 0 rgba(255,255,255,.3);" +
+      "text-transform:uppercase;white-space:nowrap}" +
+      ".drop-px{position:fixed;z-index:9990;pointer-events:none;width:5px;height:5px;background:#ffd52e;" +
+      "box-shadow:0 0 8px rgba(255,213,46,.8)}";
+    document.head.appendChild(st);
+  }
+
+  var WORDS = ["REACH", "RECALL", "AOTC", "VERIFIED", "ON ROUTE", "BRAND LIFT", "UNSKIPPABLE", "BOOKED"];
+  var wi = 0;
+
+  document.addEventListener("click", function (e) {
+    var t = e.target;
+    if (t && t.closest && t.closest("input,select,textarea,label,.cl-row")) return;
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion:reduce)").matches) return;
+    if (!e.clientX && !e.clientY) return;   /* keyboard activation */
+
+    var chip = document.createElement("div");
+    chip.className = "drop-chip";
+    chip.textContent = WORDS[wi++ % WORDS.length];
+    chip.style.left = e.clientX + "px";
+    chip.style.top = e.clientY + "px";
+    chip.style.transform = "translate(-50%,-50%)";
+    document.body.appendChild(chip);
+
+    var drift = (Math.random() * 160 - 80), spin = (Math.random() * 260 - 130);
+    chip.animate([
+      { transform: "translate(-50%,-50%) scale(.4) rotate(0deg)", opacity: 0 },
+      { transform: "translate(-50%,-90%) scale(1.08) rotate(" + (spin * .12) + "deg)", opacity: 1, offset: .18 },
+      { transform: "translate(calc(-50% + " + drift * .3 + "px),-70%) scale(1) rotate(" + (spin * .3) + "deg)", opacity: 1, offset: .42 },
+      { transform: "translate(calc(-50% + " + drift + "px)," + (window.innerHeight - e.clientY + 120) + "px) scale(.92) rotate(" + spin + "deg)", opacity: .9 }
+    ], { duration: 1250, easing: "cubic-bezier(.3,.6,.6,1)" }).onfinish = function () { chip.remove(); };
+
+    for (var i = 0; i < 5; i++) {
+      var px = document.createElement("div");
+      px.className = "drop-px";
+      px.style.left = e.clientX + "px";
+      px.style.top = e.clientY + "px";
+      document.body.appendChild(px);
+      var a = Math.random() * Math.PI * 2, d = 26 + Math.random() * 40;
+      px.animate([
+        { transform: "translate(-50%,-50%)", opacity: 1 },
+        { transform: "translate(" + (Math.cos(a) * d - 3) + "px," + (Math.sin(a) * d + 60) + "px)", opacity: 0 }
+      ], { duration: 600 + Math.random() * 300, easing: "cubic-bezier(.2,.7,.6,1)" })
+        .onfinish = function () { this.effect.target.remove(); };
+    }
+  }, true);
+})();
+
+</script>
+<script>
+/* AOTC — internal booking-form gate.
+   The booking form is a sales tool, not a public page: it is not in the nav.
+   To open it: double-click the AOTC logo, then enter the passphrase.
+   Access is per-page-load only — leaving or reloading the page re-locks it. */
+(function () {
+  var PASS = "drowssap";
+  var DEST = "book.html";
+  var clicks = 0, timer = null, box = null;
+
+  /* book.html itself: refuse to render unless this load was granted a token */
+  if (/book\.html(\?|#|$)/i.test(location.pathname + location.search + location.hash)) {
+    var ok = false;
+    try { ok = sessionStorage.getItem("aotc_gate_once") === "1"; } catch (e) {}
+    if (ok) { try { sessionStorage.removeItem("aotc_gate_once"); } catch (e) {} }
+    else { location.replace("index.html"); return; }
+  }
+
+  function css() {
+    if (document.getElementById("aotcGateCss")) return;
+    var s = document.createElement("style");
+    s.id = "aotcGateCss";
+    s.textContent =
+      ".gate-scrim{position:fixed;inset:0;z-index:2147483200;display:flex;align-items:center;justify-content:center;padding:20px;" +
+        "background:rgba(4,4,6,.9);backdrop-filter:blur(8px);opacity:0;transition:opacity .25s ease}" +
+      ".gate-scrim.on{opacity:1}" +
+      ".gate{width:min(380px,100%);background:linear-gradient(168deg,#15131a,#0b0a0d);border:1px solid rgba(255,255,255,.14);" +
+        "border-radius:4px;box-shadow:0 30px 90px rgba(0,0,0,.8);padding:26px;font-family:'Barlow',system-ui,sans-serif;" +
+        "transform:translateY(14px) scale(.98);transition:transform .3s cubic-bezier(.2,.8,.25,1)}" +
+      ".gate-scrim.on .gate{transform:none}" +
+      ".gate p.k{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:#ff3b48;margin:0 0 12px}" +
+      ".gate h4{font-family:'Barlow Condensed',Impact,sans-serif;font-weight:800;text-transform:uppercase;font-size:23px;" +
+        "letter-spacing:.02em;color:#fff;margin:0 0 6px;line-height:1}" +
+      ".gate p.s{font-size:12.5px;line-height:1.5;color:#8b847a;margin:0 0 18px}" +
+      ".gate input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:3px;color:#fff;" +
+        "padding:13px 14px;font:inherit;font-size:15px;letter-spacing:.12em;box-sizing:border-box}" +
+      ".gate input:focus{outline:0;border-color:rgba(255,21,32,.7);background:rgba(255,255,255,.09)}" +
+      ".gate input.bad{border-color:#ff1520;animation:gshake .32s}" +
+      "@keyframes gshake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}" +
+      ".gate-row{display:flex;gap:9px;margin-top:14px}" +
+      ".gate-row button{flex:1;font-family:'Barlow Condensed',Impact,sans-serif;font-weight:800;text-transform:uppercase;" +
+        "letter-spacing:.05em;font-size:15px;padding:13px;border:0;border-radius:3px;cursor:pointer;color:#fff;" +
+        "background:linear-gradient(#ff1520,#b30009)}" +
+      ".gate-row button.g{background:transparent;border:1px solid rgba(255,255,255,.2);color:#b8b2a8;flex:0 0 auto;padding:13px 18px}" +
+      ".gate small{display:block;margin-top:14px;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.14em;" +
+        "text-transform:uppercase;color:#6f6a62;line-height:1.7}";
+    document.head.appendChild(s);
+  }
+
+  function prompt() {
+    if (box) return;
+    css();
+    box = document.createElement("div");
+    box.className = "gate-scrim";
+    box.innerHTML =
+      '<div class="gate" role="dialog" aria-modal="true" aria-label="Internal access">' +
+        '<p class="k">AOTC internal</p>' +
+        '<h4>Sales console</h4>' +
+        '<p class="s">Booking form access. Staff only.</p>' +
+        '<input type="password" id="gatePass" placeholder="Passphrase" autocomplete="off" autocapitalize="off" spellcheck="false" />' +
+        '<div class="gate-row"><button type="button" id="gateGo">Unlock</button>' +
+        '<button type="button" class="g" id="gateNo">Cancel</button></div>' +
+        '<small>Access expires when this page is closed</small>' +
+      '</div>';
+    document.body.appendChild(box);
+    void box.offsetWidth;
+    box.classList.add("on");
+
+    var inp = box.querySelector("#gatePass");
+    setTimeout(function () { try { inp.focus(); } catch (e) {} }, 260);
+
+    function bail() {
+      if (!box) return;
+      box.classList.remove("on");
+      var b = box; box = null;
+      setTimeout(function () { b.remove(); }, 260);
+    }
+    function tryIt() {
+      if (inp.value.trim() === PASS) {
+        try { sessionStorage.setItem("aotc_gate_once", "1"); } catch (e) {}
+        window.location.href = DEST;
+      } else {
+        inp.classList.remove("bad");
+        void inp.offsetWidth;
+        inp.classList.add("bad");
+        inp.select();
+      }
+    }
+    box.querySelector("#gateGo").addEventListener("click", tryIt);
+    box.querySelector("#gateNo").addEventListener("click", bail);
+    inp.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { e.preventDefault(); tryIt(); }
+      if (e.key === "Escape") bail();
+    });
+    box.addEventListener("click", function (e) { if (e.target === box) bail(); });
+  }
+
+  /* two clicks on the logo inside 700ms */
+  function arm() {
+    var logo = document.querySelector(".brand");
+    if (!logo) return;
+    logo.addEventListener("click", function (e) {
+      clicks++;
+      if (clicks === 1) {
+        timer = setTimeout(function () { clicks = 0; }, 700);
+        return;   /* first click still navigates home as normal */
+      }
+      e.preventDefault();
+      e.stopPropagation();
+      clearTimeout(timer);
+      clicks = 0;
+      prompt();
+    });
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", arm);
+  else arm();
+})();
+
+</script>
+<script>
+/* AOTC unified navigation — one canonical menu, rendered into every page */
+(function () {
+  var ITEMS = [
+    ["index.html","Home","Start here"],
+    ["proof.html","Proof","13 case studies"],
+    ["faq.html","FAQ","16 answers"],
+    ["disclosures.html","Disclosures","Legal"]
+  ];
+  var SOCIAL = [
+    ["https://www.instagram.com/aotc.media/","Instagram"],
+    ["https://www.facebook.com/profile.php?id=61591701875497","Facebook"],
+    ["https://www.threads.com/@aotc.media","Threads"],
+    ["https://linkedin.com/company/advertisements-of-the-century","LinkedIn"],
+    ["https://www.tiktok.com/@adsofthecentury","TikTok"],
+    ["https://linktr.ee/AOTC","Linktree"]
+  ];
+  var GTA = "https://www.instagram.com/reel/Da8ZqD-v0Mo/?utm_source=ig_web_button_share_sheet&igsh=MzRlODBiNWFlZA==";
+
+  function here() {
+    var p = (location.pathname || "").split("/").pop();
+    return (!p || p === "" || p === "index.html") ? "index.html" : p;
+  }
+  function panelHTML() {
+    var cur = here(), out = "";
+    out += '<div class="aotc-col"><p class="aotc-h">Explore</p><div class="aotc-list">';
+    ITEMS.forEach(function (it) {
+      out += '<a class="aotc-item" href="' + it[0] + '"' + (it[0] === cur ? ' aria-current="page"' : '') +
+             ' role="menuitem">' + it[1] + '<span class="d">' + it[2] + '</span></a>';
+    });
+    out += '</div></div>';
+    out += '<div class="aotc-col"><p class="aotc-h">Promos</p><div class="aotc-list">' +
+           '<a class="aotc-item" href="' + GTA + '" target="_blank" rel="noopener" role="menuitem">GTA 6 Giveaway<span class="d">Watch the reel</span></a>' +
+           '</div><p class="aotc-h" style="margin-top:18px">Contact Us</p><div class="aotc-list">' +
+           '<a class="aotc-item" href="sms:+17737081400?&body=LET%27S%20MAKE%20MONEY" role="menuitem">Text 24/7<span class="d">(773) 708-1400</span></a>' +
+           '<a class="aotc-item" href="mailto:info@adsofthecentury.net" role="menuitem">Email 24/7<span class="d">info@adsofthecentury.net</span></a>' +
+           '</div></div>';
+    out += '<div class="aotc-col wide"><p class="aotc-h">Follow</p><div class="aotc-social">';
+    SOCIAL.forEach(function (s) {
+      out += '<a class="aotc-chip" href="' + s[0] + '" target="_blank" rel="noopener">' + s[1] + '</a>';
+    });
+    out += '</div><a class="aotc-book" href="book.html" role="menuitem">Book a campaign &rarr;</a></div>';
+    return out;
+  }
+
+  function wire(wrap) {
+    if (!wrap || wrap.dataset.aotcWired) return;
+    wrap.dataset.aotcWired = "1";
+
+    var tab = wrap.querySelector(".aotc-tab");
+    var scrim = wrap.querySelector(".aotc-scrim");
+    var panel = wrap.querySelector(".aotc-panel");
+    if (!tab || !panel) return;
+
+    panel.innerHTML = panelHTML();   /* every page gets the identical menu */
+
+    function clamp() {
+      panel.style.left = ""; panel.style.right = "";
+      var rc = panel.getBoundingClientRect(), wr = wrap.getBoundingClientRect();
+      if (rc.left < 16) { panel.style.right = "auto"; panel.style.left = (16 - wr.left) + "px"; }
+      else if (rc.right > innerWidth - 16) { panel.style.left = "auto"; panel.style.right = (wr.right - (innerWidth - 16)) + "px"; }
+    }
+    function open() { wrap.classList.add("open"); tab.setAttribute("aria-expanded", "true"); clamp(); }
+    function close() { wrap.classList.remove("open"); tab.setAttribute("aria-expanded", "false"); }
+    function toggle() { wrap.classList.contains("open") ? close() : open(); }
+
+    var hoverDevice = window.matchMedia("(hover: hover) and (min-width: 721px)").matches;
+    tab.addEventListener("click", function (e) {
+      e.stopPropagation();
+      if (hoverDevice) open(); else toggle();
+    });
+    if (scrim) scrim.addEventListener("click", close);
+    panel.addEventListener("click", function (e) { e.stopPropagation(); });
+    document.addEventListener("click", function () { if (wrap.classList.contains("open")) close(); });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && wrap.classList.contains("open")) { close(); tab.focus(); }
+    });
+    window.addEventListener("resize", function () { if (wrap.classList.contains("open")) clamp(); });
+
+    if (hoverDevice) {
+      var t;
+      wrap.addEventListener("mouseenter", function () { clearTimeout(t); open(); });
+      wrap.addEventListener("mouseleave", function () { t = setTimeout(close, 220); });
+    }
+  }
+
+  function init() {
+    var host = document.querySelector(".nav-links");
+    if (host) host.classList.add("aotc-host");
+    document.querySelectorAll(".aotc-nav").forEach(wire);
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+})();
+
 </script>
 </body>
 </html>
