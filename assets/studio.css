@@ -186,9 +186,26 @@
 @media(max-width:1180px){
   .st-actions{margin-top:4px}
 }
+@media(max-width:900px){
+  .st-work{grid-template-columns:minmax(0,1fr)}
+  .st-left{border-right:0;border-bottom:1px solid var(--line)}
+}
 @media(max-width:520px){
   .st-fields{grid-template-columns:1fr}
   .st-actions{grid-template-columns:1fr}
+  .sc-caption{left:9px;bottom:8px}
+  .sc-caption b{font-size:14px}
+  .sc-caption span{margin-top:3px;font-size:7px;letter-spacing:.14em}
+  /* the screen-size table on the studio page: one card per screen instead of a sideways scroll */
+  #the-truck .tbl{min-width:0}
+  #the-truck .tbl thead{display:none}
+  #the-truck .tbl,#the-truck .tbl tbody,#the-truck .tbl tr{display:block}
+  #the-truck .tbl tr{padding:12px 14px;border-bottom:1px solid var(--line)}
+  #the-truck .tbl tr:last-child{border-bottom:0}
+  #the-truck .tbl tbody th{display:block;padding:0 0 4px;border:0;font-size:16px}
+  #the-truck .tbl td{display:inline;padding:0;border:0;font-size:14px}
+  #the-truck .tbl td:nth-of-type(2)::before{content:" \00b7  "}
+  #the-truck .tbl td:nth-of-type(3){display:block;margin-top:4px;font-size:13.5px}
 }
 /* the drop zone grows to fill the panel, so the panel is exactly as tall as the photo; locations are compact chips */
 .st-right>.st-pane.on{flex:1}
