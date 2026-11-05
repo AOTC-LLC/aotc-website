@@ -1,0 +1,56 @@
+/* Mobile LED billboards hub (src\pages\led-billboards.html): service tiles with small animated drawings, the rotation
+   explainer and what every booking includes. Sits on the light reading sections of pages.css. */
+.svx{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:30px}
+.svx-t{position:relative;display:flex;flex-direction:column;gap:10px;padding:20px 18px 18px;border-radius:14px;background:#fff;border:1px solid rgba(13,13,15,.1);box-shadow:0 1px 0 rgba(13,13,15,.04);transition:transform .25s,box-shadow .25s,border-color .25s}
+.svx-t:hover{transform:translateY(-4px);border-color:rgba(217,0,13,.35);box-shadow:0 18px 40px rgba(13,13,15,.12)}
+.svx-art{width:72px;height:52px}
+.svx-art svg{width:100%;height:100%;overflow:visible;fill:none;stroke:#0d0d0f;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.svx-t h3{margin:2px 0 0;font:800 22px/1.05 "Barlow Condensed",sans-serif;letter-spacing:.02em;text-transform:uppercase}
+.svx-t h3 a{color:#0d0d0f;text-decoration:none}
+.svx-t h3 a::after{content:"";position:absolute;inset:0}
+.svx-line{margin:0;font:600 15px/1.45 Barlow,sans-serif;color:#2b2723}
+.svx-beats{list-style:none;margin:2px 0 0;padding:0;display:grid;gap:6px;counter-reset:b}
+.svx-beats li{display:grid;grid-template-columns:auto 1fr;gap:2px 8px;align-items:baseline;font:500 13.5px/1.4 Barlow,sans-serif;color:#4a443e}
+.svx-beats b{grid-row:span 2;align-self:start;min-width:72px;padding:3px 7px;border-radius:6px;background:rgba(217,0,13,.08);color:#b3000b;font:700 10.5px/1.3 "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase}
+.svx-best{margin:auto 0 0;display:flex;flex-wrap:wrap;gap:5px}
+.svx-best span{padding:4px 9px;border-radius:999px;background:#f2eee6;color:#3d3833;font:600 12px Barlow,sans-serif}
+.svx-go{position:relative;z-index:1;align-self:flex-start;margin-top:4px;color:#0d0d0f;font:800 14px "Barlow Condensed",sans-serif;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;border-bottom:2px solid #d9000d}
+
+/* the drawings: each one does one small thing, on a loop */
+.svx-art .sp,.svx-art .lt,.svx-art .w,.svx-art .pl{stroke:#d9000d}
+.svx-open .dr{transform-origin:29px 36px;animation:svxDoor 3.2s ease-in-out infinite}
+.svx-open .sp{animation:svxTwinkle 2.4s ease-in-out infinite}.svx-open .s2{animation-delay:1.2s}
+.svx-stadium .lt{animation:svxFlash 1.6s steps(2) infinite}.svx-stadium .l2{animation-delay:.8s}
+.svx-city .w{fill:#d9000d;stroke:none;animation:svxTwinkle 3s ease-in-out infinite}.svx-city .w2{animation-delay:.7s}.svx-city .w3{animation-delay:1.4s}.svx-city .w4{animation-delay:2.1s}
+.svx-crowd .p{fill:#d9000d;stroke:none;animation:svxHop 1.4s ease-in-out infinite}.svx-crowd .p2{animation-delay:.2s}.svx-crowd .p3{animation-delay:.4s}.svx-crowd .p4{animation-delay:.6s}
+.svx-badge .sw{transform-origin:36px 2px;animation:svxSwing 3s ease-in-out infinite}.svx-badge .ln{stroke:#d9000d}
+.svx-ballot .bl{animation:svxDrop 2.8s ease-in infinite}.svx-ballot .ln{stroke:#d9000d}
+.svx-pins .pn{fill:#d9000d;stroke:none;animation:svxPin 3s cubic-bezier(.3,1.6,.6,1) infinite}.svx-pins .p2{animation-delay:.3s}.svx-pins .p3{animation-delay:.6s}
+.svx-screen .pl{fill:#d9000d;transform-origin:38px 21px;animation:svxPulse 1.8s ease-in-out infinite}
+@keyframes svxDoor{0%,20%,100%{transform:scaleX(1)}50%,70%{transform:scaleX(.15)}}
+@keyframes svxTwinkle{0%,100%{opacity:.15}50%{opacity:1}}
+@keyframes svxFlash{50%{opacity:.2}}
+@keyframes svxHop{0%,100%{transform:translateY(0)}40%{transform:translateY(-5px)}}
+@keyframes svxSwing{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+@keyframes svxDrop{0%{transform:translateY(-6px);opacity:0}25%{opacity:1}70%{transform:translateY(14px);opacity:1}85%,100%{transform:translateY(14px);opacity:0}}
+@keyframes svxPin{0%{transform:translateY(-14px);opacity:0}30%,80%{transform:translateY(0);opacity:1}100%{transform:translateY(0);opacity:0}}
+@keyframes svxPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+
+/* the rotation explainer: a sweep runs across six slots; yours is lit */
+.svx-rot-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(24px,4vw,56px);align-items:center}
+.svx-rot{position:relative;overflow:hidden;display:grid;grid-template-columns:repeat(6,1fr);gap:6px;padding:10px;border-radius:14px;background:#050506;border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 0 40px rgba(0,0,0,.8)}
+.svx-rot span{display:grid;place-items:center;min-height:120px;border-radius:8px;background:#121215;border:1px solid rgba(255,255,255,.06);color:#6f6a61;font:700 12px "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;text-align:center;padding:6px}
+.svx-rot span.you{background:linear-gradient(160deg,#ff2330,#9a000a);color:#fff;box-shadow:0 0 30px rgba(255,35,48,.45)}
+.svx-sweep{position:absolute;top:0;bottom:0;left:0;width:calc((100% - 20px) / 6);margin-left:10px;border-radius:8px;box-shadow:0 0 0 2px #ffd31a inset,0 0 24px rgba(255,211,26,.5);animation:svxSweep 6s steps(6) infinite;pointer-events:none}
+@keyframes svxSweep{from{transform:translateX(0)}to{transform:translateX(600%)}}
+
+/* what every booking includes */
+.svx-inc{list-style:none;margin:26px 0 0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+.svx-inc li{padding:18px 16px;border-radius:12px;background:#fff;border:1px solid rgba(13,13,15,.1);border-top:3px solid #d9000d}
+.svx-inc b{display:block;font:800 18px/1.1 "Barlow Condensed",sans-serif;text-transform:uppercase;color:#0d0d0f}
+.svx-inc span{display:block;margin-top:6px;font:500 14px/1.45 Barlow,sans-serif;color:#4a443e}
+
+@media (max-width:1100px){.svx{grid-template-columns:repeat(2,minmax(0,1fr))}.svx-inc{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:800px){.svx-rot-wrap{grid-template-columns:1fr}}
+@media (max-width:560px){.svx,.svx-inc{grid-template-columns:1fr}.svx-rot span{min-height:84px;font-size:10px}}
+@media (prefers-reduced-motion:reduce){.svx-art *,.svx-sweep{animation:none!important}}

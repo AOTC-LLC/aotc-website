@@ -1,0 +1,121 @@
+/* About page: four looping explainer animations (inline SVG in src/pages/about.html). They run only while on screen
+   (assets/about.js adds .on), and hold a still, fully lit frame for visitors who prefer reduced motion. */
+.ab-row{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(28px,5vw,72px);align-items:center}
+.ab-row.flip .ab-art{order:2}
+.ab-art{margin:0;border-radius:18px;background:radial-gradient(ellipse at 50% 0%,rgba(217,0,13,.14),transparent 60%),#0b0b0d;box-shadow:0 30px 70px rgba(13,13,15,.22);padding:clamp(10px,1.6vw,18px);overflow:hidden}
+.ab-art svg{display:block;width:100%;height:auto}
+.ab-n{display:block;margin-bottom:6px;font:900 clamp(64px,8vw,112px)/.8 var(--fh);color:transparent;-webkit-text-stroke:2px rgba(217,0,13,.45)}
+.ab-copy p{max-width:52ch;font:400 clamp(16px,1.3vw,18px)/1.65 var(--fb)}
+.ab-art text{font:800 15px var(--fh);letter-spacing:.08em;text-anchor:middle;fill:#a49d92}
+.ab-art *{animation-play-state:paused}
+.ab-art.on *{animation-play-state:running}
+/* 01: three screens, three directions */
+/* 02: one corner vs every block on the route */
+.ab2 .half rect{fill:#141417;stroke:rgba(255,255,255,.06)}
+.ab2 .half text{fill:#fff}
+.ab2 .grid{stroke:rgba(255,255,255,.09);stroke-width:10;fill:none}
+.ab2 .reach{fill:rgba(255,177,0,.08);stroke:#ffb100;stroke-width:2;stroke-dasharray:6 6}
+.ab2 .board{fill:#ffb100;stroke:#ffb100;stroke-width:3}
+.ab2 .dots circle{fill:#3a3a40}
+.ab2 .d1 circle:nth-child(-n+2){animation:abPing 3.75s infinite}
+.ab2 .d1 circle:nth-child(2){animation-delay:1.9s}
+.ab2 .route{fill:none;stroke:rgba(255,42,52,.45);stroke-width:6;stroke-linejoin:round}
+.ab2 .mover{fill:#fff;stroke:#ff2a34;stroke-width:5;animation:abMove2 7.5s linear infinite}
+@keyframes abMove2{0%{transform:translate(370px,330px)}20.3%{transform:translate(370px,150px)}35%{transform:translate(500px,150px)}44%{transform:translate(500px,230px)}54.1%{transform:translate(410px,230px)}63.1%{transform:translate(410px,310px)}80%,100%{transform:translate(560px,310px)}}
+.ab2 .d2 circle{animation:abPing 7.5s infinite}
+.ab2 .d2 .a{animation-delay:.32s}
+.ab2 .d2 .b{animation-delay:1.13s}
+.ab2 .d2 .c{animation-delay:1.94s}
+.ab2 .d2 .d{animation-delay:2.54s}
+.ab2 .d2 .e{animation-delay:3.06s}
+.ab2 .d2 .f{animation-delay:3.64s}
+.ab2 .d2 .g{animation-delay:4.39s}
+.ab2 .d2 .h{animation-delay:5.24s}
+.ab2 .d2 .i{animation-delay:5.9s}
+@keyframes abPing{0%{fill:#ff2a34;r:9px}25%{fill:#ff2a34;r:6px}40%,100%{fill:#3a3a40;r:5px}}
+.ab2 .cap{fill:#ffb100;font-size:13px}
+/* 03: the route follows the clock */
+/* 04: the live route room */
+.ab4 .lap{fill:#1d1d21}
+.ab4 .route{fill:none;stroke:#ff2a34;stroke-width:7;stroke-linejoin:round;stroke-linecap:round;stroke-dasharray:810;stroke-dashoffset:810;filter:drop-shadow(0 0 6px rgba(255,42,52,.8));animation:abDraw 8s linear infinite}
+@keyframes abDraw{0%{stroke-dashoffset:810}75%,100%{stroke-dashoffset:0}}
+.ab4 .card{fill:#18181b;stroke:rgba(255,255,255,.07)}
+.ab4 .k{fill:#a49d92;font-size:11px;text-anchor:start}
+.ab4 .v{fill:#fff;font:900 30px var(--fh);text-anchor:start;font-variant-numeric:tabular-nums}
+.ab4 .v.red{fill:#ff2a34}
+@media(max-width:860px){
+  .ab-row{grid-template-columns:1fr}
+  .ab-row.flip .ab-art{order:0}
+}
+@media(prefers-reduced-motion:reduce){
+  .ab-art *{animation:none!important}
+  .ab1 .walk circle,.ab1 .car rect,.ab2 .d2 circle{fill:#ff2a34}
+  .ab2 .mover{transform:translate(560px,310px)}
+  .ab4 .route{stroke-dashoffset:0}
+}
+/* ---- photo-based explainers (1, 3, 4): real job photos and the real dashboard, with light motion on top ---- */
+.abx{position:relative;padding:0;overflow:hidden;aspect-ratio:16/10;background:#000}
+.abx img{display:block;width:100%;height:100%;object-fit:cover}
+/* 1: the side and rear screens outlined and measured on a real job */
+.abx1 svg{position:absolute;inset:0;width:100%;height:100%}
+.abx1 img{object-position:50% 55%}
+.abx1 .q{fill:rgba(255,211,26,0);stroke:#ffd31a;stroke-width:6;stroke-linejoin:round;stroke-dasharray:900;stroke-dashoffset:900;animation:abQ 9s ease-in-out infinite}
+.abx1 .qr{animation-name:abQr}
+.abx1 .tg{opacity:0;animation:abT 9s ease-in-out infinite}
+.abx1 .tgr{animation-name:abTr}
+.abx1 .tgo{animation-name:abTo}
+.abx1 .tg path{stroke:#ffd31a;stroke-width:4;fill:none}
+.abx1 .tg rect{fill:rgba(8,8,9,.86);stroke:rgba(255,211,26,.8);stroke-width:3}
+.abx1 .tg text{fill:#fff;font:800 34px var(--fh);letter-spacing:.08em;text-anchor:middle}
+@keyframes abQ{0%{stroke-dashoffset:900;fill:rgba(255,211,26,0)}14%,88%{stroke-dashoffset:0;fill:rgba(255,211,26,.14)}100%{stroke-dashoffset:0;fill:rgba(255,211,26,0);opacity:0}}
+@keyframes abQr{0%,30%{stroke-dashoffset:900;fill:rgba(255,211,26,0)}44%,88%{stroke-dashoffset:0;fill:rgba(255,211,26,.14)}100%{stroke-dashoffset:0;opacity:0}}
+@keyframes abT{0%,10%{opacity:0}16%,88%{opacity:1}100%{opacity:0}}
+@keyframes abTr{0%,40%{opacity:0}46%,88%{opacity:1}100%{opacity:0}}
+@keyframes abTo{0%,62%{opacity:0}68%,88%{opacity:1}100%{opacity:0}}
+/* 2: the people the board misses stay red, outside its reach */
+.ab2 .d1.miss circle{fill:#ff2a34;opacity:.9;animation:abMiss 3.4s ease-in-out infinite}
+.ab2 .d1.miss circle:nth-child(odd){animation-delay:1.7s}
+@keyframes abMiss{50%{opacity:.45}}
+/* 3: the same truck through the day, four real photos and a clock */
+.ab3-ph img{position:absolute;inset:0;opacity:0;animation:abPh 12s infinite;transform:scale(1.04)}
+.ab3-ph .p2{animation-delay:3s}
+.ab3-ph .p3{animation-delay:6s}
+.ab3-ph .p4{animation-delay:9s}
+@keyframes abPh{0%{opacity:0;transform:scale(1.08)}5%,25%{opacity:1}30%,100%{opacity:0;transform:scale(1)}}
+.ab3-hud{position:absolute;left:16px;right:16px;top:16px;display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:14px;background:rgba(8,8,9,.82);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(6px)}
+.ab3-clock{flex:none;width:64px;height:64px}
+.ab3-clock .face{fill:#0d0d0f;stroke:#ffd31a;stroke-width:3}
+.ab3-clock .tick{stroke:rgba(255,255,255,.5);stroke-width:3}
+.ab3-clock .hr,.ab3-clock .mn{stroke:#fff;stroke-width:5;stroke-linecap:round;transform-origin:50px 50px}
+.ab3-clock .mn{stroke:#ff2a34;stroke-width:3;animation:abMin 3s linear infinite}
+.ab3-clock .hr{animation:abHr 12s infinite}
+.ab3-clock .hub{fill:#ff2a34}
+@keyframes abMin{to{transform:rotate(360deg)}}
+@keyframes abHr{0%,22%{transform:rotate(240deg)}25%,47%{transform:rotate(360deg)}50%,72%{transform:rotate(540deg)}75%,97%{transform:rotate(660deg)}100%{transform:rotate(600deg)}}
+.ab3-lb{position:relative;flex:1;min-height:44px}
+.ab3-lb b{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;opacity:0;animation:abPh 12s infinite;color:#ffd31a;font:900 26px/1 var(--fh);letter-spacing:.04em;transform:none}
+.ab3-lb b span{margin-top:4px;color:#fff;font:600 14px/1.2 var(--fb);letter-spacing:.02em}
+.ab3-lb .l2{animation-delay:3s}
+.ab3-lb .l3{animation-delay:6s}
+.ab3-lb .l4{animation-delay:9s}
+.ab3-bar{position:absolute;left:0;right:0;bottom:0;height:5px;background:rgba(255,255,255,.12)}
+.ab3-bar i{display:block;height:100%;background:linear-gradient(90deg,#d9000d,#ffd31a);transform-origin:left;animation:abBar 12s linear infinite}
+@keyframes abBar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+/* 4: the real dashboard, on a laptop */
+.abx4{aspect-ratio:auto;padding:clamp(18px,3vw,34px) clamp(14px,2.4vw,28px) clamp(26px,3.6vw,40px);background:radial-gradient(ellipse at 50% 0%,rgba(217,0,13,.2),transparent 60%),#0b0b0d}
+.ab4-lap{padding:10px 10px 12px;border-radius:14px 14px 4px 4px;background:linear-gradient(#2a2a2f,#161619);box-shadow:0 0 0 1px rgba(255,255,255,.12) inset,0 24px 50px rgba(0,0,0,.6)}
+.ab4-scr{position:relative;overflow:hidden;border-radius:6px;background:#000}
+.ab4-scr img{height:auto;animation:abPan 14s ease-in-out infinite alternate;transform-origin:30% 45%}
+@keyframes abPan{from{transform:scale(1)}to{transform:scale(1.16)}}
+.ab4-live{position:absolute;left:12px;top:12px;display:inline-flex;align-items:center;gap:7px;padding:5px 10px;border-radius:99px;background:rgba(217,0,13,.9);color:#fff;font:800 11px/1 var(--fb);letter-spacing:.16em;text-transform:uppercase}
+.ab4-live i{width:8px;height:8px;border-radius:50%;background:#fff;animation:abBlink 1.4s ease-in-out infinite}
+@keyframes abBlink{50%{opacity:.25}}
+.ab4-glare{position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,.08),transparent 35%);pointer-events:none}
+.ab4-base{height:16px;margin:0 -4%;border-radius:0 0 16px 16px;background:linear-gradient(#3a3a40,#1a1a1d);box-shadow:0 14px 30px rgba(0,0,0,.5)}
+@media (prefers-reduced-motion:reduce){
+  .abx *{animation:none!important}
+  .ab3-ph .p1,.ab3-lb .l1,.abx1 .tg{opacity:1}
+  .abx1 .q{stroke-dashoffset:0}
+}
+.abx3 .ab3-clock{width:64px;height:64px}
+.abx1 svg{height:100%}

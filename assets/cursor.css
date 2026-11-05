@@ -1,0 +1,18 @@
+/* The LED cursor and the click ripple (assets/cursor.js). The system cursor only hides once the script is running and only for a
+   mouse; text fields keep their normal I-beam so people can see where they type. */
+.ax-ripple{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:2147483600;pointer-events:none}
+html.ax-cursor.ax-live,html.ax-cursor.ax-live *{cursor:none!important}
+html.ax-cursor.ax-live.ax-type,html.ax-cursor.ax-live.ax-type *{cursor:auto!important}
+.ax-dot,.ax-ring{position:fixed;left:0;top:0;z-index:2147483601;pointer-events:none;opacity:0;transition:opacity .15s;will-change:transform}
+html.ax-live .ax-dot,html.ax-live .ax-ring{opacity:1}
+html.ax-type .ax-dot,html.ax-type .ax-ring{opacity:0}
+/* the LED: a white-hot core, a red body, the glow it throws, and a hairline so it still shows on red */
+.ax-dot{width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:radial-gradient(circle at 50% 45%,#fff 0 22%,#ff5a63 48%,#e0000f 100%);box-shadow:0 0 0 1px rgba(0,0,0,.45),0 0 8px 1px rgba(255,35,48,.95),0 0 22px 4px rgba(255,35,48,.45)}
+.ax-dot.is-gold{background:radial-gradient(circle at 50% 45%,#fff 0 22%,#ffe28a 48%,#d9a93a 100%);box-shadow:0 0 0 1px rgba(0,0,0,.45),0 0 8px 1px rgba(243,201,84,.95),0 0 22px 4px rgba(243,201,84,.45)}
+/* the ring of LEDs, drawn as a dotted circle; it turns slowly once it opens over something clickable */
+.ax-ring{width:36px;height:36px;margin:-18px 0 0 -18px}
+.ax-ring::before{content:"";position:absolute;inset:0;border-radius:50%;border:2px dotted rgba(255,70,80,.9);filter:drop-shadow(0 0 3px rgba(255,35,48,.8)) drop-shadow(0 0 1px rgba(0,0,0,.6));transition:border-color .15s}
+.ax-ring.is-on::before{animation:axTurn 5s linear infinite;border-color:#ff5a63}
+.ax-ring.is-gold::before{border-color:#f3c954;filter:drop-shadow(0 0 3px rgba(243,201,84,.85)) drop-shadow(0 0 1px rgba(0,0,0,.6))}
+@keyframes axTurn{to{transform:rotate(360deg)}}
+@media print{.ax-ripple,.ax-dot,.ax-ring{display:none}}
