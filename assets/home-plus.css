@@ -317,8 +317,12 @@ body[data-home] .sn{position:sticky}
 .dash-legend i.h{background:#ff2a34;box-shadow:0 0 0 2px #fff inset;margin-left:8px}
 .dash-map{min-height:460px}
 @media (max-width:900px){
-  .dash-body{grid-template-columns:1fr}
-  .dash-map{min-height:380px}
+  .dash-body{grid-template-columns:minmax(0,1fr)}
+  .dash-map{width:100%;min-width:0;min-height:380px}
+}
+@media (max-width:560px){
+  .dash-legend{display:block;left:8px;right:8px;bottom:22px;padding:6px 10px;font-size:11px;line-height:1.7}
+  .dash-legend i{vertical-align:-1px;margin-right:5px}
 }
 /* 9. the close keeps room for the truck sign */
 .dash-leaf canvas,.dash-leaf img,.dash-leaf svg{max-width:none!important;max-height:none!important}
