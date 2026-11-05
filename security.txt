@@ -1,0 +1,5 @@
+Contact: mailto:info@adsofthecentury.net
+Expires: 2027-11-04T00:00:00Z
+Preferred-Languages: en
+Canonical: https://adsofthecentury.net/.well-known/security.txt
+Canonical: https://adsofthecentury.net/security.txt
