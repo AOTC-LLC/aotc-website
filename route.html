@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#050506">
+<title>Live Route Room | AOTC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800;900&family=Barlow:wght@400;500;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha384-c6Rcwz4e4CITMbu/NBmnNS8yN2sC3cUElMEMfP3vqqKFp7GOYaaBBCqmaWBjmkjb" crossorigin="anonymous" referrerpolicy="no-referrer">
+<link rel="stylesheet" href="assets/ticket.css">
+<link rel="stylesheet" href="assets/cursor.css">
+<style>
+:root{--fh:"Barlow Condensed",Impact,sans-serif;--fb:"Barlow",system-ui,sans-serif;--fm:"IBM Plex Mono",monospace;--red:#d9000d;--red2:#ff1520;
+  --bg:#050506;--card:#0c0c0e;--line:rgba(255,255,255,.1);--muted:#8d877e;--text:#e8e2d8;--gold:#f3d677;--gold2:#d9b24f;--silver:#d7dbe0;--dock:0px}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font:400 15px/1.5 var(--fb)}
+body{padding-bottom:var(--dock)}
+button{font:inherit;color:inherit}
+[hidden]{display:none!important}
+.rr-top{position:sticky;top:0;z-index:1000;display:flex;align-items:center;gap:12px;min-height:64px;padding:10px clamp(12px,2vw,22px);background:rgba(5,5,6,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.rr-logo img{display:block;height:38px;width:auto;background:#fff;border-radius:2px}
+.rr-back{height:40px;padding:0 14px;border-radius:6px;border:1px solid rgba(243,214,119,.45);background:rgba(243,214,119,.08);color:var(--gold);cursor:pointer;font:800 15px var(--fh);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.rr-back:hover{background:rgba(243,214,119,.16)}
+.rr-id{flex:1;min-width:0}
+.rr-id small{display:block;font:600 9.5px var(--fm);letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+.rr-id small.op{color:var(--gold)}
+.rr-id h1{margin:2px 0 0;font:900 clamp(20px,2.6vw,30px)/1 var(--fh);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rr-mirror{display:inline-flex;padding:3px;border-radius:999px;background:linear-gradient(115deg,#2a2412,#0d0d0f 40%,#24262a);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.rr-mirror button{height:34px;padding:0 14px;border:0;border-radius:999px;background:transparent;cursor:pointer;font:600 9.5px var(--fm);letter-spacing:.16em;text-transform:uppercase;color:#8d877e;white-space:nowrap}
+.rr-mirror button[data-side=op][aria-pressed=true]{background:linear-gradient(115deg,#a8832b,#fff2bf 45%,#d9b24f);color:#2a1d04}
+.rr-mirror button[data-side=cl][aria-pressed=true]{background:linear-gradient(115deg,#8e949c,#fbfcfd 45%,#b9bec5);color:#111}
+.rr-status{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--line);font:600 10px var(--fm);letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+.rr-status i{width:9px;height:9px;border-radius:50%;background:#555}
+.rr-status.live{border-color:rgba(255,21,32,.6)}.rr-status.live i{background:var(--red2);animation:ping 1.6s infinite}
+.rr-status.stale i{background:#f0a020}.rr-status.done i{background:#3ecf6e}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(255,21,32,.7)}70%{box-shadow:0 0 0 10px rgba(255,21,32,0)}100%{box-shadow:0 0 0 0 rgba(255,21,32,0)}}
+.rr-out{height:38px;padding:0 12px;border-radius:6px;border:1px solid var(--line);background:transparent;cursor:pointer;font:600 9.5px var(--fm);letter-spacing:.16em;text-transform:uppercase;color:#a59f95}
+.rr-out:hover{color:#fff;border-color:rgba(255,255,255,.3)}
+@media(max-width:760px){.rr-logo{display:none}.rr-mirror button{padding:0 10px;font-size:8.5px;letter-spacing:.1em}.rr-status span{display:none}.rr-status{padding:0 10px}.rr-top{flex-wrap:wrap}.rr-mirror{order:5;width:100%;justify-content:center}}
+
+/* ---- AOTC control room ---- */
+.rr-dash{padding:clamp(18px,3vw,40px) clamp(14px,3vw,40px) 60px;max-width:1280px;margin:0 auto}
+.rr-dash__head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:26px}
+.rr-eye{margin:0 0 8px;font:600 10px var(--fm);letter-spacing:.26em;text-transform:uppercase;color:var(--gold)}
+.rr-dash h2{margin:0;font:900 clamp(34px,5vw,58px)/.9 var(--fh);text-transform:uppercase}
+.rr-dash h2 em{font-style:normal;color:var(--gold)}
+.rr-new{display:flex;gap:8px;flex:0 1 420px;min-width:260px}
+.rr-new input{flex:1;min-width:0;height:48px;padding:0 14px;border-radius:8px;border:1px solid rgba(243,214,119,.35);background:#0a0a0b;color:#fff;font:500 15px var(--fb);outline:none}
+.rr-new input:focus{border-color:var(--gold)}
+.rr-new button{height:48px;padding:0 18px;border:0;border-radius:8px;cursor:pointer;background:linear-gradient(115deg,#a8832b,#fff2bf 40%,#d9b24f);color:#2a1d04;font:900 16px var(--fh);letter-spacing:.06em;text-transform:uppercase}
+.rr-sharing{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 22px;padding:12px 16px;border-radius:8px;background:rgba(255,21,32,.08);box-shadow:inset 0 0 0 1px rgba(255,21,32,.4)}
+.rr-sharing i{width:9px;height:9px;border-radius:50%;background:var(--red2);animation:ping 1.6s infinite}
+.rr-sharing b{font:800 17px var(--fh);text-transform:uppercase;letter-spacing:.04em}
+.rr-sharing button{margin-left:auto;height:36px;padding:0 14px;border-radius:6px;border:0;background:var(--red);color:#fff;cursor:pointer;font:800 14px var(--fh);letter-spacing:.06em;text-transform:uppercase}
+.rr-group{margin-top:26px}
+.rr-group h3{display:flex;align-items:baseline;gap:10px;margin:0 0 12px;font:800 22px var(--fh);text-transform:uppercase;letter-spacing:.02em}
+.rr-group h3 small{font:600 9.5px var(--fm);letter-spacing:.16em;color:var(--muted)}
+.rr-group h3 span{margin-left:auto;font:600 11px var(--fm);color:var(--muted)}
+.rr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.rr-none{grid-column:1/-1;margin:0;padding:16px;border:1px dashed var(--line);border-radius:8px;color:#7d776d;font-size:14px}
+.rr-card{position:relative;display:flex;flex-direction:column;border-radius:10px;background:var(--card);box-shadow:inset 0 0 0 1px var(--line);overflow:hidden;transition:box-shadow .2s,transform .2s}
+.rr-card:hover{box-shadow:inset 0 0 0 1px rgba(243,214,119,.5);transform:translateY(-2px)}
+.rr-card.live{box-shadow:inset 0 0 0 1px rgba(255,21,32,.55),0 0 30px rgba(217,0,13,.15)}
+.rr-card.closed{opacity:.78}
+.rr-card__open{display:block;width:100%;padding:16px 16px 12px;border:0;background:transparent;text-align:left;cursor:pointer}
+.rr-card__state{display:inline-flex;align-items:center;gap:7px;font:600 9.5px var(--fm);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.rr-card__state i{width:7px;height:7px;border-radius:50%;background:#555}
+.rr-card.live .rr-card__state{color:#fff}.rr-card.live .rr-card__state i{background:var(--red2);animation:ping 1.6s infinite}
+.rr-card.open .rr-card__state i{background:#3ecf6e}.rr-card.new .rr-card__state i{background:var(--gold)}
+.rr-card__open b{display:block;margin:8px 0 4px;font:900 26px/1 var(--fh);text-transform:uppercase;letter-spacing:.01em}
+.rr-card__open span.meta{display:block;font-size:13.5px;color:#a59f95}
+.rr-card__foot{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 16px;border-top:1px solid var(--line);font:500 10px var(--fm);letter-spacing:.08em;color:#8d877e}
+.rr-card__foot code{font:600 11.5px var(--fm);color:var(--gold);letter-spacing:.04em}
+.rr-copy{height:30px;padding:0 10px;border-radius:5px;border:1px solid var(--line);background:transparent;cursor:pointer;font:600 9px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:#c9c3b9;white-space:nowrap}
+.rr-copy:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ---- job view: the same mirror for both sides ---- */
+.rr-job{display:grid;grid-template-columns:minmax(0,1fr) 390px;min-height:calc(100vh - 65px - var(--dock))}
+.rr-job.preview{outline:2px solid rgba(215,219,224,.55);outline-offset:-2px}
+@media(max-width:960px){.rr-job{grid-template-columns:1fr}}
+.rr-map{position:relative;min-height:440px;border-right:1px solid var(--line)}
+#map{position:absolute;inset:0;background:#0b0b0c}
+@media(max-width:960px){.rr-map{min-height:48vh;border-right:0;border-bottom:1px solid var(--line)}}
+.rr-runs{position:absolute;top:12px;left:12px;right:12px;z-index:500;display:flex;gap:6px;overflow-x:auto;pointer-events:none}
+.rr-runs button{pointer-events:auto;flex:0 0 auto;height:34px;padding:0 12px;border-radius:6px;border:1px solid var(--line);background:rgba(7,7,7,.86);cursor:pointer;font:600 10px var(--fm);letter-spacing:.1em;text-transform:uppercase;color:#c9c3b9}
+.rr-runs button[aria-pressed=true]{border-color:var(--red2);color:#fff}
+.rr-runs button.live::before{content:"";display:inline-block;width:7px;height:7px;margin-right:7px;border-radius:50%;background:var(--red2)}
+.rr-follow{position:absolute;right:12px;bottom:76px;z-index:500;height:36px;padding:0 12px;border-radius:6px;border:1px solid var(--red2);background:rgba(7,7,7,.9);cursor:pointer;font:600 10px var(--fm);letter-spacing:.14em;text-transform:uppercase}
+.rr-replay{position:absolute;left:12px;right:12px;bottom:12px;z-index:500;display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(7,7,7,.88);border:1px solid var(--line);backdrop-filter:blur(6px)}
+.rr-replay label{font:600 10px var(--fm);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.rr-replay input{flex:1;accent-color:var(--red2)}
+.rr-replay output{font:600 12px var(--fm);color:#fff;min-width:66px;text-align:right}
+.rr-replay button{font:600 10px var(--fm);letter-spacing:.14em;text-transform:uppercase;background:var(--red);color:#fff;border:0;padding:8px 12px;cursor:pointer}
+.rr-empty{position:absolute;inset:0;z-index:450;display:grid;place-items:center;padding:20px;text-align:center;background:radial-gradient(ellipse at 50% 50%,rgba(5,5,6,.55),rgba(5,5,6,.92))}
+.rr-empty b{display:block;font:900 clamp(26px,3.4vw,40px)/1 var(--fh);text-transform:uppercase}
+.rr-empty span{display:block;max-width:420px;margin:10px auto 0;color:#bdb6ab}
+.rr-side{padding:16px;display:grid;gap:12px;align-content:start}
+.rr-panel{background:var(--card);border:1px solid var(--line);padding:16px}
+.rr-panel h2{margin:0 0 12px;font:600 10px var(--fm);letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.rr-stats{display:grid;grid-template-columns:1fr 1fr;gap:14px 12px}
+.rr-stats b{display:block;font:900 30px/1 var(--fh);color:#fff}
+.rr-stats span{font:500 9.5px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.rr-imp{margin:12px 0 0;font-size:11.5px;line-height:1.5;color:#8d877e}
+.rr-tl{list-style:none;margin:0;padding:0;display:grid;gap:9px;max-height:260px;overflow:auto}
+.rr-tl li{display:grid;grid-template-columns:70px 1fr;gap:10px;font-size:14px}
+.rr-tl time{font:600 11px var(--fm);color:var(--red2);padding-top:2px}
+.rr-note{margin:0;font-size:13px;color:#a59f95;line-height:1.55}
+.rr-note b{color:#fff}.rr-note code{color:var(--gold);font:600 12px var(--fm)}
+.rr-closed{max-width:560px;margin:14vh auto;padding:24px;text-align:center}
+.rr-closed h2{font:900 clamp(32px,5vw,48px)/1 var(--fh);text-transform:uppercase;margin:0 0 12px}
+.rr-closed a{color:var(--gold)}
+.truck{width:22px;height:22px;border-radius:50%;background:var(--red2);border:3px solid #fff;box-shadow:0 0 0 6px rgba(255,21,32,.35),0 0 24px rgba(255,21,32,.9)}
+.snap{width:14px;height:14px;border-radius:3px;background:var(--gold);border:2px solid #1a1203;box-shadow:0 0 12px rgba(243,214,119,.8)}
+.leaflet-container{background:#0b0b0c;font:12px var(--fb)}
+.dark-tiles{filter:invert(1) hue-rotate(180deg) brightness(.85) contrast(.9) saturate(.4)}
+.leaflet-control-attribution{background:rgba(0,0,0,.6)!important;color:#888!important}.leaflet-control-attribution a{color:#bbb!important}
+
+/* ---- AOTC dock: share GPS, add media ---- */
+.rr-dock{position:fixed;left:0;right:0;bottom:0;z-index:1100;padding:10px clamp(10px,2vw,20px) calc(10px + env(safe-area-inset-bottom));display:grid;gap:8px;
+  background:linear-gradient(180deg,#0e0c06,#060607);border-top:1px solid rgba(243,214,119,.4);box-shadow:0 -18px 40px rgba(0,0,0,.5)}
+.rr-dock__row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.rr-dock__lbl{font:600 9px var(--fm);letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.rr-chip{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 10px 0 12px;border-radius:999px;border:1px solid var(--line);background:#0e0e10;cursor:pointer;font:700 13.5px var(--fb);color:#c9c3b9}
+.rr-chip[aria-pressed=true]{border-color:var(--gold);color:#fff;background:rgba(243,214,119,.12)}
+.rr-chip.on::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--red2)}
+.rr-chip .x{font:400 16px/1 system-ui;color:#8d877e}
+.rr-chip.add{border-style:dashed;color:var(--gold)}
+.rr-dock__main{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rr-go,.rr-snap{position:relative;height:58px;border-radius:10px;cursor:pointer;font:900 20px/1 var(--fh);letter-spacing:.06em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.rr-go{border:0;background:linear-gradient(#ff2a34,#d9000d);color:#fff;box-shadow:0 5px 0 #7a0007}
+.rr-go.end{background:#1b1b1e;color:#fff;box-shadow:inset 0 0 0 1px rgba(255,21,32,.6),0 5px 0 #000}
+.rr-go:active,.rr-snap:active{transform:translateY(3px)}
+.rr-snap{border:1px solid rgba(243,214,119,.55);background:rgba(243,214,119,.1);color:var(--gold)}
+.rr-snap small{font:600 9px var(--fm);letter-spacing:.12em;color:#c9c3b9;text-transform:uppercase}
+.rr-snap.due{animation:due 1.4s ease-in-out infinite}
+@keyframes due{50%{box-shadow:0 0 0 4px rgba(243,214,119,.35),0 0 30px rgba(243,214,119,.5)}}
+.rr-dock__info{justify-content:space-between;font:500 10px var(--fm);letter-spacing:.08em;color:#a59f95}
+.rr-dock__info label{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.rr-keep{margin:0;font:500 10px var(--fm);letter-spacing:.06em;color:#f0c060}
+.rr-pick{display:flex;flex-wrap:wrap;gap:6px;padding:8px;border-radius:8px;background:#0a0a0b;box-shadow:inset 0 0 0 1px var(--line)}
+.rr-pick p{width:100%;margin:0 0 2px;font:600 9px var(--fm);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+
+/* ---- photos: the job's Drive folder as a rotating slideshow ---- */
+.rr-show__stage{position:relative;aspect-ratio:4/3;background:#000;border:1px solid var(--line);overflow:hidden}
+.rr-slide{position:absolute;inset:0;margin:0;opacity:0;transition:opacity .9s ease;cursor:zoom-in}
+.rr-slide.on{opacity:1;z-index:1}
+.rr-slide .rr-bgx{position:absolute;inset:-24px;background:#000 center/cover no-repeat;filter:blur(20px) brightness(.45) saturate(1.2)}
+.rr-slide img{position:relative;display:block;width:100%;height:100%;object-fit:contain}
+.rr-slide iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
+.rr-slide .rr-play{position:absolute;left:50%;top:50%;z-index:2;width:66px;height:66px;margin:-33px 0 0 -33px;border:2px solid rgba(255,255,255,.85);border-radius:50%;background:rgba(217,0,13,.88);cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.rr-slide .rr-play::after{content:"";position:absolute;left:26px;top:20px;border-left:20px solid #fff;border-top:13px solid transparent;border-bottom:13px solid transparent}
+.rr-slide.playing figcaption,.rr-slide.playing .play{z-index:3}
+.rr-slide figcaption{position:absolute;left:8px;bottom:8px;padding:4px 8px;background:rgba(0,0,0,.72);font:600 10px var(--fm);letter-spacing:.08em;color:#fff}
+.rr-slide .play{position:absolute;right:8px;top:8px;padding:3px 7px;background:rgba(217,0,13,.92);font:600 9px var(--fm);letter-spacing:.12em;color:#fff}
+.rr-show__nav{position:absolute;top:50%;z-index:2;width:36px;height:36px;margin-top:-18px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(0,0,0,.55);color:#fff;font:400 22px/1 system-ui;cursor:pointer}
+.rr-show__nav.prev{left:8px}.rr-show__nav.next{right:8px}
+.rr-show__count{position:absolute;right:8px;bottom:8px;z-index:2;padding:4px 8px;background:rgba(0,0,0,.72);font:600 10px var(--fm);color:#fff}
+.rr-ph{display:grid;gap:6px;place-content:center;text-align:center;aspect-ratio:4/3;padding:18px;border:1px dashed rgba(243,214,119,.35);background:radial-gradient(ellipse at 50% 40%,rgba(243,214,119,.07),transparent 70%)}
+.rr-ph b{font:900 22px/1 var(--fh);text-transform:uppercase;color:#fff}
+.rr-ph span{font-size:14px;color:#a59f95}
+.rr-folder{display:block;width:100%;aspect-ratio:4/3;height:auto;border:1px solid var(--line);background:#fff}
+.rr-folder-note{margin:8px 0 0;font-size:12px;line-height:1.5;color:#8d877e}
+.rr-drive{margin-top:12px;display:grid;gap:8px}
+.rr-drive label{font:600 9.5px var(--fm);letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.rr-drive div{display:flex;gap:6px}
+.rr-drive input{flex:1;min-width:0;height:42px;padding:0 12px;border-radius:6px;border:1px solid rgba(243,214,119,.35);background:#060607;color:#fff;font:500 13px var(--fb);outline:none}
+.rr-drive input:focus{border-color:var(--gold)}
+.rr-drive button{height:42px;padding:0 14px;border:0;border-radius:6px;cursor:pointer;background:linear-gradient(115deg,#a8832b,#fff2bf 40%,#d9b24f);color:#2a1d04;font:900 15px var(--fh);letter-spacing:.06em;text-transform:uppercase}
+.rr-drive p{margin:0;font-size:12.5px;line-height:1.5;color:#8d877e}.rr-drive p b{color:#e8e2d8}.rr-drive p.bad{color:#ff8a8a}
+
+/* ---- lightbox, toast ---- */
+.rr-lb{position:fixed;inset:0;z-index:1300;display:grid;place-items:center;padding:16px;background:rgba(0,0,0,.92)}
+.rr-lb img{max-width:100%;max-height:82vh;display:block}
+.rr-lb iframe{width:min(92vw,960px);aspect-ratio:16/9;border:0;display:block;background:#000}
+.rr-lb p{margin:10px 0 0;text-align:center;font:600 11px var(--fm);letter-spacing:.12em;color:#c9c3b9}
+.rr-lb button{position:absolute;top:12px;right:12px;width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;font:400 24px/1 system-ui;cursor:pointer}
+.rr-toast{position:fixed;left:50%;top:76px;z-index:1400;transform:translateX(-50%);max-width:min(92vw,520px);padding:10px 14px;border-radius:8px;background:#141416;box-shadow:0 0 0 1px rgba(243,214,119,.45),0 10px 30px rgba(0,0,0,.5);font-size:14px;color:#fff}
+</style>
+</head>
+<body>
+<header class="rr-top">
+  <a class="rr-logo" href="./" aria-label="AOTC home" data-site-logo><img src="aotc_final.gif" alt="AOTC" width="60" height="38"></a>
+  <button class="rr-back" id="rrBack" type="button" hidden>&larr; Back</button>
+  <div class="rr-id"><small id="rrKicker">Live route room</small><h1 id="rrTitle">Golden Ticket</h1></div>
+  <div class="rr-mirror" id="rrMirror" role="group" aria-label="Which side of the mirror" hidden>
+    <button type="button" data-side="op" aria-pressed="true">AOTC side</button><button type="button" data-side="cl" aria-pressed="false">Client side</button>
+  </div>
+  <span class="rr-status" id="rrStatus" hidden><i></i><span></span></span>
+  <button class="rr-out" id="rrOut" type="button" hidden>Lock</button>
+</header>
+
+<div id="rrGate" hidden></div>
+
+<section class="rr-dash" id="rrDash" hidden>
+  <div class="rr-dash__head">
+    <div><p class="rr-eye">AOTC side &middot; Control room</p><h2>Every job. <em>One ticket.</em></h2></div>
+    <form class="rr-new" id="rrNew" autocomplete="off"><input name="name" placeholder="New job: brand name" maxlength="60" required aria-label="Brand name for a new job"><button type="submit">Create</button></form>
+  </div>
+  <div class="rr-sharing" id="rrSharing" hidden><i></i><b id="rrSharingT">Sharing GPS</b><button type="button" id="rrSharingGo">Open</button></div>
+  <div class="rr-group" id="gLive"><h3>Running now <span></span></h3><div class="rr-grid"></div></div>
+  <div class="rr-group" id="gOpen"><h3>Clients <small>client view open</small><span></span></h3><div class="rr-grid"></div></div>
+  <div class="rr-group" id="gArch"><h3>Archive <small>client view closed &middot; kept for good</small><span></span></h3><div class="rr-grid"></div></div>
+</section>
+
+<main class="rr-job" id="rrJob" hidden>
+  <div class="rr-map">
+    <div id="map" role="img" aria-label="Map of the truck's GPS route"></div>
+    <div class="rr-runs" id="rrRuns"></div>
+    <button class="rr-follow" id="rrFollow" type="button" hidden>Follow the truck</button>
+    <div class="rr-replay" id="rrReplay" hidden>
+      <label for="rrScrub">Replay</label>
+      <input type="range" id="rrScrub" min="0" max="1000" value="1000" aria-label="Replay the route">
+      <output id="rrScrubT">--:--</output>
+      <button type="button" id="rrNow">Now</button>
+    </div>
+    <div class="rr-empty" id="rrEmpty" hidden><div><b id="rrEmptyH">No route yet.</b><span id="rrEmptyP"></span></div></div>
+  </div>
+  <aside class="rr-side">
+    <section class="rr-panel" aria-labelledby="hRoute"><h2 id="hRoute">The route</h2>
+      <div class="rr-stats">
+        <div><b id="sTime">0:00</b><span>Time on route</span></div>
+        <div><b id="sDist">0.0 mi</b><span>Distance</span></div>
+        <div><b id="sMedia">&ndash;</b><span>Photos</span></div>
+        <div><b id="sSeen">&ndash;</b><span>Last GPS</span></div>
+        <div><b id="sImp">&ndash;</b><span>Est. impressions</span></div>
+        <div><b id="sSov">&ndash;</b><span>Share of voice</span></div>
+      </div>
+      <p class="rr-imp">Impressions are estimates for planning, not a guarantee: at least one viewer per second while your ad is on screen, plus the weekly audience of each billboard the truck passes (every Lamar and OUTFRONT face in their public inventories: Lamar&rsquo;s audited figures, OUTFRONT&rsquo;s estimated from comparable Lamar faces) for the minutes beside it, times your share of the rotation.</p>
+    </section>
+    <section class="rr-panel" aria-labelledby="hMedia"><h2 id="hMedia">From the street</h2>
+      <div id="rrShow"></div>
+      <form class="rr-drive" id="rrDrive" autocomplete="off" hidden>
+        <label for="rrDriveIn">Photos folder &middot; Google Drive</label>
+        <div><input id="rrDriveIn" name="link" inputmode="url" placeholder="Paste the folder's share link"><button type="submit">Save</button></div>
+        <p id="rrDriveP">In Drive: Share &rarr; General access &rarr; <b>Anyone with the link</b>. Photos added to the folder rotate here, on both sides.</p>
+      </form>
+    </section>
+    <section class="rr-panel" aria-labelledby="hTl"><h2 id="hTl">Timeline</h2><ol class="rr-tl" id="rrTl"></ol></section>
+    <p class="rr-note" id="rrNote"></p>
+  </aside>
+</main>
+
+<div class="rr-closed" id="rrClosed" hidden><h2>This route view has closed.</h2><p class="rr-note" id="rrClosedP"></p></div>
+
+<div class="rr-dock" id="rrDock" hidden>
+  <div class="rr-dock__row"><span class="rr-dock__lbl" id="rrChipsL">This run</span><span id="rrChips" class="rr-dock__row"></span></div>
+  <div class="rr-pick" id="rrPick" hidden></div>
+  <div class="rr-dock__main">
+    <button class="rr-go" id="rrGo" type="button">Go live</button>
+    <button class="rr-snap" id="rrSnap" type="button">Add photos<small id="rrDue">Opens the job's Drive folder</small></button>
+  </div>
+  <div class="rr-dock__row rr-dock__info"><span id="rrGps">GPS off</span><label id="rrSimL" hidden><input type="checkbox" id="rrSim"> Simulate a drive (preview only)</label></div>
+  <p class="rr-keep" id="rrKeep" hidden>Keep this screen open while you drive. GPS pauses if the phone locks or you switch apps.</p>
+</div>
+
+<div class="rr-lb" id="rrLb" hidden><button type="button" id="rrLbX" aria-label="Close">&times;</button><div><div id="rrLbIn"></div><p id="rrLbP"></p></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha384-NElt3Op+9NBMCYaef5HxeJmU4Xeard/Lku8ek6hoPTvYkQPh3zLIrJP7KiRocsxO" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="assets/ticket.js"></script>
+<script src="assets/gps.js"></script>
+<script>
+/* AOTC live route room: one page, two sides of the same mirror.
+   AOTC side (one AOTC ticket): the control room with every job, plus sharing GPS and photos/video for one
+   or several brands on the same run. Client side (<brand> ticket): that brand's slice of each run, read-only,
+   until 7 days after its last route. The AOTC ticket lives only in this page's memory: the Back button keeps
+   it, but leaving the page (browser back, swipe back, reload, closing) locks the room again. */
+(function () {
+  "use strict";
+  var API = AOTCTicket.api, HANDOFF = "aotcRouteHandoff", CLIENT = "aotcRouteClient", DAY = 864e5;
+  var LOCAL = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+  var $ = function (id) { return document.getElementById(id); };
+  var S = { role: null, token: null, brand: null, name: "", ticket: "", access: null, runs: [], sel: null, since: 0, skew: 0,
+            side: "op", dash: null, timer: null, follow: true, fitted: false, pick: [], drive: null, dtimer: null,
+            gps: { run: null, brands: [], watch: null, flush: null, sim: null, queue: [], last: null, sentAt: 0, wake: null, hiddenAt: 0, err: "", buzzed: 0, photoTap: 0 } };
+
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function now() { return Date.now() + S.skew; }
+  function clock(ms) { return new Date(ms).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }); }
+  function day(ms) { return new Date(ms).toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" }); }
+  function longDay(ms) { return new Date(ms).toLocaleDateString([], { month: "long", day: "numeric" }); }
+  function dur(ms) { var s = Math.max(0, Math.round(ms / 1000)), h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60); return h + ":" + String(m).padStart(2, "0"); }
+  function ago(ms) { var s = Math.max(0, Math.round(ms / 1000)); return s < 60 ? s + " sec ago" : s < 3600 ? Math.round(s / 60) + " min ago" : Math.round(s / 3600) + " hr ago"; }
+  function meters(a, b) { var R = 6371000, r = Math.PI / 180, dLa = (b[1] - a[1]) * r, dLo = (b[2] - a[2]) * r, x = Math.sin(dLa / 2) * Math.sin(dLa / 2) + Math.cos(a[1] * r) * Math.cos(b[1] * r) * Math.sin(dLo / 2) * Math.sin(dLo / 2); return 2 * R * Math.asin(Math.sqrt(x)); }
+  // only touch the DOM when a section actually changed (polling every few seconds would otherwise reload videos)
+  var painted = {};
+  function put(id, html) { if (painted[id] !== html) { painted[id] = html; $(id).innerHTML = html; } }
+  function toast(msg) { var t = document.createElement("div"); t.className = "rr-toast"; t.setAttribute("role", "status"); t.textContent = msg; document.body.appendChild(t); setTimeout(function () { t.remove(); }, 4200); }
+
+  function api(a, o) {
+    o = o || {};
+    var init = { method: o.body !== undefined ? "POST" : "GET", headers: { Authorization: "Bearer " + S.token }, cache: "no-store" };
+    if (o.body !== undefined) { init.headers["Content-Type"] = "application/json"; init.body = JSON.stringify(o.body); }
+    return fetch(API + "?a=" + a + (o.q ? "&" + o.q : ""), init).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        if (r.status === 401) { lock(); }
+        if (!r.ok) { var e = new Error(j.error || r.status); e.status = r.status; e.data = j; throw e; }
+        return j;
+      });
+    });
+  }
+
+  /* ───── views ───── */
+  function view(v) {
+    $("rrGate").hidden = v !== "gate"; $("rrDash").hidden = v !== "dash"; $("rrJob").hidden = v !== "job"; $("rrClosed").hidden = v !== "closed";
+    var op = S.role === "op";
+    $("rrBack").hidden = !(op && v === "job");
+    $("rrMirror").hidden = !(op && v === "job");
+    $("rrStatus").hidden = v !== "job";
+    $("rrOut").hidden = v === "gate"; $("rrOut").textContent = op ? "Lock" : "Leave";
+    dock();
+    if (v === "job") setTimeout(function () { map.invalidateSize(); }, 30);
+    window.scrollTo(0, 0);
+  }
+  function head(kicker, title, gold) { var k = $("rrKicker"); k.textContent = kicker; k.className = gold ? "op" : ""; $("rrTitle").textContent = title; document.title = title + " | AOTC Live Route Room"; }
+
+  function gate() {
+    stopGPS(true); clearInterval(S.timer); clearInterval(S.dtimer); stopShow();
+    S.role = null; S.token = null; S.brand = null; S.runs = []; S.dash = null;
+    head("Live route room", "Golden Ticket"); view("gate");
+    AOTCTicket.mountInline($("rrGate"), admit);
+  }
+  function admit(j) {
+    S.role = j.role; S.token = j.token;
+    if (j.role === "cl") { try { sessionStorage.setItem(CLIENT, JSON.stringify({ token: j.token, role: "cl", brand: j.brand })); } catch (e) {} openJob(j.brand); }
+    else showDash();
+  }
+  function lock() {
+    if (S.role === "cl") { try { sessionStorage.removeItem(CLIENT); } catch (e) {} }
+    gate();
+  }
+  $("rrOut").addEventListener("click", function () {
+    if (S.gps.run && !confirm("GPS is still being shared. Lock the room and stop sharing?")) return;
+    lock();
+  });
+
+  /* ───── AOTC control room ───── */
+  function showDash() {
+    S.brand = null; head("AOTC side · Control room", "All jobs", true); view("dash"); clearInterval(S.dtimer); stopShow();
+    loadDash(); clearInterval(S.timer); S.timer = setInterval(function () { if (!document.hidden) loadDash(); }, 20000);
+  }
+  function loadDash() { return api("dash").then(function (d) { S.dash = d; S.skew = d.now - Date.now(); renderDash(); }).catch(function () {}); }
+  function card(b) {
+    var st = b.state, label = { live: "Live" + (b.liveSince ? " · " + dur(now() - b.liveSince) : ""), "new": "Ready · no routes yet", open: "Client view open", closed: "Client view closed" }[st];
+    var meta = b.runs + (b.runs === 1 ? " route" : " routes") + " · " + (b.drive ? "photos folder linked" : "no photos folder yet");
+    if (st === "live" && b.lastSeen) meta += " · GPS " + ago(now() - b.lastSeen);
+    if (st === "open") meta += " · until " + longDay(b.closes);
+    if (st === "closed") meta += " · closed " + longDay(b.closes);
+    return '<article class="rr-card ' + st + '"><button class="rr-card__open" type="button" data-open="' + esc(b.slug) + '">' +
+      '<span class="rr-card__state"><i></i>' + esc(label) + '</span><b>' + esc(b.name) + '</b><span class="meta">' + esc(meta) + '</span></button>' +
+      '<div class="rr-card__foot"><span>Client ticket <code>' + esc(b.ticket) + '</code></span><button class="rr-copy" type="button" data-copy="' + esc(b.ticket) + '" data-name="' + esc(b.name) + '">Copy invite</button></div></article>';
+  }
+  function renderDash() {
+    var d = S.dash, g = { live: [], open: [], arch: [] };
+    d.brands.forEach(function (b) { (b.state === "live" ? g.live : b.state === "closed" ? g.arch : g.open).push(b); });
+    g.live.sort(function (a, b) { return (b.liveSince || 0) - (a.liveSince || 0); });
+    g.open.sort(function (a, b) { return (b.lastEnd || b.created || 0) - (a.lastEnd || a.created || 0); });
+    g.arch.sort(function (a, b) { return (b.lastEnd || 0) - (a.lastEnd || 0); });
+    [["gLive", g.live, "Nothing on the road right now."], ["gOpen", g.open, "No open client views. Create a job above to get a client ticket."], ["gArch", g.arch, "Nothing archived yet. Client views move here 7 days after their last route, and stay here for good."]].forEach(function (x) {
+      var el = $(x[0]); el.querySelector("h3 span").textContent = x[1].length || "";
+      el.querySelector(".rr-grid").innerHTML = x[1].length ? x[1].map(card).join("") : '<p class="rr-none">' + x[2] + "</p>";
+    });
+    var sh = $("rrSharing"); sh.hidden = !S.gps.run;
+    if (S.gps.run) $("rrSharingT").textContent = "Sharing GPS for " + S.gps.brands.map(nameOf).join(" · ");
+  }
+  function nameOf(slug) { var b = S.dash && S.dash.brands.filter(function (x) { return x.slug === slug; })[0]; return b ? b.name : slug; }
+  $("rrDash").addEventListener("click", function (e) {
+    var o = e.target.closest("[data-open]"); if (o) { openJob(o.getAttribute("data-open")); return; }
+    var c = e.target.closest("[data-copy]");
+    if (c) {
+      var msg = "Your AOTC live route room: " + location.href.split(/[?#]/)[0] + "\nYour ticket: " + c.getAttribute("data-copy");
+      (navigator.clipboard ? navigator.clipboard.writeText(msg) : Promise.reject()).then(function () { toast("Invite copied for " + c.getAttribute("data-name") + "."); }, function () { prompt("Copy this invite:", msg); });
+    }
+  });
+  $("rrSharingGo").addEventListener("click", function () { if (S.gps.brands[0]) openJob(S.gps.brands[0]); });
+  $("rrNew").addEventListener("submit", function (e) {
+    e.preventDefault(); var inp = this.elements.name, name = inp.value.trim(); if (!name) return;
+    api("newjob", { body: { name: name } }).then(function (j) { inp.value = ""; toast("Job ready. Client ticket: " + j.ticket); loadDash(); })
+      .catch(function () { toast("That name didn't work. Use letters or numbers."); });
+  });
+  $("rrBack").addEventListener("click", showDash);
+
+  /* ───── job view (both sides) ───── */
+  var map = L.map("map", { zoomControl: true }).setView([41.8837, -87.6324], 13);
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, className: "dark-tiles", referrerPolicy: "strict-origin-when-cross-origin", attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
+  var glow = L.polyline([], { color: "#ff1520", weight: 12, opacity: .18 }).addTo(map);
+  var trail = L.polyline([], { color: "#ff1520", weight: 4, opacity: .9 }).addTo(map);
+  var truck = L.marker([41.8837, -87.6324], { icon: L.divIcon({ className: "", html: '<div class="truck"></div>', iconSize: [22, 22], iconAnchor: [11, 11] }) });
+  var halo = L.circle([41.8837, -87.6324], { radius: 10, color: "#ff1520", weight: 1, opacity: .45, fillColor: "#ff1520", fillOpacity: .1, interactive: false });
+  var snaps = L.layerGroup().addTo(map);
+  // the billboards (every face in Lamar's and OUTFRONT's public inventories for Chicagoland, NW Indiana and the lakeshore, all media
+  // types; dev\billboards.ps1): the ones the truck passes light up, and their audience counts toward the estimated impressions
+  var BD = [], bdots = [], bdRend = L.canvas({ padding: .4 }), PASS_M = 160, lit = {};
+  function bdFill(b) { return /^[DQK]$/.test(b[3]) ? "#ffd31a" : "#f0a830"; }   // digital faces in yellow
+  fetch("assets/data/billboards-chicago.json").then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+    if (!d) return; BD = d.boards;
+    bdots = BD.map(function (b) { return L.circleMarker([b[0], b[1]], { renderer: bdRend, radius: 4, color: "#1a1408", weight: 1, fillColor: bdFill(b), fillOpacity: .9 })
+      .bindTooltip(esc(b[4]) + "<br><b>" + b[2].toLocaleString("en-US") + "</b> weekly impressions (" + (b[7] ? "estimated" : "Lamar") + ")", { direction: "top" }).addTo(map); });
+    if (S.brand) render();
+  }).catch(function () {});
+  function near(b, p) { var dy = (b[0] - p[1]) * 111320, dx = (b[1] - p[2]) * 111320 * Math.cos(p[1] * Math.PI / 180); return dx * dx + dy * dy <= PASS_M * PASS_M; }
+  // seconds on the street and billboard credit along the route (gaps over 5 minutes are breaks, not driving)
+  function reach(pts) {
+    var secs = 0, corr = 0, hit = {}; if (pts.length < 2) return { secs: 0, corr: 0, hit: hit };
+    var la0 = Infinity, la1 = -Infinity, lo0 = Infinity, lo1 = -Infinity;
+    pts.forEach(function (p) { la0 = Math.min(la0, p[1]); la1 = Math.max(la1, p[1]); lo0 = Math.min(lo0, p[2]); lo1 = Math.max(lo1, p[2]); });
+    var cand = []; BD.forEach(function (b, k) { if (b[0] > la0 - .003 && b[0] < la1 + .003 && b[1] > lo0 - .004 && b[1] < lo1 + .004) cand.push(k); });
+    for (var i = 1; i < pts.length; i++) {
+      var dt = (pts[i][0] - pts[i - 1][0]) / 1000; if (dt <= 0 || dt > 300) continue;
+      secs += dt;
+      for (var c = 0; c < cand.length; c++) { var b = BD[cand[c]]; if (near(b, pts[i])) { corr += b[2] / 10080 * dt / 60; hit[cand[c]] = 1; } }
+    }
+    return { secs: secs, corr: corr, hit: hit };
+  }
+  map.on("dragstart", function () { S.follow = false; $("rrFollow").hidden = !curRun() || !curRun().live; });
+  $("rrFollow").addEventListener("click", function () { S.follow = true; this.hidden = true; render(); });
+
+  function openJob(slug) {
+    S.brand = slug; S.runs = []; S.sel = null; S.since = 0; S.follow = true; S.fitted = false; S.side = "op"; S.pick = [slug]; S.drive = null;
+    trail.setLatLngs([]); glow.setLatLngs([]); snaps.clearLayers(); truck.remove(); halo.remove(); stopShow(); show.ids = "";
+    $("rrScrub").value = 1000; setSide("op"); $("rrDriveIn").value = "";
+    head(S.role === "op" ? "AOTC side" : "Live route room", "…", S.role === "op"); view("job");
+    // a hidden tab only checks in when it comes back, unless it is sharing GPS
+    poll(); clearInterval(S.timer); S.timer = setInterval(function () { if (!document.hidden || S.gps.run) poll(); }, S.role === "op" ? 3000 : 4000);
+    loadDrive(); clearInterval(S.dtimer); S.dtimer = setInterval(function () { if (!document.hidden) loadDrive(); }, 60000);
+  }
+  function poll() {
+    var b = S.brand;
+    return api("state", { q: "b=" + encodeURIComponent(b) + "&since=" + S.since }).then(function (st) {
+      if (b !== S.brand) return;
+      merge(st); render();
+      if (st.more) return poll();   // a long route arrives in pages
+    }).catch(function (e) {
+      if (e.status === 403 && e.data && e.data.error === "closed") {
+        clearInterval(S.timer); head("Live route room", "Route view closed"); view("closed");
+        clearInterval(S.dtimer); stopShow();
+        $("rrClosedP").innerHTML = "Route views stay open for 7 days after the run. This one closed on <b>" + longDay(e.data.closed) + "</b>. Your photos are still with us: text <a href=\"sms:+17737081400\">(773) 708-1400</a> and we'll send them over.";
+      }
+    });
+  }
+  function merge(st) {
+    S.skew = st.now - Date.now(); S.name = st.brand.name; S.ticket = st.brand.ticket || ""; S.access = st.access;
+    if (S.drive && (st.brand.drive || null) !== S.drive.folder) loadDrive();   // the folder was linked or changed elsewhere
+    var old = {}; S.runs.forEach(function (r) { old[r.id] = r; });
+    S.runs = st.runs.map(function (r) {
+      var pts = (old[r.id] ? old[r.id].points : []).concat(r.points || []);
+      pts.sort(function (a, b) { return a[0] - b[0]; }); r.points = pts; return r;
+    });
+    S.runs.forEach(function (r) { r.points.forEach(function (p) { if (p[0] > S.since) S.since = p[0]; }); });
+    // a route that just went live takes the screen; otherwise keep whatever run is being looked at
+    var lr = S.runs.filter(function (r) { return r.live; })[0];
+    if (lr && !old[lr.id] && S.runs.length > 1) { S.sel = lr.id; S.fitted = false; $("rrScrub").value = 1000; S.follow = true; }
+    if (!S.sel || !S.runs.some(function (r) { return r.id === S.sel; })) S.sel = (lr || S.runs[0] || {}).id || null;
+  }
+  function curRun() { for (var i = 0; i < S.runs.length; i++) if (S.runs[i].id === S.sel) return S.runs[i]; return null; }
+  function liveRun() { return S.runs.filter(function (r) { return r.live; })[0] || null; }
+
+  function render() {
+    var op = S.role === "op", mirrorOp = op && S.side === "op", run = curRun();
+    head(op ? (S.side === "op" ? "AOTC side" : "Client side · what " + S.name + " sees") : "Live route room", S.name, op && S.side === "op");
+    // run tabs
+    var tabs = S.runs.length > 1 ? S.runs.map(function (r) { return '<button type="button" data-run="' + r.id + '" class="' + (r.live ? "live" : "") + '" aria-pressed="' + (r.id === S.sel) + '">' + (r.live ? "Live now" : day(r.start) + " · " + clock(r.start)) + "</button>"; }).join("") : "";
+    put("rrRuns", tabs);
+    // empty state
+    $("rrEmpty").hidden = !!(run && run.points.length);
+    if (!run) { $("rrEmptyH").textContent = "No route yet."; $("rrEmptyP").textContent = op ? "Tap Go live when the truck rolls. This brand's client side fills in the moment it does." : "When the truck rolls for you, it appears here live: every turn on the map, and photos from the street."; }
+    else if (!run.points.length) { $("rrEmptyH").textContent = run.live ? "Waiting for GPS…" : "No GPS on this route."; $("rrEmptyP").textContent = run.live ? "The route is live. The truck appears the moment its first position comes in." : ""; }
+    var all = run ? AOTCGps.track(run.points) : [], endT = run ? (run.end || now()) : now();   // assets/gps.js: bad fixes out, parked drift held still
+    var cutoff = !run || +$("rrScrub").value >= 1000 ? Infinity : (run.start + (Math.min(endT, now()) - run.start) * $("rrScrub").value / 1000);
+    var pts = all.filter(function (p) { return p[0] <= cutoff; });
+    $("rrReplay").hidden = all.length < 2;
+    $("rrScrubT").textContent = cutoff === Infinity ? (run && run.live ? "Live" : "End") : clock(cutoff);
+    // map
+    var ll = pts.map(function (p) { return [p[1], p[2]]; });
+    trail.setLatLngs(ll); glow.setLatLngs(ll);
+    if (ll.length) { truck.setLatLng(ll[ll.length - 1]).addTo(map); } else truck.remove();
+    // how sure the phone is of this position: a soft ring the size of its margin of error, shown only on the live position
+    var tip = pts[pts.length - 1];
+    if (tip && tip[3] && run.live && cutoff === Infinity) halo.setLatLng([tip[1], tip[2]]).setRadius(tip[3]).addTo(map); else halo.remove();
+    if (ll.length && !S.fitted) { map.invalidateSize(); if (ll.length > 1) map.fitBounds(trail.getBounds(), { padding: [50, 50], maxZoom: 16, animate: false }); else map.setView(ll[0], 15, { animate: false }); S.fitted = true; }
+    else if (ll.length && S.follow && run.live && cutoff === Infinity) map.panTo(ll[ll.length - 1], { animate: true });
+    // photos from the Drive folder that carry a location (and were taken during this route) go on the map
+    var files = (S.drive && S.drive.files) || [], inRun = run ? files.filter(function (f) { return f.t >= run.start - 6e5 && f.t <= endT + 36e5; }) : [];
+    snaps.clearLayers();
+    inRun.forEach(function (m) { if (m.lat != null) L.marker([m.lat, m.lng], { icon: L.divIcon({ className: "", html: '<div class="snap"></div>', iconSize: [14, 14], iconAnchor: [7, 7] }) }).on("click", function () { lightbox(m); }).addTo(snaps); });
+    // status
+    var st = $("rrStatus"), last = all[all.length - 1];
+    if (!run) { st.className = "rr-status"; st.lastChild.textContent = "No route yet"; }
+    else if (run.live) { var a = last ? now() - last[0] : Infinity; st.className = "rr-status " + (a < 90000 ? "live" : "stale"); st.lastChild.textContent = !last ? "Live · waiting for GPS" : a < 90000 ? "Live now" : "Live · GPS " + ago(a); }
+    else { st.className = "rr-status done"; st.lastChild.textContent = "Route complete"; }
+    // stats
+    var dist = AOTCGps.distance(pts), k;
+    $("sTime").textContent = run ? dur((cutoff === Infinity ? endT : cutoff) - run.start) : "0:00";
+    $("sDist").textContent = (dist / 1609.34).toFixed(1) + " mi";
+    $("sMedia").textContent = S.drive && S.drive.files ? S.drive.files.length : "–";
+    $("sSeen").textContent = last ? clock(last[0]) : "–";
+    // the brands on a run share its rotation equally; one brand alone is an exclusive run (share 1)
+    var share = run && run.share != null ? run.share : 1, rc = reach(pts);
+    $("sImp").textContent = run && pts.length > 1 ? Math.round((rc.secs + rc.corr) * share).toLocaleString("en-US") : "–";
+    $("sSov").textContent = run ? Math.round(share * 1000) / 10 + "%" : "–";
+    Object.keys(lit).forEach(function (k) { if (!rc.hit[k] && bdots[k]) { bdots[k].setStyle({ fillColor: bdFill(BD[k]), color: "#1a1408", weight: 1, radius: 4 }); delete lit[k]; } });
+    Object.keys(rc.hit).forEach(function (k) { if (!lit[k] && bdots[k]) { bdots[k].setStyle({ fillColor: "#ff1520", color: "#fff", weight: 2, radius: 7 }); lit[k] = 1; } });
+    renderDrive();
+    // timeline
+    var ev = [];
+    if (run) {
+      ev.push({ t: run.start, txt: "Route started" });
+      for (k = 1; k < all.length; k++) if (all[k][0] - all[k - 1][0] > 180000) ev.push({ t: all[k - 1][0], txt: "GPS signal lost until " + clock(all[k][0]) });
+      inRun.forEach(function (m) { ev.push({ t: m.t, txt: m.kind === "video" ? "Video from the street" : "Photo from the street" }); });
+      if (!run.live && run.end) ev.push({ t: run.end, txt: run.auto ? "Route closed on its own after 3 hours without GPS" : "Route complete" });
+    }
+    ev.sort(function (a, b) { return b.t - a.t; });
+    put("rrTl", ev.length ? ev.slice(0, 40).map(function (e) { return "<li><time>" + clock(e.t) + "</time><span>" + esc(e.txt) + "</span></li>"; }).join("") : "<li><span>Nothing yet.</span></li>");
+    // note
+    var acc = S.access || {};
+    $("rrNote").innerHTML = mirrorOp
+      ? "Client ticket <code>" + esc(S.ticket) + "</code>. " + (acc.state === "closed" ? "Their view closed on <b>" + longDay(acc.closes) + "</b>; this archive stays here for good." : acc.state === "open" ? "Their view stays open until <b>" + longDay(acc.closes) + "</b>." : "They see each route live, then for 7 days after it ends.")
+      : (run && !run.live && run.expires ? "This view shows the truck's GPS only while it ran your route, and stays open until <b>" + longDay(run.expires) + "</b> (7 days after the route)." : "This private view shows the truck's GPS <b>only while it's running your route</b>, and stays open for <b>7 days after</b>.");
+    $("rrJob").classList.toggle("preview", op && S.side === "cl");
+    dock();
+  }
+  function brandName(slug) { var r = curRun(), b = r && (r.brands || []).filter(function (x) { return x.slug === slug; })[0]; return b ? b.name : slug === S.brand ? S.name : slug; }
+
+  $("rrRuns").addEventListener("click", function (e) { var b = e.target.closest("[data-run]"); if (!b) return; S.sel = b.getAttribute("data-run"); S.fitted = false; $("rrScrub").value = 1000; render(); });
+  $("rrScrub").addEventListener("input", function () { S.follow = false; render(); });
+  $("rrNow").addEventListener("click", function () { $("rrScrub").value = 1000; S.follow = true; render(); });
+  /* ───── photos: the job's Google Drive folder, rotating ───── */
+  var show = { i: 0, ids: "", timer: null, hover: false, playing: false };
+  function loadDrive() {
+    var b = S.brand;
+    return api("drive", { q: "b=" + encodeURIComponent(b) }).then(function (d) { if (b !== S.brand) return; S.drive = d; render(); }).catch(function () {});
+  }
+  function stopShow() { clearInterval(show.timer); show.timer = null; }
+  function slides() { return document.querySelectorAll("#rrShow .rr-slide"); }
+  function go(i) {
+    var s = slides(), n = s.length; if (!n) return;
+    show.i = ((i % n) + n) % n;
+    [show.i, (show.i + 1) % n].forEach(function (k) {   // load as they come up: the picture, and a blurred copy that fills the box behind it
+      var img = s[k].querySelector("img"); if (img && !img.src) { img.src = img.getAttribute("data-src"); s[k].querySelector(".rr-bgx").style.backgroundImage = "url(\"" + img.src + "\")"; }
+    });
+    s.forEach(function (el, k) { if (k !== show.i && el.classList.contains("playing")) stopVideo(el); });
+    s.forEach(function (el, k) { el.classList.toggle("on", k === show.i); });
+    var c = $("rrShow").querySelector(".rr-show__count"); if (c) c.textContent = (show.i + 1) + " / " + n;
+  }
+  function renderDrive() {
+    var op = S.role === "op", mirrorOp = op && S.side === "op", d = S.drive || {}, p = $("rrDriveP");
+    $("rrDrive").hidden = !mirrorOp;
+    if (mirrorOp && document.activeElement !== $("rrDriveIn") && d.folder && !$("rrDriveIn").value) $("rrDriveIn").value = d.folder === "demo" ? "demo" : "https://drive.google.com/drive/folders/" + d.folder;
+    if (mirrorOp) { p.className = d.problem ? "bad" : ""; p.innerHTML = d.problem ? esc(d.problem) : "In Drive: Share &rarr; General access &rarr; <b>Anyone with the link</b>. Photos added to the folder rotate here, on both sides."; }
+    if (!S.drive) return;
+    var ph = function (h, t) { stopShow(); show.ids = ""; put("rrShow", '<div class="rr-ph"><b>' + h + "</b><span>" + t + "</span></div>"); };
+    if (!d.folder) return ph("Photos from the street", mirrorOp ? "Paste this job's Google Drive folder link below. Its photos rotate here for the client." : "Photos from your route will appear here.");
+    if (d.files === null) {   // no Google key on the Worker: Drive's own folder view, which can't show times
+      stopShow(); show.ids = "";
+      return put("rrShow", '<iframe class="rr-folder" src="https://drive.google.com/embeddedfolderview?id=' + encodeURIComponent(d.folder) + '#grid" title="Photos from the route" loading="lazy"></iframe>' +
+        (mirrorOp ? '<p class="rr-folder-note">Showing Drive&rsquo;s folder view. Add the <b>GOOGLE_API_KEY</b> secret to the Cloudflare Worker and this becomes a full-size slideshow with the time of every photo and video.</p>' : ""));
+    }
+    if (!d.files.length) return ph("No photos yet", mirrorOp ? "Add photos to the job's Drive folder and they rotate here." : "Photos from your route will appear here as they come in.");
+    var list = d.files.slice(0, 60), ids = list.map(function (f) { return f.id; }).join(",");
+    if (ids !== show.ids) {
+      show.ids = ids;
+      put("rrShow", '<div class="rr-show__stage">' + list.map(function (f, k) {
+        return '<figure class="rr-slide" data-k="' + k + '"><span class="rr-bgx" aria-hidden="true"></span><img data-src="' + esc(f.src) + '" alt="' + (f.kind === "video" ? "Video" : "Photo") + ' from the route, ' + esc(day(f.t)) + '">' +
+          (f.kind === "video" ? '<span class="play">Video</span><button type="button" class="rr-play" data-play aria-label="Play this video"></button>' : "") + "<figcaption>" + esc(day(f.t) + " · " + clock(f.t)) + "</figcaption></figure>";
+      }).join("") + (list.length > 1 ? '<button type="button" class="rr-show__nav prev" data-step="-1" aria-label="Previous photo">&lsaquo;</button><button type="button" class="rr-show__nav next" data-step="1" aria-label="Next photo">&rsaquo;</button><span class="rr-show__count"></span>' : "") + "</div>");
+      go(0);
+    }
+    if (!show.timer && list.length > 1) show.timer = setInterval(function () { if (!show.hover && !show.playing && !document.hidden) go(show.i + 1); }, 5000);
+  }
+  // a video plays right in the box (Drive's player); the slideshow waits until it's closed or skipped
+  function playVideo(sl) {
+    var m = S.drive.files[Number(sl.getAttribute("data-k"))]; if (!m || !m.play) return;
+    var fr = document.createElement("iframe"); fr.src = m.play; fr.allow = "autoplay; fullscreen"; fr.allowFullscreen = true; fr.title = "Video from the route";
+    sl.appendChild(fr); sl.classList.add("playing"); show.playing = true;
+  }
+  function stopVideo(sl) { var fr = sl.querySelector("iframe"); if (fr) fr.remove(); sl.classList.remove("playing"); show.playing = false; }
+  $("rrShow").addEventListener("click", function (e) {
+    var st = e.target.closest("[data-step]"); if (st) { go(show.i + Number(st.getAttribute("data-step"))); return; }
+    var pl = e.target.closest("[data-play]"); if (pl) { playVideo(pl.closest(".rr-slide")); return; }
+    if (e.target.closest(".rr-slide.playing")) return;
+    var sl = e.target.closest(".rr-slide"); if (!sl || !S.drive || !S.drive.files) return;
+    lightbox(S.drive.files[Number(sl.getAttribute("data-k"))]);
+  });
+  $("rrShow").addEventListener("mouseenter", function () { show.hover = true; });
+  $("rrShow").addEventListener("mouseleave", function () { show.hover = false; });
+  $("rrDrive").addEventListener("submit", function (e) {
+    e.preventDefault(); var link = $("rrDriveIn").value.trim();
+    api("setdrive", { body: { brand: S.brand, link: link } }).then(function () { toast(link ? "Photos folder linked." : "Photos folder removed."); show.ids = ""; return loadDrive(); })
+      .catch(function () { toast("That doesn't look like a Google Drive folder link."); });
+  });
+  function lightbox(m) {
+    if (!m) return;
+    $("rrLbIn").innerHTML = m.play ? '<iframe src="' + esc(m.play) + '" allow="autoplay; fullscreen" allowfullscreen title="Video from the route"></iframe>' : '<img src="' + esc(m.full || m.src) + '" alt="Photo from the route">';
+    $("rrLbP").textContent = (m.kind === "video" ? "Video" : "Photo") + " · " + day(m.t) + " · " + clock(m.t); $("rrLb").hidden = false;
+  }
+  function closeLb() { $("rrLb").hidden = true; $("rrLbIn").innerHTML = ""; }
+  $("rrLbX").addEventListener("click", closeLb); $("rrLb").addEventListener("click", function (e) { if (e.target === this) closeLb(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") { closeLb(); } });
+
+  /* ───── the mirror: AOTC side / client side ───── */
+  function setSide(s) { S.side = s; document.querySelectorAll("#rrMirror button").forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-side") === s); }); }
+  $("rrMirror").addEventListener("click", function (e) { var b = e.target.closest("[data-side]"); if (!b) return; setSide(b.getAttribute("data-side")); show.ids = ""; render(); });
+
+  /* ───── AOTC dock: share GPS, add photos and video ───── */
+  function dock() {
+    var show = S.role === "op" && S.side === "op" && !$("rrJob").hidden;
+    $("rrDock").hidden = !show;
+    document.documentElement.style.setProperty("--dock", show ? $("rrDock").offsetHeight + "px" : "0px");
+    if (!show) return;
+    var lr = liveRun(), sharingHere = S.gps.run && lr && S.gps.run === lr.id;
+    // chips: before going live, who this run is for; while live, who is on it
+    var chips;
+    if (lr) chips = (lr.brands || []).filter(function (b) { return b.on; }).map(function (b) { return '<button type="button" class="rr-chip on" data-unlink="' + esc(b.slug) + '" title="Stop sharing with ' + esc(b.name) + '">' + esc(b.name) + ' <span class="x">&times;</span></button>'; });
+    else chips = S.pick.map(function (s) { return '<button type="button" class="rr-chip" aria-pressed="true" data-unpick="' + esc(s) + '">' + esc(s === S.brand ? S.name : nameOf(s)) + (s === S.brand ? "" : ' <span class="x">&times;</span>') + "</button>"; });
+    chips.push('<button type="button" class="rr-chip add" data-add>+ Brand on this truck</button>');
+    $("rrChipsL").textContent = lr ? "On this run" : "This run";
+    put("rrChips", chips.join(""));
+    var go = $("rrGo");
+    if (!lr) { go.textContent = "Go live"; go.className = "rr-go"; }
+    else if (sharingHere) { go.textContent = "End route"; go.className = "rr-go end"; }
+    else { go.textContent = "Share my GPS"; go.className = "rr-go"; }
+    $("rrSimL").hidden = !LOCAL;
+    $("rrKeep").hidden = !S.gps.run;
+    paintGps(); due();
+    document.documentElement.style.setProperty("--dock", $("rrDock").offsetHeight + "px");
+  }
+  $("rrChips").addEventListener("click", function (e) {
+    var t = e.target.closest("button"); if (!t) return;
+    if (t.hasAttribute("data-unpick")) { var s = t.getAttribute("data-unpick"); if (s !== S.brand) S.pick = S.pick.filter(function (x) { return x !== s; }); dock(); return; }
+    if (t.hasAttribute("data-unlink")) {
+      var u = t.getAttribute("data-unlink"), lr = liveRun();
+      if (!confirm("Stop sharing with " + brandName(u) + "? Their live view ends now. The run keeps going for the others.")) return;
+      api("unlink", { body: { run: lr.id, brand: u } }).then(function () { if (S.gps.run === lr.id) S.gps.brands = S.gps.brands.filter(function (x) { return x !== u; }); return poll(); });
+      return;
+    }
+    if (t.hasAttribute("data-add")) togglePick();
+  });
+  function togglePick() {
+    var p = $("rrPick"); if (!p.hidden) { p.hidden = true; dock(); return; }
+    (S.dash ? Promise.resolve() : loadDash()).then(function () {
+      var lr = liveRun(), taken = lr ? (lr.brands || []).filter(function (b) { return b.on; }).map(function (b) { return b.slug; }) : S.pick;
+      var opts = (S.dash ? S.dash.brands : []).filter(function (b) { return taken.indexOf(b.slug) < 0; });
+      p.innerHTML = "<p>Rotating ads: who else is on the screens this run?</p>" + (opts.length ? opts.map(function (b) { return '<button type="button" class="rr-chip" data-addb="' + esc(b.slug) + '">' + esc(b.name) + "</button>"; }).join("") : '<span class="rr-dock__info">No other jobs yet. Create one in the control room.</span>');
+      p.hidden = false; dock();
+    });
+  }
+  $("rrPick").addEventListener("click", function (e) {
+    var t = e.target.closest("[data-addb]"); if (!t) return;
+    var s = t.getAttribute("data-addb"), lr = liveRun(); $("rrPick").hidden = true;
+    if (lr) api("link", { body: { run: lr.id, brand: s } }).then(function () { if (S.gps.run === lr.id && S.gps.brands.indexOf(s) < 0) S.gps.brands.push(s); toast(nameOf(s) + " is on this run. Their client side is live now."); return poll(); });
+    else { if (S.pick.indexOf(s) < 0) S.pick.push(s); dock(); }
+  });
+
+  $("rrGo").addEventListener("click", function () {
+    var lr = liveRun();
+    if (lr && S.gps.run === lr.id) {   // end the route
+      if (!confirm("End the route? Every brand on this run stops being live now. Their views stay open for 7 days.")) return;
+      flush(true).then(function () { return api("end", { body: { run: lr.id } }); }).then(function () { stopGPS(); toast("Route ended."); return poll(); });
+      return;
+    }
+    var brands = lr ? (lr.brands || []).filter(function (b) { return b.on; }).map(function (b) { return b.slug; }) : S.pick.slice();
+    if (brands.indexOf(S.brand) < 0) brands.unshift(S.brand);
+    api("start", { body: { brands: brands } }).then(function (j) {
+      stopGPS(true); S.gps.run = j.run; S.gps.brands = brands; startGPS(); return poll();
+    }).catch(function () { toast("Couldn't start the route. Check the connection and try again."); });
+  });
+
+  // GPS: the phone's own location, sent in small batches; the client side reads the same points back
+  function startGPS() {
+    S.gps.err = ""; S.gps.queue = []; S.gps.last = null;
+    if ($("rrSim").checked && LOCAL) startSim();
+    else if (navigator.geolocation) S.gps.watch = navigator.geolocation.watchPosition(onFix, function (e) {
+      S.gps.err = e.code === 1 ? "Location is blocked. Allow location for this site (Settings → Safari → Location)." : "Looking for GPS…"; paintGps();
+    }, { enableHighAccuracy: true, maximumAge: 0, timeout: 30000 });
+    else S.gps.err = "This browser can't share location.";
+    S.gps.flush = setInterval(flush, 4000);
+    wake(); dock();
+  }
+  function onFix(pos) {
+    var c = pos.coords, f = [AOTCGps.fixTime(pos) + S.skew, c.latitude, c.longitude, Math.round(c.accuracy || 0)], q = S.gps.queue, prev = q[q.length - 1] || S.gps.lastSent;
+    S.gps.last = f; S.gps.err = "";
+    if (!prev || f[0] - prev[0] >= 3000 || meters(prev, f) > 12) q.push(f);
+    paintGps();
+  }
+  function flush(force) {
+    var q = S.gps.queue;
+    if (!S.gps.run || !q.length || (S.gps.sending && !force)) return Promise.resolve();
+    var batch = q.slice(0, 300); S.gps.sending = true;
+    return api("points", { body: { run: S.gps.run, pts: batch } }).then(function () {
+      q.splice(0, batch.length); S.gps.lastSent = batch[batch.length - 1]; S.gps.sentAt = Date.now();
+    }).catch(function (e) { if (e.status === 409) { stopGPS(); toast("This route was ended."); } })
+      .then(function () { S.gps.sending = false; paintGps(); });
+  }
+  function stopGPS(quiet) {
+    if (S.gps.watch != null && navigator.geolocation) navigator.geolocation.clearWatch(S.gps.watch);
+    clearInterval(S.gps.flush); clearInterval(S.gps.sim);
+    if (S.gps.wake) { try { S.gps.wake.release(); } catch (e) {} }
+    S.gps.watch = null; S.gps.flush = null; S.gps.sim = null; S.gps.wake = null; S.gps.run = null; S.gps.brands = []; S.gps.queue = [];
+    if (!quiet) dock();
+  }
+  function paintGps() {
+    var el = $("rrGps"), g = S.gps;
+    if (!g.run) { el.textContent = liveRun() ? "This route is live from another device. Tap Share my GPS to take over." : "GPS off. Nothing is shared until you go live."; return; }
+    if (g.err) { el.textContent = g.err; return; }
+    if (!g.last) { el.textContent = "Waiting for the first GPS fix…"; return; }
+    el.textContent = "GPS ±" + g.last[3] + " m" + (g.sentAt ? " · sent " + ago(Date.now() - g.sentAt) : "") + (g.queue.length > 1 ? " · " + g.queue.length + " waiting" : "");
+  }
+  function wake() {
+    if (!("wakeLock" in navigator) || !S.gps.run) return;
+    navigator.wakeLock.request("screen").then(function (l) { S.gps.wake = l; }).catch(function () {});
+  }
+  document.addEventListener("visibilitychange", function () {
+    if (!S.gps.run) return;
+    if (document.hidden) S.gps.hiddenAt = Date.now();
+    else { wake(); var gap = S.gps.hiddenAt ? Date.now() - S.gps.hiddenAt : 0; if (gap > 20000) toast("GPS paused for " + dur(gap).replace(/^0:/, "") + " min while this screen was hidden."); S.gps.hiddenAt = 0; }
+  });
+  // hourly photo reminder: counts from the newest photo in the job's folder (or the last time the folder was opened)
+  function due() {
+    var lr = liveRun(), el = $("rrDue"), b = $("rrSnap");
+    if (!lr || S.gps.run !== lr.id) { el.textContent = S.drive && S.drive.folder ? "Opens the job's Drive folder" : "Link a Drive folder first"; b.classList.remove("due"); return; }
+    var newest = ((S.drive && S.drive.files) || []).reduce(function (m, x) { return Math.max(m, x.t); }, 0);
+    var lastM = Math.max(lr.start, newest, S.gps.photoTap), left = lastM + 36e5 - now();
+    if (left > 0) { el.textContent = "Next photo due in " + Math.ceil(left / 6e4) + " min"; b.classList.remove("due"); }
+    else { el.textContent = "Photo due now"; b.classList.add("due"); if (Date.now() - S.gps.buzzed > 6e5 && navigator.vibrate) { navigator.vibrate([200, 100, 200]); S.gps.buzzed = Date.now(); } }
+  }
+  // local preview only: drive a loop through downtown Chicago so both sides can be watched without a truck
+  var LOOP = [[41.90087, -87.62462], [41.89260, -87.62417], [41.88460, -87.62468], [41.88452, -87.63108], [41.88934, -87.63128], [41.89659, -87.63155], [41.89686, -87.62436], [41.90087, -87.62462]];
+  function startSim() {
+    var m = 0, segs = [], len = 0, i;
+    for (i = 1; i < LOOP.length; i++) { var d = meters([0, LOOP[i - 1][0], LOOP[i - 1][1]], [0, LOOP[i][0], LOOP[i][1]]); segs.push([LOOP[i - 1], LOOP[i], len, d]); len += d; }
+    function along(x) { x = x % len; for (var k = 0; k < segs.length; k++) { var s = segs[k]; if (x <= s[2] + s[3]) { var f = (x - s[2]) / s[3]; return [s[0][0] + (s[1][0] - s[0][0]) * f, s[0][1] + (s[1][1] - s[0][1]) * f]; } } return LOOP[0]; }
+    function tick() { var p = along(m); onFix({ coords: { latitude: p[0] + (Math.random() - .5) * 4e-5, longitude: p[1] + (Math.random() - .5) * 4e-5, accuracy: 4 + Math.random() * 6 } }); m += 22; }
+    tick(); S.gps.sim = setInterval(tick, 2000);
+  }
+
+  // photos: "Add photos" opens the job's Drive folder (the Drive app on a phone); whatever lands there rotates on both sides
+  $("rrSnap").addEventListener("click", function () {
+    var d = S.drive || {};
+    if (!d.folder) { setSide("op"); render(); $("rrDriveIn").focus(); toast("Paste this job's Google Drive folder link first."); return; }
+    if (d.folder === "demo") { toast("The sample folder lives in this preview only."); return; }
+    S.gps.photoTap = now(); due();
+    window.open("https://drive.google.com/drive/folders/" + encodeURIComponent(d.folder), "_blank", "noopener");
+  });
+
+  /* ───── the AOTC ticket lives only in memory: leaving the page locks the room ───── */
+  window.addEventListener("pagehide", function () { if (S.role === "op") gate(); });
+  window.addEventListener("pageshow", function (e) { if (e.persisted && !S.token) gate(); });
+
+  // arriving from the Golden Ticket on another page: take the ticket once, then forget it
+  var h = null; try { h = JSON.parse(sessionStorage.getItem(HANDOFF) || "null"); sessionStorage.removeItem(HANDOFF); } catch (e) {}
+  var c = null; try { c = JSON.parse(sessionStorage.getItem(CLIENT) || "null"); } catch (e) {}
+  if (h && h.token) admit(h); else if (c && c.token) admit(c); else gate();
+  setInterval(function () { if (!$("rrJob").hidden) { paintGps(); due(); } }, 15000);
+  document.addEventListener("visibilitychange", function () { if (!document.hidden && S.brand && !$("rrJob").hidden) { poll(); loadDrive(); } });
+})();
+</script>
+<script src="assets/logo.js" defer></script>
+<script src="assets/cursor.js" defer></script>
+</body>
+</html>
