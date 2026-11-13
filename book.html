@@ -3,1197 +3,1099 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AOTC Sales Console — Route Booking Form (Internal)</title>
-<meta name="description" content="Internal AOTC route booking form for sales staff." />
+<title>AOTC Sales Console (Internal)</title>
+<meta name="description" content="Internal AOTC sales console for staff on live calls." />
 <meta name="robots" content="noindex, nofollow, noarchive" />
+<meta name="theme-color" content="#f6f3ee" />
 <link rel="icon" type="image/gif" href="aotc_final.gif" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<script>
+/* the sales console only opens from the staff gate (double-click the AOTC logo, then the passphrase); a reload re-locks it */
+(function () { var ok = false; try { ok = sessionStorage.getItem("aotc_gate_once") === "1"; } catch (e) {} if (ok) { try { sessionStorage.removeItem("aotc_gate_once"); } catch (e) {} } else { location.replace("index.html"); } })();
+</script>
 <style>
-/* AOTC unified navigation — single source of truth for every page */
-/* the host container must always show the menu, whatever the page's own CSS says */
-.nav-links.aotc-host{
-  display:flex!important; visibility:visible!important; opacity:1!important;
-  align-items:center; gap:10px; min-width:0; position:static;
-}
-
-.aotc-nav{
-  --an-red:#d9000d; --an-red2:#ff1520;
-  --an-fh:"Barlow Condensed",Impact,sans-serif;
-  --an-fm:"IBM Plex Mono",ui-monospace,monospace;
-  --an-ease:cubic-bezier(.16,1,.3,1);
-  display:flex; align-items:center; gap:12px; position:relative; z-index:2147483000;
-}
-.aotc-nav *{box-sizing:border-box}
-
-/* ---- the single tab: clean marquee plate ---- */
-.aotc-tab{
-  appearance:none; cursor:pointer; position:relative;
-  display:inline-flex; align-items:center; gap:11px;
-  height:44px; padding:0 18px 0 15px;
-  border:1px solid rgba(255,255,255,.18); border-radius:6px;
-  background:linear-gradient(180deg,#17171a,#0a0a0c);
-  color:#fff; line-height:1;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 4px 12px rgba(0,0,0,.45);
-  transition:border-color .22s var(--an-ease),box-shadow .25s var(--an-ease),transform .15s var(--an-ease);
-}
-.aotc-tab::after{
-  content:""; position:absolute; left:12px; right:12px; bottom:5px; height:2px; border-radius:2px;
-  background:linear-gradient(90deg,transparent,var(--an-red2),transparent);
-  opacity:.8; animation:aotcPulse 2.6s ease-in-out infinite;
-}
-@keyframes aotcPulse{0%,100%{opacity:.4;transform:scaleX(.65)}50%{opacity:1;transform:scaleX(1)}}
-.aotc-lab{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding-bottom:3px}
-.aotc-lab b{
-  font-family:var(--an-fh); font-weight:900; font-size:17px; letter-spacing:.08em;
-  text-transform:uppercase; white-space:nowrap;
-}
-.aotc-lab i{
-  font-style:normal; font-family:var(--an-fm); font-size:7.5px; font-weight:600;
-  letter-spacing:.24em; text-transform:uppercase; color:#a49d92; white-space:nowrap;
-}
-.aotc-tab:hover{border-color:rgba(255,21,32,.6);transform:translateY(-1px);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 8px 20px rgba(0,0,0,.5),0 0 24px rgba(217,0,13,.35)}
-.aotc-tab:hover .aotc-lab i{color:var(--an-red2)}
-.aotc-tab:focus-visible{outline:2px solid var(--an-red2);outline-offset:2px}
-.aotc-nav.open .aotc-tab,.aotc-nav:focus-within .aotc-tab{
-  border-color:var(--an-red2);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 0 28px rgba(217,0,13,.5);
-}
-.aotc-nav.open .aotc-tab .aotc-lab i,.aotc-nav:focus-within .aotc-tab .aotc-lab i{color:var(--an-red2)}
-.aotc-bars{position:relative;width:17px;height:12px;flex:0 0 auto;filter:drop-shadow(0 0 6px rgba(255,21,32,.55))}
-.aotc-bars i{
-  position:absolute; left:0; width:100%; height:2px; background:linear-gradient(90deg,var(--an-red2),#fff); border-radius:2px;
-  transition:transform .32s var(--an-ease),opacity .2s var(--an-ease),width .32s var(--an-ease);
-}
-.aotc-bars i:nth-child(1){top:0}
-.aotc-bars i:nth-child(2){top:5px;width:70%}
-.aotc-bars i:nth-child(3){top:10px}
-.aotc-tab:hover .aotc-bars i:nth-child(2){width:100%}
-.aotc-nav.open .aotc-bars i:nth-child(1){transform:translateY(5px) rotate(45deg)}
-.aotc-nav.open .aotc-bars i:nth-child(2){opacity:0;width:0}
-.aotc-nav.open .aotc-bars i:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
-
-/* ---- phone CTA beside the tab ---- */
-a.aotc-call{
-  display:inline-flex; align-items:center; gap:8px; height:44px; padding:0 15px;
-  border:1px solid rgba(255,255,255,.14); border-radius:5px;
-  font-family:var(--an-fm); font-size:10.5px; font-weight:600; letter-spacing:.14em;
-  text-transform:uppercase; color:#c9c3b9; text-decoration:none; white-space:nowrap;
-  transition:color .2s,border-color .2s,background .2s;
-}
-a.aotc-call::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--an-red2);box-shadow:0 0 10px var(--an-red2);flex:0 0 auto}
-a.aotc-call:hover{color:#fff;border-color:rgba(255,21,32,.5);background:rgba(217,0,13,.1)}
-@media(max-width:820px){a.aotc-call span{display:none}a.aotc-call{padding:0 12px}}
-
-/* ---- the panel ---- */
-.aotc-panel{
-  position:absolute; top:calc(100% + 14px); right:0; z-index:2147483000;
-  width:min(660px,calc(100vw - 32px));
-  display:grid; grid-template-columns:1fr 1fr; gap:0;
-  border:1px solid rgba(255,255,255,.13); border-radius:8px; overflow:hidden;
-  background:linear-gradient(160deg,#101012,#070708);
-  box-shadow:0 30px 80px rgba(0,0,0,.66),0 0 44px rgba(217,0,13,.16);
-  opacity:0; visibility:hidden; transform:translateY(-10px) scale(.985);
-  transition:opacity .26s var(--an-ease),transform .32s var(--an-ease),visibility .26s;
-}
-.aotc-panel::before{
-  content:""; position:absolute; top:0; left:0; right:0; height:2px;
-  background:linear-gradient(90deg,transparent,var(--an-red),var(--an-red2),var(--an-red),transparent);
-}
-.aotc-nav.open .aotc-panel,
-.aotc-nav:focus-within .aotc-panel{opacity:1;visibility:visible;transform:translateY(0) scale(1)}
-@media(hover:hover){.aotc-nav:hover .aotc-panel{opacity:1;visibility:visible;transform:translateY(0) scale(1)}}
-.aotc-col{padding:22px 22px 20px;min-width:0}
-.aotc-col + .aotc-col{border-left:1px solid rgba(255,255,255,.07)}
-.aotc-col.wide{grid-column:1 / -1;border-left:0;border-top:1px solid rgba(255,255,255,.07);padding-top:18px}
-.aotc-h{
-  display:flex; align-items:center; gap:9px; margin:0 0 12px;
-  font-family:var(--an-fm); font-size:9px; font-weight:600; letter-spacing:.26em;
-  text-transform:uppercase; color:var(--an-red2);
-}
-.aotc-h::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(255,21,32,.35),transparent)}
-.aotc-col + .aotc-col .aotc-h{color:#8b847a}
-.aotc-col + .aotc-col .aotc-h::after{background:linear-gradient(90deg,rgba(255,255,255,.14),transparent)}
-.aotc-list{display:flex;flex-direction:column;gap:2px}
-a.aotc-item{
-  display:flex; align-items:baseline; gap:10px;
-  padding:9px 11px; border-radius:4px; text-decoration:none;
-  color:#c9c3b9; font-family:var(--an-fh); font-weight:700; font-size:19px;
-  letter-spacing:.01em; text-transform:uppercase; line-height:1.1;
-  transition:color .18s,background .18s,padding-left .22s var(--an-ease);
-}
-a.aotc-item .d{
-  font-family:var(--an-fm); font-weight:400; font-size:9.5px; letter-spacing:.12em;
-  text-transform:uppercase; color:#6f6a61; margin-left:auto; white-space:nowrap;
-  transition:color .18s;
-}
-a.aotc-item:hover,a.aotc-item:focus-visible{
-  color:#fff; background:linear-gradient(90deg,rgba(217,0,13,.2),rgba(255,255,255,.03));
-  padding-left:16px; outline:none;
-}
-a.aotc-item:hover .d{color:var(--an-red2)}
-a.aotc-item[aria-current="page"]{color:#fff}
-a.aotc-item[aria-current="page"]::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--an-red2);box-shadow:0 0 9px var(--an-red2);align-self:center;flex:0 0 auto;margin-right:-4px}
-/* compact social row */
-.aotc-social{display:flex;flex-wrap:wrap;gap:6px}
-a.aotc-chip{
-  display:inline-flex; align-items:center; padding:7px 11px; border-radius:999px;
-  border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.03);
-  font-family:var(--an-fm); font-size:9.5px; letter-spacing:.12em; text-transform:uppercase;
-  color:#a49d92; text-decoration:none; transition:color .18s,border-color .18s,background .18s,transform .18s var(--an-ease);
-}
-a.aotc-chip:hover{color:#fff;border-color:rgba(255,21,32,.5);background:rgba(217,0,13,.12);transform:translateY(-2px)}
-/* book CTA inside panel */
-a.aotc-book{
-  display:flex; align-items:center; justify-content:center; gap:9px; margin-top:14px;
-  padding:14px 18px; border-radius:6px; text-decoration:none;
-  background:linear-gradient(#ff2a34,#d9000d); color:#fff;
-  font-family:var(--an-fh); font-weight:800; font-size:17px; letter-spacing:.04em; text-transform:uppercase;
-  box-shadow:0 5px 0 #7a0007,0 8px 20px rgba(0,0,0,.45);
-  transition:transform .1s,box-shadow .1s;
-}
-a.aotc-book:active{transform:translateY(4px);box-shadow:0 1px 0 #7a0007,0 3px 9px rgba(0,0,0,.45)}
-
-/* scrim removed: position:fixed misbehaves inside the nav's backdrop-filter */
-.aotc-scrim{display:none}
-
-@media(max-width:720px){
-  .aotc-panel{
-    position:absolute; top:calc(100% + 12px); bottom:auto; left:auto; right:0;
-    width:min(94vw,420px); grid-template-columns:1fr; border-radius:8px;
-    max-height:min(72vh,560px); overflow:auto;
-  }
-  .aotc-col{padding:18px 18px 16px}
-  .aotc-col + .aotc-col{border-left:0;border-top:1px solid rgba(255,255,255,.07)}
-  .aotc-col.wide{border-top:1px solid rgba(255,255,255,.07)}
-  a.aotc-item{font-size:20px;padding:11px 12px;min-height:44px;align-items:center}
-  a.aotc-chip{padding:10px 13px}
-  a.aotc-book{min-height:48px}
-}
-@media(prefers-reduced-motion:reduce){
-  .aotc-panel,.aotc-tab,.aotc-bars i,a.aotc-item{transition-duration:.01ms}
-}
-
-/* ---- very narrow phones: keep the tab + phone chip on one row ---- */
-@media(max-width:430px){
-  .nav-links.aotc-host{gap:7px}
-  .aotc-nav{gap:7px}
-  .aotc-tab{height:42px;padding:0 12px 0 11px;gap:8px}
-  .aotc-lab b{font-size:15px;letter-spacing:.05em}
-  .aotc-lab i{display:none}
-  .aotc-lab{padding-bottom:0}
-  .aotc-tab::after{bottom:4px;left:9px;right:9px}
-  a.aotc-call{height:42px;padding:0 11px}
-}
-@media(max-width:400px){
-  .aotc-panel{width:calc(100vw - 20px);right:-6px}
-}
-
-</style>
-
-
-<style>
-  :root{--red:#d9000d;--red2:#ff1520;--gold:#ffd23f;--ink:#08080a;--line:rgba(255,255,255,.1);
-    --fh:"Barlow Condensed",Impact,sans-serif;--fd:"Anton",Impact,sans-serif;--fb:"Barlow",system-ui,sans-serif;--fm:"IBM Plex Mono",monospace}
+  :root{--bg:#f6f3ee;--card:#fff;--ink:#1f1d1a;--ink2:#55504a;--mute:#8a847b;--line:#ece6dd;--line2:#ddd5ca;--soft:#f8f5f0;
+    --red:#e1252e;--red-d:#b5141c;--red-s:#fdeced;--gold:#efab12;--gold-d:#8a5a00;--gold-s:#fff3d2;--blue:#2f6fe4;--blue-d:#1f55b8;--blue-s:#e9f0ff;--green:#1d9a5f;--green-s:#e4f5ea;
+    --ac:var(--gold);--ac-d:var(--gold-d);--ac-s:var(--gold-s);--ac-ink:#2b1d00;
+    --f:"Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--r:20px;--r2:13px;
+    --sh:0 1px 2px rgba(45,32,15,.05),0 8px 24px rgba(45,32,15,.06)}
+  body[data-mode=rotational]{--ac:var(--red);--ac-d:var(--red-d);--ac-s:var(--red-s);--ac-ink:#fff}
+  body[data-mode=private]{--ac:var(--blue);--ac-d:var(--blue-d);--ac-s:var(--blue-s);--ac-ink:#fff}
   *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth;scroll-padding-top:80px}
-  body{background:var(--ink);color:#e8e4dc;font-family:var(--fb);-webkit-font-smoothing:antialiased;overflow-x:hidden;
-    transition:background .6s ease}
-  a{color:var(--red2);text-decoration:none}
-  a:hover{color:#fff}
-  button,input,select,textarea{font:inherit}
-  button{cursor:pointer}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  html,body{max-width:100%;overflow-x:clip}
+  body{background:var(--bg);color:var(--ink);font:400 15.5px/1.5 var(--f);-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+  a{color:var(--ac-d)}
+  button,input,select,textarea{font:inherit;color:inherit}
+  button{cursor:pointer;background:none;border:0}
   img{display:block;max-width:100%}
-  ::selection{background:var(--red);color:#fff}
-  .wrap{width:min(1040px,calc(100% - 40px));margin:0 auto}
+  [hidden]{display:none!important}
+  :focus-visible{outline:3px solid color-mix(in srgb,var(--ac) 45%,transparent);outline-offset:2px}
 
-  .nav{position:sticky;top:0;z-index:99999;background:rgba(8,8,10,.93);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-  .nav-in{height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,4vw,40px)}
-  .brand{display:flex;align-items:center;gap:11px}
-  .brand span.m{width:40px;height:40px;background:#f4f1ea;border-radius:6px;display:flex;align-items:center;justify-content:center;overflow:hidden}
-  .brand span.m img{width:100%;height:100%;object-fit:contain;padding:2px}
-  .brand strong{font-family:var(--fh);font-weight:800;font-size:17px;letter-spacing:.02em;text-transform:uppercase;color:#fff;line-height:1;display:block}
-  .brand small{display:block;font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:#8b847a;margin-top:3px}
-  .nav-links{display:flex;align-items:center;gap:clamp(14px,2.2vw,26px)}
-  .staff{font-family:var(--fm);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#ffd23f;
-    border:1px solid rgba(255,210,63,.4);border-radius:3px;padding:6px 10px;background:rgba(255,210,63,.08)}
+  /* ---------- top ---------- */
+  .top{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:14px;height:64px;padding:0 clamp(14px,3vw,32px);background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink)}
+  .brand img{width:40px;height:40px;object-fit:contain;border-radius:11px;background:#fff;border:1px solid var(--line);padding:2px}
+  .brand b{font-size:17px;font-weight:800;letter-spacing:-.01em}
+  .brand span{display:block;font-size:12.5px;color:var(--mute);line-height:1.1}
+  .top-r{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .pill{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border-radius:999px;font-size:12.5px;font-weight:600;background:var(--gold-s);color:var(--gold-d)}
+  .ghost{height:38px;padding:0 16px;border-radius:999px;border:1.5px solid var(--line2);font-size:14px;font-weight:600;color:var(--ink2);background:#fff}
+  .ghost:hover{border-color:var(--ink2);color:var(--ink)}
+  .ghost.dark{background:var(--ink);border-color:var(--ink);color:#fff;white-space:nowrap}
+  .ghost.dark:before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--gold);margin-right:7px;vertical-align:1px}
+  .ghost.dark:hover{color:#fff;filter:brightness(1.25)}
 
-  .hd{border-bottom:1px solid var(--line);padding:clamp(26px,4.4vw,46px) 0 clamp(20px,3vw,32px);
-    background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(217,0,13,.16),transparent 62%),linear-gradient(180deg,#121014,#08080a)}
-  .kick{display:inline-flex;align-items:center;gap:10px;font-family:var(--fm);font-size:10.5px;letter-spacing:.27em;text-transform:uppercase;color:var(--red2);margin-bottom:14px}
-  .kick:before{content:"";width:24px;height:1px;background:var(--red)}
-  h1{font-family:var(--fd);font-weight:400;text-transform:uppercase;line-height:.9;letter-spacing:.4px;font-size:clamp(30px,5.4vw,60px);color:#fff;margin-bottom:12px}
-  h1 em{font-style:normal;color:var(--red2)}
-  .hd p{max-width:74ch;font-size:clamp(13.5px,1.4vw,16px);line-height:1.6;color:#c9c3b9;text-wrap:pretty}
+  .wrap{max-width:1260px;margin:0 auto;padding:22px clamp(14px,3vw,32px) 130px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);padding:clamp(16px,2vw,24px)}
+  .card + .card{margin-top:16px}
+  h1{font-size:clamp(23px,2.4vw,28px);font-weight:800;letter-spacing:-.02em;line-height:1.15}
+  h2{font-size:19px;font-weight:700;letter-spacing:-.01em;line-height:1.25}
+  .sub{font-size:14px;color:var(--mute);margin-top:2px}
+  .card-h{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+  .num{flex:0 0 34px;height:34px;border-radius:50%;background:var(--ac-s);color:var(--ac-d);font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center}
+  .say{display:flex;gap:10px;align-items:flex-start;background:var(--soft);border-radius:16px;padding:11px 14px;font-size:14.5px;line-height:1.45;color:var(--ink2);margin-bottom:16px}
+  .say b{flex:0 0 auto;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ac-d);background:var(--ac-s);border-radius:999px;padding:3px 10px;margin-top:1px}
+  .say.tip b{background:var(--green-s);color:var(--green)}
 
-  section.blk{border-bottom:1px solid var(--line);padding:clamp(28px,4.2vw,54px) 0}
-  .sn{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
-  .sn b{font-family:var(--fd);font-size:clamp(22px,3vw,32px);color:rgba(255,21,32,.3);line-height:1}
-  .sn span{font-family:var(--fm);font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--red2)}
-  h2{font-family:var(--fh);font-weight:800;text-transform:uppercase;line-height:.98;font-size:clamp(24px,3.6vw,40px);color:#fff;margin-bottom:12px;max-width:28ch}
-  .lead{max-width:74ch;font-size:clamp(13.5px,1.35vw,16px);line-height:1.6;color:#c9c3b9;margin-bottom:24px;text-wrap:pretty}
-  .lead b{color:#fff}
+  /* ---------- welcome ---------- */
+  .intro{display:flex;gap:18px;align-items:center;background:linear-gradient(120deg,#fff,#fff8e6);border:1px solid #f1e3bf;border-radius:var(--r);padding:16px 20px;margin-bottom:16px}
+  .intro ol{list-style:none;display:flex;flex-wrap:wrap;gap:8px 22px;flex:1;counter-reset:i}
+  .intro li{counter-increment:i;display:flex;gap:8px;align-items:center;font-size:14px;color:var(--ink2)}
+  .intro li:before{content:counter(i);flex:0 0 24px;height:24px;border-radius:50%;background:var(--gold);color:var(--ac-ink);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+  .intro strong{font-size:15px;white-space:nowrap}
 
-  /* ---------- contact ---------- */
-  .fields{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:820px}
-  .f-full{grid-column:1/-1}
-  label.fl{display:block;font-family:var(--fm);font-size:9.5px;letter-spacing:.17em;text-transform:uppercase;color:#8b847a;margin-bottom:7px}
-  label.fl i{font-style:normal;color:var(--red2)}
-  input[type=text],input[type=email],input[type=tel],select,textarea{width:100%;background:rgba(255,255,255,.05);
-    border:1px solid var(--line);border-radius:4px;color:#fff;padding:13px 14px;font-size:15px;transition:border-color .18s,background .18s}
-  input:focus,select:focus,textarea:focus{outline:0;border-color:rgba(255,21,32,.66);background:rgba(255,255,255,.08)}
-  select option{background:#141317;color:#fff}
-  textarea{min-height:92px;resize:vertical;line-height:1.5}
+  /* ---------- fields ---------- */
+  .grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 14px}
+  .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 14px}
+  .full{grid-column:1/-1}
+  label.l{display:block;font-size:13.5px;font-weight:600;color:var(--ink2);margin-bottom:6px}
+  label.l i{font-style:normal;color:var(--red)} .opt{font-weight:400;color:var(--mute)}
+  input[type=text],input[type=email],input[type=tel],select,textarea{width:100%;background:#fff;border:1.5px solid var(--line2);border-radius:var(--r2);padding:11px 13px;font-size:15.5px;color:var(--ink);transition:border-color .15s,box-shadow .15s}
+  input::placeholder,textarea::placeholder{color:#a8a197}
+  input:focus,select:focus,textarea:focus{outline:0;border-color:var(--ac);box-shadow:0 0 0 4px var(--ac-s)}
+  input.bad{border-color:var(--red);box-shadow:0 0 0 4px var(--red-s)}
+  textarea{min-height:76px;resize:vertical;line-height:1.45}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+  .chip{font-size:13.5px;padding:6px 12px;border-radius:999px;border:1.5px solid var(--line2);color:var(--ink2);background:#fff;transition:all .15s}
+  .chip:hover{border-color:var(--ac)}
+  .chip.on{background:var(--ac-s);border-color:var(--ac);color:var(--ac-d);font-weight:600}
 
-  /* ---------- service table ---------- */
-  .tbl{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:5px;overflow:hidden;
-    background:rgba(255,255,255,.025)}
-  .tbl caption{caption-side:top;text-align:left;font-family:var(--fm);font-size:9.5px;letter-spacing:.18em;
-    text-transform:uppercase;color:#8b847a;padding-bottom:11px;line-height:1.7}
-  .tbl caption b{color:var(--gold)}
-  .tbl th,.tbl td{text-align:left;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.07);vertical-align:top}
-  .tbl tr:last-child th,.tbl tr:last-child td{border-bottom:0}
-  .tbl th{width:32%;font-family:var(--fh);font-weight:800;text-transform:uppercase;letter-spacing:.02em;
-    font-size:15px;color:#fff;background:rgba(255,255,255,.03);white-space:nowrap}
-  .tbl th span{display:block;font-family:var(--fm);font-weight:400;font-size:9px;letter-spacing:.14em;color:#7d776f;margin-top:4px}
-  .tbl td{font-size:14px;line-height:1.55;color:#c2bcb2;text-wrap:pretty}
-  .tbl td b{color:#fff;font-weight:600}
-  .tbl td em{font-style:normal;color:var(--gold)}
-  .tbl tr:nth-child(even) td,.tbl tr:nth-child(even) th{background:rgba(255,255,255,.014)}
+  /* ---------- tabs + swiping ---------- */
+  .tabs{position:sticky;top:74px;z-index:30;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:6px;margin:22px 0 6px;border-radius:22px;background:#ebe4da;box-shadow:0 0 0 10px var(--bg)}
+  .tab{display:flex;gap:11px;align-items:center;text-align:left;padding:10px 14px;border-radius:17px;color:var(--ink2);transition:background .2s,box-shadow .2s,color .2s;min-width:0}
+  .tab i{flex:0 0 12px;height:12px;border-radius:50%;background:var(--c)}
+  .tab b{display:block;font-size:15.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tab small{display:block;font-size:12.5px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tab .st{display:none}
+  .tab:hover{background:rgba(255,255,255,.55)}
+  .tab[aria-selected=true]{background:#fff;color:var(--ink);box-shadow:var(--sh)}
+  .swipe{display:flex;align-items:center;justify-content:center;gap:10px;margin:2px 0 12px;font-size:12.5px;color:var(--mute)}
+  .dots{display:flex;gap:6px}
+  .dots i{width:7px;height:7px;border-radius:99px;background:var(--line2);transition:all .25s}
+  .dots i.on{width:22px;background:var(--ac)}
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) 370px;gap:22px;align-items:start}
+  .sw{display:flex;align-items:flex-start;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain;margin:0 -12px;transition:height .3s ease}
+  .sw::-webkit-scrollbar{display:none}
+  .pg{flex:0 0 100%;min-width:0;scroll-snap-align:start;scroll-snap-stop:always;padding:2px 12px 26px}
 
-  /* ---------- budget ---------- */
-  .quote{display:grid;grid-template-columns:1.02fr .98fr;gap:16px;margin-bottom:20px}
-  .qbox{border:1px solid var(--line);border-radius:5px;background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.015));padding:clamp(18px,2.4vw,26px);transition:border-color .5s,background .5s}
-  .qbox.hero{border-left:3px solid var(--red)}
-  #goldBadge{display:inline-block;font-family:var(--fm);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
-    color:#241a00;background:var(--gold);border-radius:3px;padding:6px 10px;margin-bottom:12px}
-  .qtag{font-family:var(--fm);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#8b847a;margin-bottom:10px}
-  .qpkg{font-family:var(--fh);font-weight:800;text-transform:uppercase;font-size:clamp(18px,2.2vw,24px);color:#fff;letter-spacing:.01em;margin-bottom:6px}
-  .qprice{font-family:var(--fd);font-size:clamp(42px,7vw,76px);line-height:.84;color:#fff;letter-spacing:.5px}
-  .qprice span{color:var(--red2);font-size:.42em;letter-spacing:.02em}
-  .qper{font-family:var(--fh);font-weight:800;text-transform:uppercase;font-size:clamp(16px,1.9vw,21px);color:var(--gold);margin-top:12px}
-  .qsub{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:14px;font-family:var(--fm);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#8b847a}
-  .qsub b{color:#fff;font-weight:500}
-  .qdesc{font-size:14px;line-height:1.6;color:#c2bcb2;text-wrap:pretty}
-  .qdesc b{color:#fff}
-  .qexcl{margin-top:14px;display:flex;flex-direction:column;gap:7px}
-  .qexcl i{font-style:normal;position:relative;padding-left:17px;font-size:13px;line-height:1.45;color:#cdc7bd}
-  .qexcl i:before{content:"";position:absolute;left:0;top:6px;width:6px;height:6px;border-radius:50%;background:var(--red)}
+  /* ---------- included ---------- */
+  .inc{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px}
+  .inc li{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;line-height:1.4;color:var(--ink2)}
+  .inc li:before{content:"\2713";flex:0 0 22px;height:22px;border-radius:50%;background:var(--green-s);color:var(--green);font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;margin-top:-1px}
+  .inc b{color:var(--ink);font-weight:700}
+  .notes{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .notes span{font-size:13.5px;padding:7px 12px;border-radius:12px;background:var(--soft);color:var(--ink2)}
+  .notes span b{color:var(--ink)}
+  .notes span.no{background:#fbefee;color:#8e2a2f}
 
-  .sl-wrap{border:1px solid var(--line);border-radius:5px;background:rgba(255,255,255,.03);padding:clamp(16px,2.2vw,24px)}
-  .sl-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-family:var(--fm);font-size:10px;letter-spacing:.17em;text-transform:uppercase;color:#8b847a;margin-bottom:14px}
-  .sl-top b{color:#fff;font-weight:500}
-  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:34px;background:transparent;cursor:grab}
-  input[type=range]:active{cursor:grabbing}
-  input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;background:linear-gradient(90deg,#4a1216,#d9000d 74%,#ffd23f);border:1px solid rgba(255,255,255,.13)}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;margin-top:-10px;border-radius:5px;
-    background:linear-gradient(#fff,#cfc9bf);border:1px solid #6b665e;box-shadow:0 3px 0 rgba(0,0,0,.55),0 6px 16px rgba(0,0,0,.5)}
-  input[type=range]::-moz-range-track{height:8px;border-radius:4px;background:linear-gradient(90deg,#4a1216,#d9000d 74%,#ffd23f);border:1px solid rgba(255,255,255,.13)}
-  input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:5px;background:linear-gradient(#fff,#cfc9bf);border:1px solid #6b665e}
-  input[type=range]:focus-visible{outline:2px solid var(--red2);outline-offset:6px}
-  .sl-ticks{display:flex;justify-content:space-between;font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#6f6a62;margin-top:2px}
-  .tick-ult{color:var(--gold)}
-
-  /* ---------- gold / exclusive ---------- */
-  body.gold{background:#120d02}
-  body.gold .qbox.hero{border-left-color:var(--gold);background:linear-gradient(160deg,rgba(255,210,63,.14),rgba(255,210,63,.03))}
-  body.gold .qprice span,body.gold .sn span,body.gold .kick{color:var(--gold)}
-  body.gold .qper{color:#fff}
-  body.gold input[type=range]::-webkit-slider-runnable-track{background:linear-gradient(90deg,#4a3a02,#d99b00 70%,#ffe98a)}
-  body.gold input[type=range]::-moz-range-track{background:linear-gradient(90deg,#4a3a02,#d99b00 70%,#ffe98a)}
-  body.gold input[type=range]::-webkit-slider-thumb{background:radial-gradient(circle at 34% 28%,#fff8d8,#ffd23f 46%,#c08e00);
-    border-color:#8a6200;border-radius:50%;box-shadow:0 0 24px rgba(255,210,63,.85),0 3px 0 rgba(0,0,0,.5);
-    clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
-  body.gold input[type=range]::-moz-range-thumb{background:radial-gradient(circle at 34% 28%,#fff8d8,#ffd23f 46%,#c08e00);
-    border-color:#8a6200;clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
-  body.gold .qexcl i:before{background:var(--gold)}
-  body.gold .recap{border-left-color:var(--gold)}
-  body.gold .day.start{background:#c08e00;border-color:var(--gold);box-shadow:0 0 18px rgba(255,210,63,.5)}
-  body.gold .day.span{background:rgba(255,210,63,.24);border-color:rgba(255,210,63,.36)}
-  body.gold .day.end{background:rgba(255,210,63,.46);border-color:var(--gold)}
-  body.gold .send{background:linear-gradient(#ffd23f,#c08e00);color:#241a00;box-shadow:0 5px 0 #6b4d00,0 10px 22px rgba(0,0,0,.5)}
+  /* ---------- cities + autocomplete ---------- */
+  .cityrow{display:flex;gap:10px;align-items:flex-end}
+  .ac{position:relative;flex:1;min-width:0}
+  .ac-list{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:30;list-style:none;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 16px 40px rgba(45,32,15,.14)}
+  .ac-list li{padding:10px 14px;font-size:15px;color:var(--ink2);cursor:pointer}
+  .ac-list li b{color:var(--ink);font-weight:700}
+  .ac-list li.on,.ac-list li:hover{background:var(--ac-s)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:0 18px;border-radius:999px;border:1.5px solid var(--line2);background:#fff;font-size:15px;font-weight:700;color:var(--ink);white-space:nowrap;text-decoration:none;transition:border-color .15s,background .15s}
+  .btn:hover{border-color:var(--ink2)}
+  .btn.p{background:var(--ac);border-color:var(--ac);color:var(--ac-ink)}
+  .btn.p:hover{filter:brightness(1.05)}
+  .cities{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+  .city{display:inline-flex;align-items:center;border-radius:999px;border:1.5px solid var(--line2);background:#fff;font-size:14.5px}
+  .city button{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 6px 0 13px;font-weight:600}
+  .city i{width:11px;height:11px;border-radius:50%;background:var(--cc)}
+  .city small{font-weight:500;color:var(--mute)}
+  .city .x{width:32px;padding:0;justify-content:center;color:var(--mute);font-size:17px}
+  .city .x:hover{color:var(--red)}
+  .city.on{border-color:var(--cc);background:color-mix(in srgb,var(--cc) 10%,#fff);box-shadow:0 0 0 3px color-mix(in srgb,var(--cc) 18%,transparent)}
+  .help{font-size:13px;color:var(--mute);margin-top:4px}
 
   /* ---------- calendar ---------- */
-  .cal-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:16px}
-  .cal{border:1px solid var(--line);border-radius:5px;background:rgba(255,255,255,.03);padding:clamp(16px,2.2vw,22px)}
-  .cal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-  .cal-hd strong{font-family:var(--fh);font-weight:800;text-transform:uppercase;font-size:19px;color:#fff;letter-spacing:.02em}
-  .cal-nav{display:flex;gap:6px}
-  .cal-nav button{width:32px;height:32px;border:1px solid var(--line);background:transparent;color:#cdc7bd;border-radius:4px;font-size:14px;transition:all .18s}
-  .cal-nav button:hover:not([disabled]){border-color:rgba(255,255,255,.4);color:#fff;background:rgba(255,255,255,.06)}
-  .cal-nav button[disabled]{opacity:.28;cursor:not-allowed}
-  .dow{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px}
-  .dow span{text-align:center;font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#6f6a62}
-  .days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-  .day{aspect-ratio:1;min-height:38px;border:1px solid var(--line);background:rgba(255,255,255,.02);color:#cdc7bd;border-radius:4px;
-    font-family:var(--fm);font-size:12.5px;display:flex;align-items:center;justify-content:center;transition:all .16s}
-  .day:hover:not([disabled]){border-color:rgba(255,21,32,.6);color:#fff;background:rgba(217,0,13,.16)}
-  .day[disabled]{opacity:.22;cursor:not-allowed}
-  .day.pad{border:0;background:transparent;pointer-events:none}
-  .day.start{background:var(--red);border-color:var(--red2);color:#fff;font-weight:600;box-shadow:0 0 18px rgba(217,0,13,.5)}
-  .day.span{background:rgba(217,0,13,.26);border-color:rgba(255,21,32,.36);color:#fff}
-  .day.end{background:rgba(217,0,13,.5);border-color:var(--red2);color:#fff}
-  .cal-note{margin-top:12px;font-family:var(--fm);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#6f6a62;line-height:1.7}
+  .cal{margin-top:14px;border:1px solid var(--line);border-radius:18px;padding:14px;background:#fff}
+  .cal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .cal-hd button{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--line2);color:var(--ink2);font-size:15px}
+  .cal-hd button:hover:not([disabled]){border-color:var(--ink2)}
+  .cal-hd button[disabled]{opacity:.3;cursor:default}
+  .cal-ms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+  .cal-m strong{display:block;font-size:15.5px;font-weight:700;margin-bottom:8px}
+  .dow,.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+  .dow{margin-bottom:4px}
+  .dow span{text-align:center;font-size:11.5px;font-weight:600;color:var(--mute)}
+  .days{touch-action:none;user-select:none;-webkit-user-select:none}
+  .day{position:relative;height:40px;border-radius:11px;border:1.5px solid transparent;background:var(--soft);color:var(--ink2);font-size:13.5px;font-weight:500;display:flex;align-items:flex-start;justify-content:center;padding-top:8px;transition:background .12s,border-color .12s}
+  .day:hover:not([disabled]){border-color:var(--line2);background:#fff}
+  .day[disabled]{opacity:.35;cursor:default;background:transparent}
+  .day.pad{background:none;pointer-events:none}
+  .day.rush{background-image:repeating-linear-gradient(135deg,rgba(239,171,18,.16) 0 4px,transparent 4px 8px)}
+  .day.has{color:var(--ink);font-weight:700;background:#fff;border-color:var(--line)}
+  .day.act{background:color-mix(in srgb,var(--cc) 16%,#fff);border-color:var(--cc)}
+  .day .bars{position:absolute;left:6px;right:6px;bottom:5px;display:flex;gap:2px}
+  .day .bars i{flex:1;height:4px;border-radius:2px}
+  .cal.ro .day{cursor:default}
+  .dsum{margin-top:12px;display:flex;flex-direction:column;gap:5px}
+  .dsum div{display:flex;gap:9px;align-items:baseline;font-size:14px;color:var(--ink2)}
+  .dsum b{color:var(--ink);font-weight:700;flex:0 0 auto}
+  .dsum i{width:10px;height:10px;border-radius:50%;flex:0 0 auto;background:var(--cc);transform:translateY(1px)}
+  .tierline{display:inline-flex;margin-top:10px;padding:6px 12px;border-radius:999px;background:var(--ac-s);color:var(--ac-d);font-size:13.5px;font-weight:600}
 
-  .recap{border:1px solid var(--line);border-left:3px solid var(--red);border-radius:5px;background:rgba(255,255,255,.03);padding:clamp(18px,2.2vw,24px);align-self:start;transition:border-color .5s}
-  .rrow{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:13.5px}
-  .rrow:last-child{border-bottom:0}
-  .rrow span{font-family:var(--fm);font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;color:#8b847a;flex:0 0 auto;padding-top:3px}
-  .rrow b{color:#fff;text-align:right;font-weight:600}
-  .tsel{margin-top:16px}
-  .auto{margin-top:12px;font-family:var(--fm);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);line-height:1.6}
+  /* ---------- events ---------- */
+  .evs{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+  .evc{border:1.5px solid var(--line);border-radius:18px;overflow:hidden;background:#fff;transition:border-color .15s,box-shadow .15s}
+  .evc.on{border-color:var(--ac);box-shadow:0 0 0 4px var(--ac-s)}
+  .evc-pick{display:block;width:100%;text-align:left;position:relative}
+  .evc-pick img{width:100%;aspect-ratio:16/8;object-fit:cover}
+  .evc-pick .tag{position:absolute;top:9px;left:9px;padding:4px 9px;border-radius:999px;background:rgba(255,255,255,.92);font-size:11.5px;font-weight:700;color:var(--gold-d)}
+  .evc-pick .add{position:absolute;top:9px;right:9px;padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.95);font-size:12.5px;font-weight:700;color:var(--ink)}
+  .evc.on .evc-pick .add{background:var(--ac);color:var(--ac-ink)}
+  .evc-t{display:block;padding:10px 13px 12px}
+  .evc-t b{display:block;font-size:15px;font-weight:700;line-height:1.25}
+  .evc-t small{display:block;font-size:13px;color:var(--mute);margin-top:3px}
+  .evc-f{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:0 13px 13px}
+  .evc.out{background:var(--soft);border-color:var(--line)}
+  .evc.out .evc-pick{cursor:not-allowed}
+  .evc.out img{filter:grayscale(1);opacity:.55}
+  .evc.out .evc-t b,.evc.out .evc-t small{color:var(--mute)}
+  .evc.out .add{background:#e9e4dc;color:var(--ink2)}
 
-  /* ---------- submit ---------- */
-  .submit-bar{display:flex;flex-wrap:wrap;align-items:center;gap:16px;padding:clamp(26px,4vw,44px) 0}
-  .send{font-family:var(--fh);font-weight:800;text-transform:uppercase;letter-spacing:.05em;font-size:clamp(16px,1.9vw,20px);
-    padding:17px 40px;border:0;border-radius:4px;color:#fff;background:linear-gradient(var(--red2),#a80009);
-    box-shadow:0 5px 0 #6d0006,0 10px 22px rgba(0,0,0,.5);transition:transform .09s,box-shadow .09s,filter .2s}
-  .send:hover:not([disabled]){filter:brightness(1.08)}
-  .send:active:not([disabled]){transform:translateY(5px);box-shadow:0 0 0 #6d0006,0 4px 10px rgba(0,0,0,.5)}
-  .send[disabled]{background:#2a282c;color:#6f6a62;box-shadow:none;cursor:not-allowed;filter:none}
-  .send-note{font-family:var(--fm);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#7d776f;line-height:1.8}
-  .send-note b{color:#cdc7bd;font-weight:500}
+  /* ---------- price ---------- */
+  .rngs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:14px}
+  .rng{border:1.5px solid var(--line);border-radius:15px;padding:10px 13px;color:var(--mute)}
+  .rng small{display:block;font-size:12.5px;font-weight:600}
+  .rng b{display:block;font-size:16.5px;font-weight:800;color:var(--ink2);margin-top:2px}
+  .rng.on{border-color:var(--ac);background:var(--ac-s);color:var(--ac-d)}
+  .rng.on b{color:var(--ink)}
+  .seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--soft);border:1px solid var(--line);gap:2px}
+  .seg button{height:34px;padding:0 15px;border-radius:999px;font-size:14px;font-weight:600;color:var(--ink2)}
+  .seg button[aria-checked=true]{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(45,32,15,.12)}
+  .rate{display:flex;align-items:center;gap:6px;margin-top:10px;border:1.5px solid var(--line2);border-radius:16px;padding:0 16px;background:#fff;transition:border-color .15s,box-shadow .15s}
+  .rate:focus-within{border-color:var(--ac);box-shadow:0 0 0 4px var(--ac-s)}
+  .rate span{font-size:28px;font-weight:700;color:var(--mute)}
+  .rate em{font-style:normal;font-size:14px;color:var(--mute);white-space:nowrap}
+  .rate input{border:0!important;box-shadow:none!important;padding:12px 0;font-size:34px;font-weight:800;letter-spacing:-.02em;min-width:0;background:none}
+  .rate input::placeholder{font-size:15px;font-weight:500;letter-spacing:0}
+  .meter{position:relative;height:10px;border-radius:99px;margin:16px 2px 26px}
+  .meter i{position:absolute;top:50%;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;background:#fff;border:3px solid var(--ink);box-shadow:0 2px 6px rgba(0,0,0,.18);transition:left .25s}
+  .meter span{position:absolute;top:16px;transform:translateX(-50%);font-size:11.5px;color:var(--mute);white-space:nowrap}
+  .hint{font-size:14px;line-height:1.45;color:var(--ink2);padding:10px 13px;border-radius:13px;background:var(--soft)}
+  .hint.lo{background:#fdeced;color:#9d1e25} .hint.ok{background:var(--green-s);color:#145f3c} .hint.hi{background:var(--gold-s);color:var(--gold-d)}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid var(--line);font-size:14.5px}
+  .row:first-child{border-top:0}
+  .row > span{min-width:0;color:var(--ink2)} .row > span b{color:var(--ink)}
+  .row small{display:block;font-size:12.5px;color:var(--mute)}
+  .step{display:inline-flex;align-items:center;border:1.5px solid var(--line2);border-radius:999px;flex:0 0 auto;background:#fff}
+  .step button{width:36px;height:36px;border-radius:50%;font-size:18px;color:var(--ink2)}
+  .step button:hover{background:var(--soft)}
+  .step output{min-width:64px;text-align:center;font-size:14px;font-weight:700}
+  .money{display:inline-flex;align-items:center;gap:4px;border:1.5px solid var(--line2);border-radius:12px;padding:0 11px;background:#fff;width:150px;flex:0 0 auto}
+  .money:focus-within{border-color:var(--ac);box-shadow:0 0 0 4px var(--ac-s)}
+  .money span{color:var(--mute);font-weight:600}
+  .money input{border:0!important;box-shadow:none!important;padding:9px 0;font-size:15.5px;font-weight:600;min-width:0}
+  .tog{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--ink2);cursor:pointer}
+  .tog input{width:19px;height:19px;accent-color:var(--ac)}
 
-  /* ---------- confirmation ---------- */
-  .ty{position:fixed;inset:0;z-index:2147483000;display:none;align-items:center;justify-content:center;padding:24px;
-    background:rgba(5,5,7,.94);backdrop-filter:blur(10px)}
-  .ty.on{display:flex}
-  .ty-in{max-width:620px;background:linear-gradient(168deg,#15131a,#0b0a0d);border:1px solid rgba(255,255,255,.14);
-    border-left:3px solid var(--gold);border-radius:5px;padding:clamp(24px,3.6vw,38px);
-    animation:rise .5s cubic-bezier(.2,.8,.25,1) both}
-  @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
-  .ty-in .k{font-family:var(--fm);font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:#8fd08f;margin-bottom:12px}
-  .ty h3{font-family:var(--fd);text-transform:uppercase;font-size:clamp(26px,4.4vw,42px);line-height:.92;color:#fff;margin-bottom:16px}
-  .ty h3 em{font-style:normal;color:var(--gold)}
-  .ty ol{list-style:none;counter-reset:t;display:flex;flex-direction:column;gap:14px;margin-bottom:22px}
-  .ty li{counter-increment:t;position:relative;padding-left:38px;font-size:14.5px;line-height:1.55;color:#cdc7bd;text-wrap:pretty}
-  .ty li:before{content:counter(t);position:absolute;left:0;top:-1px;width:26px;height:26px;border-radius:3px;
-    display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:14px;color:#241a00;background:var(--gold)}
-  .ty li b{color:#fff}
-  .ty-acts{display:flex;flex-wrap:wrap;gap:10px}
-  .ty-acts a,.ty-acts button{font-family:var(--fh);font-weight:800;text-transform:uppercase;letter-spacing:.04em;font-size:15px;
-    padding:13px 22px;border-radius:4px;border:1px solid rgba(255,255,255,.2);background:transparent;color:#e8e4dc;transition:all .18s}
-  .ty-acts a.p{background:linear-gradient(var(--red2),#a80009);border-color:transparent;color:#fff}
-  .ty-acts a:hover,.ty-acts button:hover{border-color:#fff;color:#fff}
+  /* ---------- the summary (stays beside the page) ---------- */
+  .side{position:sticky;top:150px;max-height:calc(100vh - 166px);overflow:auto;padding:2px 4px 6px;margin:0 -4px;scrollbar-width:thin}
+  .sum-h{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 10px;margin-bottom:6px}
+  .sum-h .pill{background:var(--ac-s);color:var(--ac-d)}
+  .ov .r{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-top:1px solid var(--line);font-size:14px}
+  .ov .r:first-child{border-top:0}
+  .ov .r span{color:var(--mute);flex:0 0 auto}
+  .ov .r b{text-align:right;font-weight:600;white-space:pre-line}
+  .ov .tot{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:6px;padding-top:12px;border-top:2px solid var(--ink)}
+  .ov .tot span{font-weight:700}
+  .ov .tot b{font-size:30px;font-weight:800;letter-spacing:-.02em}
+  .ov .empty{font-size:14px;color:var(--mute);padding:6px 0}
+  .com{margin-top:14px;border-radius:var(--r);padding:18px 20px;background:linear-gradient(135deg,#fff7dc,#ffe7a6);border:1px solid #f2d68c;color:#4a3300;box-shadow:var(--sh)}
+  .com small{display:block;font-size:13px;font-weight:700;color:#8a5a00}
+  .com b{display:block;font-size:46px;font-weight:800;letter-spacing:-.03em;line-height:1.05;color:#3a2800;margin:2px 0 6px}
+  .com p{font-size:14px;line-height:1.45}
+  .com p + p{margin-top:4px}
+  .com em{font-style:normal;font-weight:800}
+  .com.pop b{animation:pop .4s ease}
+  @keyframes pop{40%{transform:scale(1.06)}}
+  .sendcard{margin-top:14px}
+  .need{margin:12px 0;display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13.5px;color:var(--ink2)}
+  .need button{padding:5px 11px;border-radius:999px;background:#fdeced;color:#9d1e25;font-size:13px;font-weight:600}
+  .need button:hover{background:#fbdcdf}
+  .need .ok{padding:6px 12px;border-radius:999px;background:var(--green-s);color:#145f3c;font-weight:700}
+  .send{width:100%;height:54px;border-radius:999px;background:var(--ac);color:var(--ac-ink);font-size:16.5px;font-weight:800;box-shadow:0 6px 18px color-mix(in srgb,var(--ac) 35%,transparent);transition:transform .1s,filter .15s}
+  .send:hover{filter:brightness(1.05)}
+  .send:active{transform:translateY(2px)}
+  .send[disabled]{opacity:.6;cursor:progress}
+  .fine{margin-top:8px;font-size:12.5px;color:var(--mute);text-align:center}
 
-  .foot{padding:24px 0;text-align:center;font-family:var(--fm);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#6f6a62;line-height:1.9}
+  /* ---------- phone bar, objections, sent ---------- */
+  .mbar{display:none}
+  .sheet{position:fixed;inset:0;z-index:60;background:rgba(31,29,26,.32);display:flex;justify-content:flex-end;align-items:flex-start;padding:76px 16px 16px}
+  .sheet-in{width:min(440px,100%);max-height:min(640px,calc(100vh - 32px));overflow:auto;background:#fff;border-radius:24px;padding:20px 22px;box-shadow:0 24px 60px rgba(0,0,0,.25);animation:up .25s ease}
+  @keyframes up{from{transform:translateY(16px);opacity:0}}
+  .sheet-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .x2{width:36px;height:36px;border-radius:50%;background:var(--soft);font-size:18px;color:var(--ink2)}
+  .obj{border-top:1px solid var(--line)}
+  .obj summary{list-style:none;cursor:pointer;padding:12px 0;font-weight:700;display:flex;justify-content:space-between;gap:10px}
+  .obj summary::-webkit-details-marker{display:none}
+  .obj summary:after{content:"+";color:var(--mute);font-weight:500}
+  .obj[open] summary:after{content:"\2212"}
+  .obj p{font-size:14.5px;line-height:1.5;color:var(--ink2);padding:0 0 12px}
+  .modal{position:fixed;inset:0;z-index:70;background:rgba(31,29,26,.38);display:flex;align-items:flex-start;justify-content:center;padding:clamp(12px,4vh,40px) 14px;overflow:auto}
+  .modal-in{width:min(1040px,100%);background:var(--bg);border-radius:26px;padding:clamp(18px,3vw,30px);box-shadow:0 30px 80px rgba(0,0,0,.3);animation:up .3s ease}
+  .ok-pill{display:inline-flex;align-items:center;gap:7px;padding:6px 13px;border-radius:999px;background:var(--green-s);color:#145f3c;font-size:13.5px;font-weight:700;margin-bottom:10px}
+  .acts{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 18px}
+  .two{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:18px;align-items:start}
+  .mailprev{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;max-height:480px;overflow:auto;box-shadow:var(--sh)}
+  .todo{list-style:none;counter-reset:t;display:flex;flex-direction:column;gap:12px}
+  .todo li{counter-increment:t;position:relative;padding-left:36px;font-size:14.5px;line-height:1.45;color:var(--ink2)}
+  .todo li:before{content:counter(t);position:absolute;left:0;top:0;width:25px;height:25px;border-radius:50%;background:var(--ac-s);color:var(--ac-d);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+  .todo b{color:var(--ink)}
+  .toast{position:fixed;left:50%;bottom:28px;z-index:90;transform:translate(-50%,16px);opacity:0;pointer-events:none;max-width:min(560px,calc(100vw - 32px));padding:12px 18px;border-radius:999px;background:var(--ink);color:#fff;font-size:14.5px;text-align:center;box-shadow:0 14px 40px rgba(0,0,0,.25);transition:opacity .25s,transform .25s}
+  .toast.on{opacity:1;transform:translate(-50%,0)}
 
-  @media(max-width:900px){
-    .quote,.cal-grid,.fields{grid-template-columns:1fr}
-    .tbl th{width:38%;white-space:normal}
+  @media(max-width:1060px){
+    .layout{grid-template-columns:minmax(0,1fr)}
+    .side{position:static;max-height:none;overflow:visible;margin:0;padding:0}
+    .mbar{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;align-items:center;gap:14px;padding:10px clamp(14px,3vw,24px) calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-top:1px solid var(--line)}
+    .mbar div{min-width:0}
+    .mbar small{display:block;font-size:12px;color:var(--mute);font-weight:600}
+    .mbar b{display:block;font-size:20px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+    .mbar .me b{color:var(--gold-d)}
+    .mbar button{margin-left:auto;height:46px;padding:0 20px;border-radius:999px;background:var(--ac);color:var(--ac-ink);font-weight:800;font-size:15px;white-space:nowrap;flex:0 0 auto}
+    .toast{bottom:90px}
+  }
+  @media(max-width:820px){
+    .grid3{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .cal-ms{grid-template-columns:minmax(0,1fr)} .cal-ms .cal-m + .cal-m{display:none}
+    .inc{grid-template-columns:minmax(0,1fr)}
+    .two{grid-template-columns:minmax(0,1fr)}
+    .intro{flex-direction:column;align-items:flex-start}
   }
   @media(max-width:620px){
-    .brand small{display:none}
-    .qprice{font-size:clamp(38px,13vw,54px)}
-    .day{min-height:34px}
-    .tbl,.tbl tbody,.tbl tr,.tbl th,.tbl td{display:block;width:100%}
-    .tbl tr{border-bottom:1px solid rgba(255,255,255,.09)}
-    .tbl th{border-bottom:0;padding-bottom:4px;white-space:normal}
-    .tbl td{padding-top:0}
-    .send{width:100%}
+    .grid3,.grid2{grid-template-columns:minmax(0,1fr)}
+    .tabs{top:70px;gap:4px;padding:5px}
+    .tab{padding:9px 8px;justify-content:center;text-align:center;gap:7px}
+    .tab b{font-size:14.5px} .tab small{display:none} .tab .lg{display:none} .tab .st{display:inline}
+    .evs{grid-template-columns:minmax(0,1fr);gap:8px}
+    .evc-pick{display:grid;grid-template-columns:78px minmax(0,1fr);grid-template-rows:auto auto;align-items:start}
+    .evc-pick img{grid-row:1 / span 2;width:78px;height:100%;min-height:96px;aspect-ratio:auto}
+    .evc-pick .tag{display:none}
+    .evc-pick .add{position:static;grid-column:2;grid-row:2;justify-self:start;margin:2px 12px 11px;background:var(--soft);transform:none}
+    .evc-t{grid-column:2;grid-row:1;padding:10px 12px 4px}
+    .evc-t b{font-size:14.5px}
+    .rngs{grid-template-columns:minmax(0,1fr)}
+    .rng:not(.on){display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:8px 13px} .rng:not(.on) b{font-size:14.5px;margin:0;white-space:nowrap}
+    .cityrow{flex-direction:column;align-items:stretch}
+    .row{flex-wrap:wrap}
+    .brand span,.brand b,.pill.staff{display:none}
+    .top{gap:8px} .top-r{gap:8px} .ghost{padding:0 13px;font-size:13.5px}
+    input[type=text],input[type=email],input[type=tel],select,textarea{font-size:16px}
   }
-</style>
-<style>
-/* AOTC — shared responsive safety net.
-   Loaded last on every page. Fixes the small-screen issues that recur across
-   pages without touching each page's own layout rules. */
-
-/* 1. never allow sideways scroll, and stop iOS inflating text on rotate */
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
-html,body{max-width:100%;overflow-x:clip}
-
-/* 2. media and embeds must never exceed their column */
-img,video,iframe,canvas,svg,table{max-width:100%}
-img,video{height:auto}
-
-/* 3. long unbroken strings (emails, URLs, GPS strings) must wrap */
-p,li,td,th,dd,dt,figcaption,blockquote,h1,h2,h3,h4,h5,h6{overflow-wrap:break-word}
-
-/* 4. respect the notch / home indicator on phones */
-@supports(padding:max(0px)){
-  body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
-}
-
-/* 5. touch targets: anything tappable gets a real hit area on phones */
-@media(hover:none) and (pointer:coarse){
-  a[href^="tel"],a[href^="sms"],a[href^="mailto"],button,input[type="button"],input[type="submit"],
-  .btn,.go,.send,.chip,.day,.cal-nav button{min-height:44px}
-  .day{min-height:42px}
-}
-
-/* 6. inputs must not zoom the viewport on iOS (needs >=16px) */
-@media(max-width:768px){
-  input[type="text"],input[type="email"],input[type="tel"],input[type="password"],
-  input[type="search"],input[type="number"],select,textarea{font-size:16px}
-}
-
-/* 7. tiny phones: give every page's gutter a floor and pull display type in */
-@media(max-width:400px){
-  .wrap,.narrow,.pw{width:calc(100% - 26px)!important}
-}
-@media(max-width:360px){
-  h1{font-size:clamp(28px,10vw,40px)!important}
-}
-
-/* 8. landscape phones: stop full-height heroes from swallowing the screen */
-@media(max-height:520px) and (orientation:landscape){
-  .lp-hero,.hero,.ph{min-height:0!important}
-}
-
-/* 9. print: never carry the dark canvas onto paper */
-@media print{
-  html,body{background:#fff!important;overflow:visible!important}
-}
-
+  @media(max-width:360px){
+    .mbar{gap:10px} .mbar b{font-size:17.5px} .mbar button{padding:0 15px;font-size:14px}
+  }
+  @media(min-width:1061px){ .swipe span{display:none} }
+  @media print{
+    body{background:#fff} body > *:not(.modal){display:none!important}
+    .modal{position:static;background:none;padding:0} .modal-in{box-shadow:none;background:#fff;padding:0} .modal-in > *:not(.two){display:none!important}
+    .two{display:block} .two > *:not(.mailprev){display:none!important} .mailprev{border:0;box-shadow:none;max-height:none;overflow:visible;padding:0}
+  }
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
-<body>
-  <nav class="nav">
-    <div class="nav-in">
-      <a class="brand" href="index.html" aria-label="AOTC home" data-site-logo><span class="m"><img src="aotc_final.gif" alt="AOTC" /></span><span><strong>AOTC</strong><small>Sales Console</small></span></a>
-      <span class="nav-links aotc-host">
-        <span class="staff">Internal &mdash; staff only</span>
-        <div class="aotc-nav">
-          <button class="aotc-tab" type="button" aria-label="Open menu" aria-expanded="false" aria-haspopup="true" aria-controls="aotcPanel">
-            <span class="aotc-bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="aotc-lab"><b>Got Ads?</b><i>We do &mdash; look inside</i></span>
-          </button>
-          <a class="aotc-call" href="sms:+17737081400?&amp;body=LET%27S%20MAKE%20MONEY" aria-label="Text AOTC"><span>(773) 708-1400</span></a>
-          <button class="aotc-scrim" type="button" tabindex="-1" aria-hidden="true"></button>
-          <div class="aotc-panel" id="aotcPanel" role="menu" aria-label="Site menu">
-            <div class="aotc-col">
-              <p class="aotc-h">Explore</p>
-              <div class="aotc-list">
-                <a class="aotc-item" href="index.html" role="menuitem">Home<span class="d">Start here</span></a>
-                                <a class="aotc-item" href="faq.html" role="menuitem">FAQ<span class="d">Questions, answered</span></a>
-                <a class="aotc-item" href="disclosures.html" role="menuitem">Disclosures<span class="d">Legal</span></a>
-              </div>
-            </div>
-            <div class="aotc-col">
-              <p class="aotc-h">Contact Us</p>
-              <div class="aotc-list">
-                <a class="aotc-item" href="sms:+17737081400?&amp;body=LET%27S%20MAKE%20MONEY" role="menuitem">Text 24/7<span class="d">(773) 708-1400</span></a>
-                <a class="aotc-item" href="mailto:info@adsofthecentury.net" role="menuitem">Email 24/7<span class="d">info@adsofthecentury.net</span></a>
-              </div>
-            </div>
-            <div class="aotc-col wide">
-              <p class="aotc-h">Follow</p>
-              <div class="aotc-social">
-                <a class="aotc-chip" href="https://www.instagram.com/aotc.media/" target="_blank" rel="noopener">Instagram</a>
-                <a class="aotc-chip" href="https://www.facebook.com/profile.php?id=61591701875497" target="_blank" rel="noopener">Facebook</a>
-                <a class="aotc-chip" href="https://www.threads.com/@aotc.media" target="_blank" rel="noopener">Threads</a>
-                <a class="aotc-chip" href="https://linkedin.com/company/advertisements-of-the-century" target="_blank" rel="noopener">LinkedIn</a>
-                <a class="aotc-chip" href="https://www.tiktok.com/@adsofthecentury" target="_blank" rel="noopener">TikTok</a>
-                <a class="aotc-chip" href="https://linktr.ee/AOTC" target="_blank" rel="noopener">Linktree</a>
-              </div>
-              <a class="aotc-book" href="sms:+17737081400?&amp;body=LET%27S%20MAKE%20MONEY" role="menuitem">Book a campaign &rarr;</a>
-            </div>
-          </div>
-        </div>
-      </span>
-    </div>
-  </nav>
+<body data-mode="exclusive">
+<header class="top">
+  <a class="brand" href="index.html" aria-label="AOTC home" data-site-logo><img src="aotc_final.gif" alt="AOTC" /><div><b>Sales console</b><span>AOTC, Ads of the Century</span></div></a>
+  <div class="top-r"><span class="pill staff">Staff only</span><button type="button" class="ghost dark" id="objBtn">If they say&hellip;</button><button type="button" class="ghost" id="reset">Start over</button></div>
+</header>
 
-  <header class="hd">
-    <div class="wrap">
-      <span class="kick">Route booking &mdash; sales console</span>
-      <h1>Build the deal <em>on the call.</em></h1>
-      <p>Fill this in while you have the client on the line. Everything below scrolls freely, the quote updates live as you move the slider, and the whole record emails to <b>info@adsofthecentury.net</b> the moment you submit.</p>
-    </div>
-  </header>
-
-  <!-- 01 CONTACT -->
-  <section class="blk">
-    <div class="wrap">
-      <div class="sn"><b>01</b><span>Client contact</span></div>
-      <h2>Who is on the phone?</h2>
-      <p class="lead">Name, company, email, and phone are required. Everything else helps whoever picks this up next.</p>
-      <div class="fields">
-        <div><label class="fl" for="fName">Name <i>*</i></label><input type="text" id="fName" autocomplete="name" placeholder="First and last" /></div>
-        <div><label class="fl" for="fCo">Company / Organization <i>*</i></label><input type="text" id="fCo" autocomplete="organization" placeholder="Business, union, campaign, venue" /></div>
-        <div><label class="fl" for="fEmail">Email <i>*</i></label><input type="email" id="fEmail" autocomplete="email" placeholder="client@company.com" /></div>
-        <div><label class="fl" for="fPhone">Phone <i>*</i></label><input type="tel" id="fPhone" autocomplete="tel" placeholder="(773) 000-0000" /></div>
-        <div><label class="fl" for="fRep">AOTC rep on the call</label><input type="text" id="fRep" placeholder="Your name" /></div>
-        <div><label class="fl" for="fIndustry">Client industry</label><input type="text" id="fIndustry" placeholder="For industry exclusivity check" /></div>
-        <div class="f-full"><label class="fl" for="fNotes">Call notes &mdash; objective, target audience, route ideas, creative status</label><textarea id="fNotes" placeholder="What are they trying to accomplish? Who are they trying to reach? Any route or placement they named? Do they have creative already?"></textarea></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 02 WHAT'S INCLUDED -->
-  <section class="blk">
-    <div class="wrap">
-      <div class="sn"><b>02</b><span>What they get</span></div>
-      <h2>Included in every service.</h2>
-      <p class="lead">Read from this on the call. These terms apply to all standard route bookings &mdash; <b>Exclusive Coverage and Private Events are quoted separately</b> and are not bound by the rotation, SOV, or RPM figures below.</p>
-      <table class="tbl">
-        <caption>Standard route inclusions &middot; <b>Exclusive Coverage &amp; Private Events excluded</b></caption>
-        <tbody>
-          <tr><th>Route<span>Coverage area</span></th><td>Single market with district rotation &mdash; <b>determine the route with the client</b>. Check the <em>Route Coverage PDF</em> for current route activations before committing.</td></tr>
-          <tr><th>Prioritized Premium Placement<span>Positioning</span></th><td>Included. <b>We optimize for the client's target audience</b> &mdash; ask who they are trying to reach before you promise a corner.</td></tr>
-          <tr><th>Share Of Voice<span>SOV</span></th><td>Varies &mdash; <b>100% maximum, ~15% minimum</b>. Longer runs and fewer co-riders push it up; a full rotation pushes it toward the floor.</td></tr>
-          <tr><th>Rotations Per Minute<span>RPM</span></th><td>Varies &mdash; <b>6 maximum, 1 minimum</b>, driven by how many companies share the rotation.</td></tr>
-          <tr><th>Display Rotation<span>Loop structure</span></th><td>Balanced content rotation &mdash; <b>10-second rotations, up to 6 companies per route</b>. Nobody is buried at the back of the loop.</td></tr>
-          <tr><th>Industry Exclusivity<span>Competitive protection</span></th><td><b>Guaranteed.</b> No competing companies within the rotation &mdash; their category is theirs for the run.</td></tr>
-          <tr><th>Display<span>Hardware</span></th><td><b>4 LED billboards with full-motion</b> capability.</td></tr>
-          <tr><th>Sound<span>Audio</span></th><td>Sound is available and <b>turns the ad into a mobile commercial</b>. Note clearly: <em>AOTC does not provide audio</em> &mdash; the client supplies it.</td></tr>
-          <tr><th>Route &amp; photos<span>Delivery</span></th><td>Start &amp; end of service notice, a <b>GPS-tracked route</b>, and photos of the ad on the street throughout the run.</td></tr>
-          <tr><th>Creative Design Fee<span>Production</span></th><td><b>Still images included</b> in the cost. Motion content design is <em>$150</em>.</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- 03 BUDGET -->
-  <section class="blk">
-    <div class="wrap">
-      <div class="sn"><b>03</b><span>Length &amp; investment</span></div>
-      <h2>Move the slider while they talk.</h2>
-      <p class="lead">Every stop is a real, bookable price &mdash; two hours to a full-month exclusive. The date panel below updates itself as you move.</p>
-
-      <div class="quote">
-        <div class="qbox hero">
-          <div id="goldBadge" hidden><b>&#9733; Ultimate unlocked</b> &mdash; the truck is theirs alone</div>
-          <div class="qtag" id="qTag">Rate</div>
-          <div class="qpkg" id="qPkg">The Month</div>
-          <div class="qprice" id="qPrice">$50<span>/HR</span></div>
-          <div class="qper" id="qPer">$400 per day</div>
-          <div class="qsub"><span>Total <b id="qTotal">$12,000</b></span><span><b id="qDays">30 days</b></span><span><b id="qHours">240 service hours</b></span></div>
-        </div>
-        <div class="qbox">
-          <div class="qtag">Talk track</div>
-          <p class="qdesc" id="qDesc"></p>
-          <div class="qexcl" id="qExcl" hidden>
-            <i>100% share of voice &mdash; the truck comes off the market for their month</i>
-            <i>Their route, drawn to their objective, premium placement at every stop</i>
-            <i>Unlimited creative changes, same day, as many times as they want</i>
-            <i>All 213 square feet answering only to them</i>
-          </div>
-        </div>
-      </div>
-
-      <div class="sl-wrap">
-        <div class="sl-top"><span>Length of service &mdash; <b id="qDays2">30 days</b></span><span>Drag, scroll, or use arrow keys</span></div>
-        <input type="range" id="slider" min="1" max="37" step="1" value="36" aria-label="Length of service" aria-describedby="qDesc" />
-        <div class="sl-ticks"><span>2 hrs</span><span>1 day</span><span>3</span><span>7</span><span>14</span><span>21</span><span>30 days</span><span class="tick-ult">&#9733;</span></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 04 DATES -->
-  <section class="blk">
-    <div class="wrap">
-      <div class="sn"><b>04</b><span>Dates of service</span></div>
-      <h2>When does it roll?</h2>
-      <p class="lead" id="s2lead">Pick the first day of service. The last day sets itself from the length above.</p>
-
-      <div class="cal-grid">
-        <div class="cal">
-          <div class="cal-hd">
-            <strong id="calTitle">Month</strong>
-            <div class="cal-nav"><button type="button" id="calPrev" aria-label="Previous month">&#9664;</button><button type="button" id="calNext" aria-label="Next month">&#9654;</button></div>
-          </div>
-          <div class="dow"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div>
-          <div class="days" id="calDays"></div>
-          <div class="cal-note">Minimum 3 days lead time for creative and routing &middot; Rush dates: confirm with dispatch</div>
-        </div>
-
-        <div class="recap">
-          <div class="qtag" style="margin-bottom:4px">Investment overview</div>
-          <div class="rrow"><span>Package</span><b id="r2Pkg">&mdash;</b></div>
-          <div class="rrow"><span>Investment</span><b id="r2Price">&mdash;</b></div>
-          <div class="rrow"><span>Rate</span><b id="r2Rate">&mdash;</b></div>
-          <div class="rrow"><span>Service hours</span><b id="r2Hours">&mdash;</b></div>
-          <div class="rrow"><span>First day</span><b id="r2Start">Select a date</b></div>
-          <div class="rrow"><span>Last day</span><b id="r2End">&mdash;</b></div>
-          <div class="tsel" id="timeSel" hidden>
-            <label class="fl" for="startTime">Start time on route</label>
-            <select id="startTime"></select>
-            <div class="auto" id="autoEnd"></div>
-          </div>
-          <div class="auto" id="autoSpan" hidden></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="wrap submit-bar">
-    <button class="send" type="button" id="send" disabled>Submit booking</button>
-    <div class="send-note" id="sendNote"><b>Required:</b> name, company, email, phone, and a first day of service</div>
+<main class="wrap">
+  <div class="intro" id="intro" hidden>
+    <strong>New here? It&rsquo;s four steps.</strong>
+    <ol><li>Fill in who&rsquo;s calling</li><li>Swipe to what they&rsquo;re booking</li><li>Work down the page as you talk</li><li>Check your commission, then send</li></ol>
+    <button type="button" class="ghost" id="introOk">Got it</button>
   </div>
 
-  <div class="foot">AOTC &mdash; Ads of the Century &middot; Internal sales console &middot; Not for client distribution</div>
+  <section class="card" aria-labelledby="hClient">
+    <div class="card-h"><div><h1 id="hClient">Who&rsquo;s on the phone?</h1><p class="sub">Get the email right: their overview goes there at the end.</p></div></div>
+    <p class="say"><b>Say</b>&ldquo;Thanks for calling AOTC! Who do I have the pleasure of speaking with, and what&rsquo;s the business?&rdquo;</p>
+    <div class="grid3">
+      <div><label class="l" for="fName">Their name <i>*</i></label><input type="text" id="fName" autocomplete="off" placeholder="First and last name" /></div>
+      <div><label class="l" for="fCo">Business or brand <i>*</i></label><input type="text" id="fCo" autocomplete="off" placeholder="The name on the screens" /></div>
+      <div><label class="l" for="fEmail">Email <i>*</i></label><input type="email" id="fEmail" autocomplete="off" placeholder="name@business.com" /></div>
+      <div><label class="l" for="fPhone">Phone <i>*</i></label><input type="tel" id="fPhone" autocomplete="off" placeholder="(773) 000-0000" /></div>
+      <div><label class="l" for="fIndustry">What they do <span class="opt">for the competitor check</span></label><input type="text" id="fIndustry" autocomplete="off" placeholder="Restaurant, dealership, law firm&hellip;" /></div>
+      <div><label class="l" for="fRep">Your name <span class="opt">we&rsquo;ll remember it</span></label><input type="text" id="fRep" autocomplete="off" placeholder="Your first and last name" /></div>
+    </div>
+  </section>
 
-  <div class="ty" id="ty" role="alertdialog" aria-live="polite">
-    <div class="ty-in">
-      <p class="k">&#10003; Submitted to info@adsofthecentury.net</p>
-      <h3>Booking sent. <em>Three things, now.</em></h3>
-      <ol>
-        <li><b>Email the client for creative.</b> Ask them to reply with their files &mdash; MP4, MOV, JPG, PNG, PDF, AI, PSD, whatever they have.</li>
-        <li><b>No creative yet? Get their ideas in writing.</b> A paragraph on what they want the screen to say is enough to start production the same day. Do not hang up without one or the other.</li>
-        <li><b>Call the CEO to confirm this submission.</b> The booking is not confirmed until that call happens.</li>
-      </ol>
-      <div class="ty-acts">
-        <a class="p" id="tyMail" href="#">Email the client now</a>
-        <a href="tel:+17737081400">Call CEO</a>
-        <button type="button" id="tyClose">Start another booking</button>
+  <div class="tabs" role="tablist" aria-label="What they're booking">
+    <button type="button" class="tab" role="tab" id="tab-exclusive" aria-controls="pg-exclusive" aria-selected="true" data-tab="exclusive" style="--c:var(--gold)"><i></i><span><b><span class="lg">Exclusive use</span><span class="st">Exclusive</span></b><small>The truck is all theirs</small></span></button>
+    <button type="button" class="tab" role="tab" id="tab-rotational" aria-controls="pg-rotational" aria-selected="false" data-tab="rotational" style="--c:var(--red)"><i></i><span><b><span class="lg">Rotational slot</span><span class="st">Rotational</span></b><small>10 seconds at a big event</small></span></button>
+    <button type="button" class="tab" role="tab" id="tab-private" aria-controls="pg-private" aria-selected="false" data-tab="private" style="--c:var(--blue)"><i></i><span><b><span class="lg">Private event</span><span class="st">Private</span></b><small>The truck parked at their party</small></span></button>
+  </div>
+  <div class="swipe"><div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i></div><span>Swipe sideways or tap a tab to switch</span></div>
+
+  <div class="layout">
+    <div class="sw" id="sw">
+
+      <section class="pg" id="pg-exclusive" data-mode="exclusive" role="tabpanel" aria-labelledby="tab-exclusive">
+        <div class="card">
+          <div class="card-h"><span class="num">1</span><div><h2>What they get</h2><p class="sub">Read it out, then pause and let them react.</p></div></div>
+          <p class="say"><b>Say</b>&ldquo;With an exclusive booking the truck is yours alone: all the screen time, three LED billboards and sound, in as many cities as you need.&rdquo;</p>
+          <ul class="inc" data-inc="exclusive"></ul>
+          <div class="notes" data-notes="exclusive"></div>
+        </div>
+        <div class="card">
+          <div class="card-h"><span class="num">2</span><div><h2>Their goal</h2><p class="sub">Get it in their words before you talk about price. It tells us where to put the truck.</p></div></div>
+          <p class="say"><b>Ask</b>&ldquo;What&rsquo;s the one thing you need this to fix? Who has to see it, and where are they during the day?&rdquo;</p>
+          <div class="grid2">
+            <div><label class="l" for="exProblem">The problem</label><div class="chips" data-for="problem"></div><textarea id="exProblem" data-bind="problem" placeholder="What isn&rsquo;t working, and what a win looks like"></textarea></div>
+            <div><label class="l" for="exAudience">Who has to see it, and where</label><div class="chips" data-for="audience"></div><textarea id="exAudience" data-bind="audience" placeholder="Who they are, which neighborhoods, what time of day"></textarea></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><span class="num">3</span><div><h2>Cities and dates</h2><p class="sub">Add each city, then tap its days. Drag across days to add a whole run.</p></div></div>
+          <p class="say"><b>Ask</b>&ldquo;Is there another city where the same people are? Any dates that matter, like an opening, a game or a launch?&rdquo;</p>
+          <div class="cityrow">
+            <div class="ac"><label class="l" for="cityIn">Add a city</label><input type="text" id="cityIn" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="cityList" placeholder="Start typing: Chicago, Milwaukee, Gary&hellip;" /><ul class="ac-list" id="cityList" role="listbox" hidden></ul></div>
+            <button type="button" class="btn" id="cityAdd">+ Add city</button>
+          </div>
+          <div class="cities" id="cityChips"></div>
+          <p class="help" id="cityHelp"></p>
+          <div class="cal" id="exCal"></div>
+          <div class="dsum" id="exSum"></div>
+          <p class="tierline" id="exTier" hidden></p>
+        </div>
+        <div class="card">
+          <div class="card-h"><span class="num">4</span><div><h2>The price</h2><p class="sub">Per truck, per day. The number of days picks the range for you.</p></div></div>
+          <p class="say tip"><b>Tip</b>Open at the top of the range and then go quiet. You can always come down; you can&rsquo;t go back up.</p>
+          <div class="rngs" id="exRngs"></div>
+          <div class="seg" role="radiogroup" aria-label="Type the rate"><button type="button" role="radio" data-unit="day" aria-checked="true">Per day</button><button type="button" role="radio" data-unit="hr" aria-checked="false">Per hour</button></div>
+          <div class="rate"><span>$</span><input type="text" id="exRate" inputmode="decimal" autocomplete="off" aria-label="Rate per truck" /><em id="exUnit">per truck, per day</em></div>
+          <div class="meter" id="exMeter" aria-hidden="true"></div>
+          <p class="hint" id="exHint"></p>
+          <div style="margin-top:8px">
+            <div class="row"><span><b>Hours a day</b><small>Ranges assume 7 to 8 hours</small></span><div class="seg" role="radiogroup" aria-label="Hours a day"><button type="button" role="radio" data-hours="7" aria-checked="false">7 hours</button><button type="button" role="radio" data-hours="8" aria-checked="true">8 hours</button></div></div>
+            <div id="exTrucks"></div>
+            <div class="row"><span><b>Creative design</b> <span class="opt">optional add-on</span><small>Priced by what we design and the return they need</small></span><label class="money"><span>$</span><input type="text" id="exCreative" inputmode="decimal" placeholder="0" aria-label="Creative design add-on" /></label></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="pg" id="pg-rotational" data-mode="rotational" role="tabpanel" aria-labelledby="tab-rotational">
+        <div class="card">
+          <div class="card-h"><span class="num">1</span><div><h2>What they get</h2><p class="sub">Big crowds for much less than an exclusive booking.</p></div></div>
+          <p class="say"><b>Say</b>&ldquo;A rotational slot puts you in front of the year&rsquo;s biggest crowds: a 10-second spot in the loop, premium placement and never a competitor next to you.&rdquo;</p>
+          <ul class="inc" data-inc="rotational"></ul>
+          <div class="notes" data-notes="rotational"></div>
+        </div>
+        <div class="card">
+          <div class="card-h"><span class="num">2</span><div><h2>Pick the events</h2><p class="sub">Every event on the homepage is here. Tap to add it, then price the slot right on the card.</p></div></div>
+          <p class="say"><b>Ask</b>&ldquo;Which of these will your customers be at? One event, or a few through the summer?&rdquo;</p>
+          <div class="evs" id="evList"></div>
+        </div>
+        <div class="card">
+          <div class="card-h"><span class="num">3</span><div><h2>Add-ons</h2><p class="sub">Sound is on each event card ($150). Creative design is priced by what we make.</p></div></div>
+          <div class="row"><span><b>Creative design fee</b> <span class="opt">optional</span></span><label class="money"><span>$</span><input type="text" id="rtCreative" inputmode="decimal" placeholder="0" aria-label="Creative design fee" /></label></div>
+        </div>
+      </section>
+
+      <section class="pg" id="pg-private" data-mode="private" role="tabpanel" aria-labelledby="tab-private">
+        <div class="card">
+          <div class="card-h"><span class="num">1</span><div><h2>What they get</h2><p class="sub">Simple: we park, they play. All the creative is included.</p></div></div>
+          <p class="say"><b>Say</b>&ldquo;We park the truck right at your event and put anything you like on the screens: movies, video games, videos or photos. Sound and creative are included.&rdquo;</p>
+          <ul class="inc" data-inc="private"></ul>
+          <div class="notes" data-notes="private"></div>
+        </div>
+        <div class="card">
+          <div class="card-h"><span class="num">2</span><div><h2>The event</h2><p class="sub">The location is required. Tap the date (or dates) on the calendar.</p></div></div>
+          <p class="say"><b>Ask</b>&ldquo;Where&rsquo;s the event, what time should we arrive, and how long should the truck stay?&rdquo;</p>
+          <div class="grid2">
+            <div><label class="l" for="pLoc">Event location <i>*</i></label><input type="text" id="pLoc" autocomplete="off" placeholder="Venue and street address" /></div>
+            <div class="ac"><label class="l" for="pCity">City <i>*</i></label><input type="text" id="pCity" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="pCityList" placeholder="Start typing a city" /><ul class="ac-list" id="pCityList" role="listbox" hidden></ul></div>
+            <div><label class="l" for="pStart">Truck arrives at</label><select id="pStart"></select></div>
+            <div><label class="l">Hours on site</label><div class="step" data-stepper="pHours"><button type="button" data-d="-1" aria-label="One hour less">&minus;</button><output id="pHoursOut">4 hours</output><button type="button" data-d="1" aria-label="One hour more">+</button></div></div>
+          </div>
+          <div class="cal" id="pCal"></div>
+          <div class="dsum" id="pSum"></div>
+        </div>
+        <div class="card">
+          <div class="card-h"><span class="num">3</span><div><h2>The price</h2><p class="sub">Per truck, per hour. $200 is the minimum; most land between $200 and $400.</p></div></div>
+          <p class="say tip"><b>Tip</b>Quote $400 first. $200 an hour is the floor, never the opening number.</p>
+          <div class="rate" style="margin-top:0"><span>$</span><input type="text" id="pvRate" inputmode="decimal" autocomplete="off" aria-label="Rate per hour" /><em>per truck, per hour</em></div>
+          <div class="meter" id="pvMeter" aria-hidden="true"></div>
+          <p class="hint" id="pvHint"></p>
+          <div style="margin-top:8px">
+            <div class="row"><span><b>Trucks</b></span><div class="step" data-stepper="pTrucks"><button type="button" data-d="-1" aria-label="One truck less">&minus;</button><output id="pTrucksOut">1 truck</output><button type="button" data-d="1" aria-label="One truck more">+</button></div></div>
+            <div class="row"><label class="tog"><input type="checkbox" id="pDrive" /> <span><b>Add driving</b><small>$200 an hour, 1-hour minimum</small></span></label><div class="step" data-stepper="pDriveHrs"><button type="button" data-d="-1" aria-label="One hour less">&minus;</button><output id="pDriveOut">1 hour</output><button type="button" data-d="1" aria-label="One hour more">+</button></div></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <aside class="side" id="side" aria-label="Investment overview">
+      <div class="card">
+        <div class="sum-h"><h2>Investment overview</h2><span class="pill" id="sideMode"></span></div>
+        <div class="ov" id="ov"></div>
+      </div>
+      <div class="com" id="com"></div>
+      <div class="card sendcard">
+        <label class="l" for="fNotes">Notes for the team <span class="opt">optional</span></label>
+        <textarea id="fNotes" placeholder="Parking, creative status, who else to copy, timing&hellip;"></textarea>
+        <div class="need" id="need"></div>
+        <button type="button" class="send" id="send">Send for an availability check</button>
+        <p class="fine">Goes to info@adsofthecentury.net. Next you&rsquo;ll email the client their overview.</p>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<div class="mbar" id="mbar"><div><small>Total</small><b id="mTotal">$0</b></div><div class="me"><small>You make</small><b id="mMe">$0</b></div><button type="button" id="mGo">Review &amp; send</button></div>
+
+<div class="sheet" id="sheet" hidden><div class="sheet-in" role="dialog" aria-modal="true" aria-labelledby="hObj"><div class="sheet-h"><h2 id="hObj">If they say&hellip;</h2><button type="button" class="x2" data-close aria-label="Close">&times;</button></div><div id="objList"></div></div></div>
+
+<div class="modal" id="sent" hidden>
+  <div class="modal-in" role="dialog" aria-modal="true" aria-labelledby="hSent">
+    <span class="ok-pill">&#10003; Sent to info@adsofthecentury.net</span>
+    <h1 id="hSent">Now email <span id="snName">the client</span> their overview</h1>
+    <p class="sub" id="snHow" style="font-size:15px;max-width:70ch;margin-top:6px"></p>
+    <div class="acts">
+      <a class="btn p" id="snGmail" href="#" target="_blank" rel="noopener">Open in Gmail</a>
+      <a class="btn" id="snMail" href="#">Open in my email app</a>
+      <button type="button" class="btn" id="snCopy">Just copy it</button>
+      <button type="button" class="btn" id="snPrint">Print or save as PDF</button>
+    </div>
+    <div class="two">
+      <div class="mailprev" id="snPrev"></div>
+      <div>
+        <div class="card">
+          <h2 style="margin-bottom:12px">Before you hang up</h2>
+          <ol class="todo">
+            <li><b>Ask for their artwork.</b> Video, photos, a logo, a PDF: whatever they have.</li>
+            <li><b>No artwork yet?</b> Get a few lines on what the screens should say. That&rsquo;s enough for our Design Studio to start.</li>
+            <li><b>Call the CEO to confirm the booking.</b> Nothing is confirmed until that call. <a href="tel:+17737081400">(773) 708-1400</a></li>
+          </ol>
+        </div>
+        <div class="com" id="snCom"></div>
+        <div class="acts"><button type="button" class="btn p" id="snNew">Start the next booking</button><button type="button" class="btn" data-close>Back to this booking</button></div>
       </div>
     </div>
   </div>
+</div>
 
+<script type="application/json" id="cxEvents">[{"id":"auto-show","name":"Chicago Auto Show","venue":"McCormick Place","city":"Chicago, IL","start":"2027-02-14","end":"2027-02-14","when":"February 14, 2027","status":"confirmed","slot":null,"img":"assets/gallery/elevated-760.jpg","alt":"An AOTC LED truck with an Elevated Exotics ad on its side and rear screens on a downtown Chicago street","place":"Elevated Exotics, downtown Chicago"},{"id":"c2e2","name":"Chicago Comic \u0026 Entertainment Expo (C2E2)","venue":"McCormick Place","city":"Chicago, IL","start":"2027-04-30","end":"2027-05-02","when":"April 30 – May 2, 2027","status":"confirmed","slot":null,"img":"assets/gallery/dusk-760.jpg","alt":"An AOTC LED truck with its headlights on turning through a downtown Chicago intersection at dusk, its screens lit","place":"VS Mobile Arcade, downtown Chicago"},{"id":"suenos","name":"Sueños Music Festival","venue":"Grant Park","city":"Chicago, IL","start":"2027-05-29","end":"2027-05-30","when":"May 29–30, 2027","status":"confirmed","slot":null,"img":"assets/gallery/parade-760.jpg","alt":"An AOTC LED truck in the El Grito parade in Chicago, a rider on horseback beside it","place":"El Grito parade, Chicago"},{"id":"summer-smash","name":"Lyrical Lemonade Summer Smash","venue":"Chicagoland","city":"Chicago, IL","start":"2027-06-11","end":"2027-06-13","when":"June 11–13, 2027","status":"projected","slot":null,"img":"assets/gallery/fab-760.jpg","alt":"An AOTC LED truck in Hammond, Indiana, with a FAB 94.5 radio ad filling its side screen","place":"FAB 94.5, Hammond, IN"},{"id":"naic","name":"Pokémon North America International Championships","venue":"McCormick Place","city":"Chicago, IL","start":"2027-06-18","end":"2027-06-20","when":"June 18–20, 2027","status":"projected","slot":null,"img":"assets/gallery/skyline-760.jpg","alt":"An AOTC LED truck against the Chicago skyline at sunset","place":"HCDS, the Chicago skyline"},{"id":"nascar","name":"NASCAR at Chicagoland Speedway","venue":"Chicagoland Speedway","city":"Joliet, IL","start":"2027-06-25","end":"2027-06-27","when":"June 25–27, 2027","status":"confirmed","slot":null,"img":"assets/gallery/exit68b-760.jpg","alt":"An AOTC LED truck beside I-94 in Northwest Indiana advertising Uncle Sam\u0027s Fireworks at Exit 68B","place":"Uncle Sam\u0027s Fireworks, I-94"},{"id":"savannah-bananas","name":"Savannah Bananas at Soldier Field","venue":"Soldier Field","city":"Chicago, IL","start":"2027-07-10","end":"2027-07-11","when":"July 10–11, 2027","status":"confirmed","slot":null,"img":"assets/gallery/wendys-760.jpg","alt":"An AOTC LED truck at a Wendy\u0027s grand opening in Bedford Park, Illinois, with costumed mascots out front","place":"Wendy\u0027s grand opening, Bedford Park, IL"},{"id":"mlb-all-star","name":"MLB All-Star Game","venue":"Wrigley Field","city":"Chicago, IL","start":"2027-07-13","end":"2027-07-13","when":"July 13, 2027","status":"confirmed","slot":null,"img":"assets/gallery/aps-760.jpg","alt":"An AOTC LED truck with an American Precision Services ad on its side and rear screens outside Wrigley Field at dusk","place":"American Precision Services, Wrigley Field"},{"id":"lollapalooza","name":"Lollapalooza","venue":"Grant Park","city":"Chicago, IL","start":"2027-07-29","end":"2027-08-01","when":"July 29 – August 1, 2027","status":"projected","slot":null,"img":"assets/gallery/bigten-760.jpg","alt":"Two AOTC LED trucks at night in downtown Chicago, one reading Welcome to the Big Stage","place":"Big Ten game weekend, downtown Chicago"},{"id":"harry-styles","soldout":true,"name":"Harry Styles at Soldier Field","venue":"Soldier Field","city":"Chicago, IL","start":"2027-06-01","end":"2027-08-31","when":"Summer 2027","status":"projected","season":true,"slot":null,"img":"assets/gallery/devon-760.jpg","alt":"An AOTC LED truck screen showing a Tanishq ad outside a row of restaurants on Devon Avenue in Chicago","place":"Tanishq, Devon Avenue, Chicago"},{"id":"chicago-marathon","name":"Bank of America Chicago Marathon","venue":"Grant Park start \u0026 finish","city":"Chicago, IL","start":"2027-10-10","end":"2027-10-10","when":"October 10, 2027","status":"confirmed","slot":null,"img":"assets/gallery/lakefront-760.jpg","alt":"An AOTC LED truck running a concert tour promo along the Chicago lakefront at sunset, the skyline behind it","place":"Concert tour promo, the Chicago lakefront"},{"id":"soldier-field","name":"Soldier Field Residencies","venue":"Soldier Field","city":"Chicago, IL","start":"2027-01-01","end":"2027-12-31","when":"Bears games \u0026 concerts, 2027","status":"season","season":true,"slot":null,"img":"assets/scenes/skyline-sunset.jpg","alt":"An AOTC LED truck against the Chicago skyline at sunset","place":"The Chicago skyline at sunset"},{"id":"united-center","name":"United Center Residencies","venue":"United Center","city":"Chicago, IL","start":"2027-01-01","end":"2027-12-31","when":"Bulls, Blackhawks \u0026 concerts, 2027","status":"season","season":true,"slot":null,"img":"assets/scenes/downtown-night.jpg","alt":"An AOTC LED billboard truck in downtown Chicago at night","place":"Downtown Chicago at night"}]</script>
+<script type="application/json" id="cxCities">["Chicago, IL","Evanston, IL","Skokie, IL","Oak Park, IL","Cicero, IL","Berwyn, IL","Rosemont, IL","Schaumburg, IL","Naperville, IL","Aurora, IL","Joliet, IL","Elgin, IL","Waukegan, IL","Arlington Heights, IL","Palatine, IL","Des Plaines, IL","Park Ridge, IL","Niles, IL","Northbrook, IL","Highland Park, IL","Lake Forest, IL","Gurnee, IL","Oak Brook, IL","Oak Lawn, IL","Orland Park, IL","Tinley Park, IL","Bolingbrook, IL","Downers Grove, IL","Wheaton, IL","Lombard, IL","Elmhurst, IL","Hinsdale, IL","Melrose Park, IL","Franklin Park, IL","Mount Prospect, IL","Buffalo Grove, IL","Hoffman Estates, IL","Carol Stream, IL","Glen Ellyn, IL","Lisle, IL","Woodridge, IL","Romeoville, IL","Plainfield, IL","Oswego, IL","St. Charles, IL","Geneva, IL","Batavia, IL","Crystal Lake, IL","McHenry, IL","Bedford Park, IL","Bridgeview, IL","Calumet City, IL","Chicago Heights, IL","Harvey, IL","Lansing, IL","Blue Island, IL","DeKalb, IL","Kankakee, IL","Rockford, IL","Champaign, IL","Urbana, IL","Peoria, IL","Springfield, IL","Bloomington, IL","Hammond, IN","Gary, IN","East Chicago, IN","Whiting, IN","Munster, IN","Highland, IN","Schererville, IN","Dyer, IN","Griffith, IN","Merrillville, IN","Crown Point, IN","Hobart, IN","Portage, IN","Chesterton, IN","Valparaiso, IN","Michigan City, IN","La Porte, IN","Cedar Lake, IN","South Bend, IN","Mishawaka, IN","Elkhart, IN","Fort Wayne, IN","Indianapolis, IN","Carmel, IN","Fishers, IN","Lafayette, IN","Bloomington, IN","Evansville, IN","New Buffalo, MI","St. Joseph, MI","Benton Harbor, MI","Kalamazoo, MI","Grand Rapids, MI","Holland, MI","Detroit, MI","Dearborn, MI","Ann Arbor, MI","Lansing, MI","Troy, MI","Warren, MI","Flint, MI","Milwaukee, WI","Madison, WI","Kenosha, WI","Racine, WI","Waukesha, WI","Green Bay, WI","Appleton, WI","New York, NY","Brooklyn, NY","Queens, NY","Bronx, NY","Buffalo, NY","Rochester, NY","Albany, NY","Syracuse, NY","Newark, NJ","Jersey City, NJ","Hoboken, NJ","Atlantic City, NJ","Los Angeles, CA","Long Beach, CA","Santa Monica, CA","Pasadena, CA","Anaheim, CA","Irvine, CA","Riverside, CA","San Diego, CA","San Francisco, CA","Oakland, CA","San Jose, CA","Sacramento, CA","Fresno, CA","Las Vegas, NV","Henderson, NV","Reno, NV","Phoenix, AZ","Scottsdale, AZ","Tempe, AZ","Mesa, AZ","Glendale, AZ","Tucson, AZ","Dallas, TX","Fort Worth, TX","Arlington, TX","Plano, TX","Frisco, TX","Irving, TX","Houston, TX","Austin, TX","San Antonio, TX","El Paso, TX","Atlanta, GA","Savannah, GA","Miami, FL","Miami Beach, FL","Fort Lauderdale, FL","West Palm Beach, FL","Orlando, FL","Tampa, FL","St. Petersburg, FL","Jacksonville, FL","Washington, DC","Arlington, VA","Alexandria, VA","Richmond, VA","Virginia Beach, VA","Baltimore, MD","Philadelphia, PA","Pittsburgh, PA","Boston, MA","Cambridge, MA","Providence, RI","Hartford, CT","New Haven, CT","Wilmington, DE","Seattle, WA","Tacoma, WA","Bellevue, WA","Spokane, WA","Portland, OR","Denver, CO","Boulder, CO","Colorado Springs, CO","Salt Lake City, UT","Nashville, TN","Memphis, TN","Knoxville, TN","Chattanooga, TN","Louisville, KY","Lexington, KY","Cincinnati, OH","Cleveland, OH","Columbus, OH","Toledo, OH","Dayton, OH","Akron, OH","St. Louis, MO","Kansas City, MO","Kansas City, KS","Wichita, KS","Omaha, NE","Des Moines, IA","Cedar Rapids, IA","Iowa City, IA","Davenport, IA","Minneapolis, MN","St. Paul, MN","Charlotte, NC","Raleigh, NC","Durham, NC","Greensboro, NC","Charleston, SC","Columbia, SC","Greenville, SC","New Orleans, LA","Baton Rouge, LA","Birmingham, AL","Little Rock, AR","Jackson, MS","Oklahoma City, OK","Tulsa, OK","Albuquerque, NM","Boise, ID","Sioux Falls, SD","Fargo, ND","Billings, MT","Cheyenne, WY","Burlington, VT","Portland, ME","Manchester, NH","Honolulu, HI","Anchorage, AK","Northwest Indiana, IN","Southwest Michigan, MI","New York City, NY","Dallas–Fort Worth, TX","San Francisco Bay Area, CA","Minneapolis–St. Paul, MN","Tampa Bay, FL","Raleigh–Durham, NC","Champaign–Urbana, IL"]</script>
 <script>
-(function(){
-  /* ================= pricing ================= */
-  /* stops 1-7 = 2..8 service hours in a single day \u00b7 stops 8-36 = 2..30 days \u00b7 stop 37 = exclusive */
-  var HR=[0,0,150,140,130,120,110,105,100];
-  var ANCH=[[1,800],[2,1300],[3,1600],[7,3400],[14,6600],[30,12000]];
-  function hpd(){ return 8; }
-  function priceFor(d){
-    if(d>=28) return d*8*50;
-    for(var i=0;i<ANCH.length-1;i++){
-      var a=ANCH[i],c=ANCH[i+1];
-      if(d>=a[0]&&d<=c[0]){
-        var t=(d-a[0])/(c[0]-a[0]);
-        return Math.round((a[1]+(c[1]-a[1])*t)/50)*50;
-      }
-    }
-    return ANCH[ANCH.length-1][1];
-  }
-  function money(n){ return "$"+n.toLocaleString("en-US"); }
-  function model(v){
-    if(v<=7){
-      var hrs=v+1;
-      return {mode:"hour",days:1,hours:hrs,hpd:hrs,price:Math.round(hrs*HR[hrs]/5)*5,pkg:hrs+" Hours \u2014 Single Day"};
-    }
-    if(v>=37) return {mode:"ult",days:30,hours:240,hpd:8,price:36000,pkg:"The Ultimate \u2014 Exclusive Month"};
-    var d=v-6, h=d*hpd();
-    var nm = d===3?"The 3-Day":(d===7?"The Week":(d===30?"The Month":
-      (d<=7?d+"-Day Run":(d<=20?d+"-Day Flight":d+"-Day Presence"))));
-    return {mode:"day",days:d,hours:h,hpd:hpd(),price:priceFor(d),pkg:nm};
-  }
-  function descFor(m,rate){
-    if(m.mode==="ult") return "Thirty-six thousand takes the truck <b>off the market</b>. Nobody books around them, nobody shares a frame, and for a full month all 213 square feet answer only to their objective. Their route. Premium placement at every stop. Unlimited same-day creative changes. This is what we build when the goal is to <b>own a market outright</b>, not to appear in it.";
-    if(m.mode==="hour"){
-      if(m.hours<=3) return m.hours+" hours is a <b>strike, not a campaign</b> \u2014 right for one thing: parked where a crowd already is, at the hour it peaks. A gate, a game let-out, a ribbon cutting. Be clear-eyed about the ceiling. Every hour added costs less than the one before it.";
-      if(m.hours>=6) return m.hours+" hours is a <b>full working day on the street</b> \u2014 morning commute, lunch rush, school pickup, and drive home in one shift. Rate is down to "+money(HR[m.hours])+" an hour, and a full eight-hour day lands at <b>$800 flat</b>. The honest floor for a single-day event, and where a second day starts paying for itself.";
-      return m.hours+" hours covers a real slice of somebody\u2019s day \u2014 a lunch rush into an afternoon, or a whole evening on one strip. "+money(HR[m.hours])+" an hour and falling. <b>A full eight-hour day is $800</b> \u2014 $100 an hour \u2014 and it turns a moment into a day.";
-    }
-    var d=m.days;
-    if(d>=28) return "The number the whole offer is built around: <b>"+money(rate)+" an hour</b>, "+money(Math.round(m.price/d))+" a day. At this length they stop advertising to a market and become part of it \u2014 eight hours a day, "+d+" days, hundreds of miles of street. Clients who run this long stop describing results in impressions and start describing them in phone calls.";
-    if(d>=21) return "At "+d+" days they are a fixture, and the rate is down to <b>"+money(rate)+" an hour</b> \u2014 the lowest tier before the exclusive. Long enough to rotate creative, long enough for people to expect them on their block.";
-    if(d>=8) return "At "+d+" days they are no longer an event, they are part of the landscape. Long enough for recognition to compound and to change creative mid-flight. <b>\u201cI keep seeing your truck everywhere\u201d</b> starts showing up around here. "+money(rate)+" an hour.";
-    if(d>=4) return "A "+d+"-day run catches the same neighborhood at every hour of its day. Rate is "+money(rate)+" an hour and recall is climbing at the same time. <b>The shortest run where clients stop asking whether anyone saw it.</b>";
-    if(d>=2) return "Two or three days is where recognition actually begins. The same commuters pass twice, the same block sees them at two different hours, and <b>it is the second sighting that sticks</b>. The smallest run we would honestly call a campaign.";
-    return "Eight hundred buys eight hours and one shot \u2014 genuinely right for a moment: a grand opening, a game day, a festival gate. Be straight about the ceiling. If being <b>known</b> is the objective, keep moving the slider.";
-  }
-
-  var slider=document.getElementById("slider");
-  var state={days:30,price:12000,hours:240,rate:50,hpd:8,mode:"day",pkg:"The Month",
-             start:null,end:null,startTime:null,endTime:null};
-
-  var MN=["January","February","March","April","May","June","July","August","September","October","November","December"];
-  var today=new Date(); today.setHours(0,0,0,0);
-  var minDate=new Date(today.getTime()); minDate.setDate(minDate.getDate()+3);
-  var view=new Date(minDate.getFullYear(),minDate.getMonth(),1);
-  var pick=null;
-
-  function fmt(dt){ return dt.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"}); }
-  function endOf(s){ var e=new Date(s.getTime()); e.setDate(e.getDate()+state.days-1); return e; }
-  function label(mins){
-    var h=Math.floor(mins/60)%24, mm=mins%60;
-    var ap=h>=12?"PM":"AM", hh=h%12; if(hh===0) hh=12;
-    return hh+":"+(mm<10?"0":"")+mm+" "+ap;
-  }
-
-  function paint(){
-    var v=parseInt(slider.value,10), m=model(v), r=Math.round(m.price/m.hours);
-    state.days=m.days; state.price=m.price; state.hours=m.hours; state.rate=r;
-    state.pkg=m.pkg; state.hpd=m.hpd; state.mode=m.mode;
-
-    document.getElementById("qPkg").textContent=m.pkg;
-    document.getElementById("qPrice").innerHTML=money(r)+"<span>/HR</span>";
-    document.getElementById("qPer").textContent=(m.mode==="hour")
-      ? money(m.price)+" for "+m.hours+(m.hours===1?" hour":" hours")
-      : money(Math.round(m.price/m.days))+" per day";
-    document.getElementById("qTotal").textContent=money(m.price);
-    document.getElementById("qDays").textContent=(m.mode==="hour")?"One day":(m.days+(m.days===1?" day":" days"));
-    document.getElementById("qHours").textContent=m.hours+(m.hours===1?" service hour":" service hours");
-    document.getElementById("qDays2").textContent=(m.mode==="hour")
-      ? m.hours+" hours \u00b7 one day"
-      : (m.mode==="ult"?"30 days \u00b7 exclusive":m.days+(m.days===1?" day":" days"));
-    document.getElementById("qDesc").innerHTML=descFor(m,r);
-    document.getElementById("qExcl").hidden=(m.mode!=="ult");
-    var ult=(m.mode==="ult");
-    document.body.classList.toggle("gold",ult);
-    document.getElementById("qTag").textContent=ult?"Exclusive rate":"Rate";
-    document.getElementById("goldBadge").hidden=!ult;
-
-    syncDates();
-    gate();
-  }
-
-  /* live investment overview + date span, no locking */
-  function syncDates(){
-    document.getElementById("r2Pkg").textContent=state.pkg;
-    document.getElementById("r2Price").textContent=money(state.price);
-    document.getElementById("r2Rate").textContent=money(state.rate)+"/hr";
-    document.getElementById("r2Hours").textContent=state.hours+" hrs"+(state.mode==="hour"?" (one day)":" ("+state.hpd+"/day)");
-
-    var single=(state.mode==="hour"||state.days===1);
-    document.getElementById("s2lead").innerHTML=single
-      ? "Pick the day, then the hour they want us rolling \u2014 their "+state.hours+(state.hours===1?" hour runs":" hours run")+" from there and the end time sets itself."
-      : "Pick the <b>first</b> day of service. The last day sets itself \u2014 "+state.days+" consecutive days from there.";
-
-    var timeSel=document.getElementById("timeSel"), autoSpan=document.getElementById("autoSpan");
-    if(!pick){
-      document.getElementById("r2Start").textContent="Select a date";
-      document.getElementById("r2End").textContent="\u2014";
-      timeSel.hidden=true; autoSpan.hidden=true;
-      state.start=null; state.end=null;
-      renderCal();
-      return;
-    }
-    state.start=fmt(pick);
-    document.getElementById("r2Start").textContent=fmt(pick);
-    if(single){
-      state.end=fmt(pick);
-      document.getElementById("r2End").textContent="Same day";
-      autoSpan.hidden=true;
-      timeSel.hidden=false;
-      buildTimes();
-    }else{
-      var e=endOf(pick);
-      state.end=fmt(e);
-      document.getElementById("r2End").textContent=fmt(e);
-      timeSel.hidden=true;
-      state.startTime=null; state.endTime=null;
-      autoSpan.hidden=false;
-      autoSpan.innerHTML=state.days+" consecutive days of service, "+state.hpd+" hours each day. Daily route windows set on the confirmation call.";
-    }
-    renderCal();
-  }
-
-  function buildTimes(){
-    var sel=document.getElementById("startTime");
-    var keep=sel.value;
-    sel.innerHTML='<option value="">Choose a start time</option>';
-    var dur=state.hours;
-    for(var m=8*60;m<=20*60;m+=30){
-      if(m+dur*60>23*60) break;
-      var o=document.createElement("option");
-      o.value=String(m);
-      o.textContent=label(m)+"  \u2192  ends "+label(m+dur*60);
-      sel.appendChild(o);
-    }
-    if(keep && sel.querySelector('option[value="'+keep+'"]')){
-      sel.value=keep;
-      var mm=parseInt(keep,10);
-      state.startTime=label(mm); state.endTime=label(mm+dur*60);
-      document.getElementById("autoEnd").textContent="End of service: "+state.endTime+" \u2014 "+dur+" hours from start.";
-    }else{
-      state.startTime=null; state.endTime=null;
-      document.getElementById("autoEnd").textContent="";
-    }
-  }
-
-  function renderCal(){
-    document.getElementById("calTitle").textContent=MN[view.getMonth()]+" "+view.getFullYear();
-    var first=new Date(view.getFullYear(),view.getMonth(),1);
-    var last=new Date(view.getFullYear(),view.getMonth()+1,0);
-    var host=document.getElementById("calDays");
-    host.innerHTML="";
-    for(var p=0;p<first.getDay();p++){
-      var pd=document.createElement("div"); pd.className="day pad"; host.appendChild(pd);
-    }
-    var single=(state.mode==="hour"||state.days===1);
-    var sEnd=(pick&&!single)?endOf(pick):null;
-    for(var n=1;n<=last.getDate();n++){
-      var dt=new Date(view.getFullYear(),view.getMonth(),n);
-      var b=document.createElement("button");
-      b.type="button"; b.className="day"; b.textContent=n;
-      if(dt<minDate) b.disabled=true;
-      if(pick){
-        if(dt.getTime()===pick.getTime()) b.classList.add("start");
-        else if(sEnd&&dt>pick&&dt<sEnd) b.classList.add("span");
-        else if(sEnd&&dt.getTime()===sEnd.getTime()) b.classList.add("end");
-      }
-      b.setAttribute("aria-label",fmt(dt));
-      (function(d0){ b.addEventListener("click",function(){ pick=d0; syncDates(); gate(); }); })(dt);
-      host.appendChild(b);
-    }
-    document.getElementById("calPrev").disabled=(view.getFullYear()===minDate.getFullYear()&&view.getMonth()===minDate.getMonth());
-  }
-  document.getElementById("calPrev").addEventListener("click",function(){ view.setMonth(view.getMonth()-1); renderCal(); });
-  document.getElementById("calNext").addEventListener("click",function(){ view.setMonth(view.getMonth()+1); renderCal(); });
-  document.getElementById("startTime").addEventListener("change",function(){
-    var ae=document.getElementById("autoEnd");
-    if(!this.value){ ae.textContent=""; state.startTime=null; state.endTime=null; return; }
-    var m=parseInt(this.value,10);
-    state.startTime=label(m); state.endTime=label(m+state.hours*60);
-    ae.textContent="End of service: "+state.endTime+" \u2014 "+state.hours+" hours from start.";
-  });
-  slider.addEventListener("input",paint);
-
-  /* ================= submit ================= */
-  var f={name:"fName",co:"fCo",email:"fEmail",phone:"fPhone",rep:"fRep",industry:"fIndustry",notes:"fNotes"};
-  function val(k){ var el=document.getElementById(f[k]); return el?el.value.trim():""; }
-  function digits(s){ return (s||"").replace(/\D/g,""); }
-  function valid(){
-    return val("name").length>1 && val("co").length>0 &&
-           /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(val("email")) &&
-           digits(val("phone")).length>=10 && !!pick;
-  }
-  var sendBtn=document.getElementById("send"), sendNote=document.getElementById("sendNote");
-  function gate(){
-    var ok=valid();
-    sendBtn.disabled=!ok;
-    sendNote.innerHTML=ok
-      ? "<b>Ready.</b> Sends the full record to info@adsofthecentury.net"
-      : "<b>Required:</b> name, company, email, phone, and a first day of service";
-  }
-  Object.keys(f).forEach(function(k){
-    var el=document.getElementById(f[k]);
-    if(el) el.addEventListener("input",gate);
-  });
-
-  var sending=false;
-  sendBtn.addEventListener("click",function(){
-    if(!valid()||sending) return;
-    sending=true;
-    sendBtn.textContent="Sending\u2026";
-    sendBtn.disabled=true;
-
-    var fd=new FormData();
-    fd.append("_subject","ROUTE BOOKING \u2014 "+state.pkg+" \u2014 "+(val("co")||val("name")));
-    fd.append("_captcha","false");
-    fd.append("_template","table");
-    fd.append("Client name",val("name"));
-    fd.append("Company",val("co"));
-    fd.append("Email",val("email"));
-    fd.append("Phone",val("phone"));
-    fd.append("AOTC rep",val("rep")||"\u2014");
-    fd.append("Client industry",val("industry")||"\u2014");
-    fd.append("Call notes",val("notes")||"\u2014");
-    fd.append("Package",state.pkg);
-    fd.append("Investment",money(state.price));
-    fd.append("Effective rate",money(state.rate)+"/hr");
-    fd.append("Length",state.mode==="hour"?(state.hours+" hours, one day"):(state.mode==="ult"?"30 days (exclusive)":state.days+" days"));
-    fd.append("Service hours",state.hours+" hrs @ "+state.hpd+" hrs/day");
-    fd.append("First day of service",state.start||"");
-    fd.append("Last day of service",state.end||"");
-    fd.append("Start time",state.startTime||"Set on confirmation call");
-    fd.append("End time",state.endTime||"Set on confirmation call");
-    fd.append("Submitted from","Sales console \u2014 book.html");
-
-    fetch("https://formsubmit.co/ajax/info@adsofthecentury.net",{method:"POST",headers:{"Accept":"application/json"},body:fd})
-      .then(function(r){ if(!r.ok) throw 0; done(); }).catch(fallback);
-
-    function fallback(){
-      var body=[
-        "ROUTE BOOKING \u2014 AOTC sales console","",
-        "Client: "+val("name"),"Company: "+val("co"),
-        "Email: "+val("email"),"Phone: "+val("phone"),
-        "AOTC rep: "+(val("rep")||"\u2014"),"Industry: "+(val("industry")||"\u2014"),
-        "","Package: "+state.pkg,"Investment: "+money(state.price),
-        "Rate: "+money(state.rate)+"/hr","Service hours: "+state.hours,
-        "First day: "+(state.start||""),"Last day: "+(state.end||""),
-        "Start time: "+(state.startTime||"TBD"),"End time: "+(state.endTime||"TBD"),
-        "","Notes: "+(val("notes")||"\u2014")
-      ].join("\n");
-      try{
-        window.location.href="mailto:info@adsofthecentury.net?subject="+
-          encodeURIComponent("Route booking \u2014 "+state.pkg)+"&body="+encodeURIComponent(body);
-      }catch(e){}
-      done();
-    }
-
-    function done(){
-      var subj="AOTC \u2014 creative for your "+state.pkg+" campaign";
-      var body="Hi "+val("name")+",\n\nGreat speaking with you. To get production moving today, please reply to this email with either:\n\n1. Your creative files \u2014 MP4, MOV, JPG, PNG, PDF, AI or PSD, whatever you have.\n2. Or, if you don't have creative yet, a short paragraph on what you want the screen to say and who you're trying to reach. We design in-house and can build from that.\n\nYour dates: "+(state.start||"")+(state.end&&state.end!==state.start?(" through "+state.end):"")+".\n\nThanks,\nAOTC \u2014 Ads of the Century\n(773) 708-1400";
-      document.getElementById("tyMail").href="mailto:"+encodeURIComponent(val("email"))+
-        "?subject="+encodeURIComponent(subj)+"&body="+encodeURIComponent(body);
-      document.getElementById("ty").classList.add("on");
-      document.documentElement.style.overflow="hidden";
-    }
-  });
-  document.getElementById("tyClose").addEventListener("click",function(){
-    document.getElementById("ty").classList.remove("on"); document.documentElement.style.overflow="";
-    document.querySelectorAll("form").forEach(function(f){ f.reset(); }); paint(); window.scrollTo(0,0);
-  });
-
-  paint();
-})();
-</script>
-<script>
-/* AOTC click & drop — every click mints a chip that falls off the screen.
-   Skipped on form controls only. */
 (function () {
-  if (window.__aotcClickFx) return;
-  window.__aotcClickFx = 1;
+  "use strict";
+  var doc = document;
+  function $(s, r) { return (r || doc).querySelector(s); }
+  function $$(s, r) { return Array.prototype.slice.call((r || doc).querySelectorAll(s)); }
+  function data(id) { try { return JSON.parse($("#" + id).textContent); } catch (e) { return []; } }
+  var EVENTS = data("cxEvents"), CITIES = data("cxCities");
 
-  if (!document.getElementById("aotcFxCss")) {
-    var st = document.createElement("style");
-    st.id = "aotcFxCss";
-    st.textContent =
-      ".drop-chip{position:fixed;z-index:9990;pointer-events:none;font-family:'IBM Plex Mono',monospace;font-size:10px;" +
-      "font-weight:600;letter-spacing:.14em;padding:7px 11px;color:#fff;background:linear-gradient(135deg,#e2000f,#9d000a);" +
-      "border:1px solid rgba(255,255,255,.35);box-shadow:0 0 14px rgba(217,0,13,.55),inset 0 1px 0 rgba(255,255,255,.3);" +
-      "text-transform:uppercase;white-space:nowrap}" +
-      ".drop-px{position:fixed;z-index:9990;pointer-events:none;width:5px;height:5px;background:#ffd52e;" +
-      "box-shadow:0 0 8px rgba(255,213,46,.8)}";
-    document.head.appendChild(st);
+  /* ================= the numbers =================
+     Suggested ranges are per truck, for 7-8 hours a day; the bottom of each range is the hard minimum.
+     The cost figures below never show on screen: they go only into the email to info@adsofthecentury.net. */
+  var COMMISSION = 0.20;                 // the rep's commission: 20% of the sale
+  var TIERS = [
+    { id: "daily", name: "Daily", days: "1 to 6 days", max: 6, min: 1400, top: 1600 },
+    { id: "weekly", name: "Weekly", days: "1 to 3 weeks", max: 27, min: 1100, top: 1200 },
+    { id: "monthly", name: "Monthly", days: "28 days or more", max: 1e9, min: 800, top: 1000 }];
+  var PRIVATE = { min: 200, top: 400, drive: 200 };
+  var SOUND = 150;                       // rotational add-on
+  var COST = { driver: 20, ops: 20,      // per hour, per truck
+    gas: 81.22, diesel: 51.17,           // per 8-hour truck-day, from the receipt log (see FUEL)
+    vendor: 0.20 };                      // vendor outsourcing: 20% of the net profit (second estimate)
+  var FUEL = "AOTC Receipt Log, Jan 1 – Nov 3, 2026: 41 gas receipts over 35 fill days averaged $81.22 a day (latest $4.70/gal); " +
+    "13 diesel fills totaled $1,791.07, about $51.17 per operating day (latest $6.61–$6.85/gal). Planning figures were $100 gas and $50 diesel a day.";
+  var COLORS = ["#e1252e", "#e39b00", "#2f6fe4", "#1d9a5f", "#8a4fd8", "#ef7a12", "#d43d8c", "#5b9a19"];
+  var MODES = ["exclusive", "rotational", "private"];
+  var MODE = { exclusive: "Exclusive use", rotational: "Rotational slot", private: "Private event" };
+  var INC = {
+    exclusive: { items: [["Multi-market coverage", "one city or several"], ["Premium placement", "prime spots for their audience"], ["100% share of voice", "no other brand on the screens"],
+      ["Up to 2 displays per rotation", "the same design, or one for the sides and one for the rear"], ["3 LED billboards", "both sides and the rear, full motion"], ["Sound", "included"],
+      ["Unlimited creative revisions", "with our Design Studio experts"]], notes: [["", "<b>Add-on:</b> creative design, priced by what we make and the return they need"]] },
+    rotational: { items: [["Premium placement", "guaranteed at every event"], ["A 10-second slot", "full motion, on every screen in the loop"], ["Up to 33% share of voice", "one of no more than three brands"],
+      ["Industry exclusivity", "never a competitor in their rotation"], ["Unlimited creative revisions", "with our Design Studio experts"]],
+      notes: [["", "<b>Add-ons:</b> creative design (varies) and sound ($150)"], ["no", "<b>Not included:</b> the truck to themselves. That&rsquo;s Exclusive use"]] },
+    private: { items: [["Parked right at the event", "where they want it, for as long as they book"], ["Movies, video games, videos and photos", "anything they want on the screens"],
+      ["Creative included", "no add-ons"], ["Sound included", "their playlist, mic or movie audio"]],
+      notes: [["", "<b>Extra:</b> driving, $200 an hour, 1-hour minimum"], ["no", "<b>Not included:</b> tables, chairs and tents"]] }
+  };
+  var CHIPS = { problem: ["Grand opening", "Product launch", "Event turnout", "Slow foot traffic", "Brand awareness", "Hiring", "Election or advocacy", "A competitor nearby"],
+    audience: ["Commuters", "Families", "Students", "Event crowds", "Sports fans", "Office workers", "Tourists", "Spanish speakers", "Expressway drivers"] };
+
+  /* ================= state ================= */
+  function fresh() {
+    return { mode: "exclusive", goal: { problem: "", audience: "" },
+      ex: { cities: [], active: 0, unit: "day", rate: "", hours: 8, creative: "" },
+      rt: { sel: {}, creative: "" },
+      pv: { days: {}, hours: 4, start: "", trucks: 1, drive: false, driveHrs: 1, rate: "" } };
+  }
+  var S = fresh(), justSent = false;
+  var FIELDS = ["fName", "fCo", "fEmail", "fPhone", "fRep", "fIndustry", "fNotes", "pLoc", "pCity"];
+  function v(id) { var el = doc.getElementById(id); return el ? el.value.trim() : ""; }
+
+  /* ================= helpers ================= */
+  var T0 = new Date(); T0.setHours(0, 0, 0, 0);
+  var MN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  function key(d) { return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
+  function parse(k) { var p = k.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); }
+  function addDays(d, n) { var x = new Date(d.getTime()); x.setDate(x.getDate() + n); return x; }
+  function num(s) { var n = parseFloat(String(s || "").replace(/[^0-9.]/g, "")); return isFinite(n) ? n : 0; }
+  function money(n, cents) { var r = cents ? Math.round(n * 100) / 100 : Math.round(n); return (r < 0 ? "-$" : "$") + Math.abs(r).toLocaleString("en-US", { minimumFractionDigits: cents ? 2 : 0, maximumFractionDigits: cents ? 2 : 0 }); }
+  function plural(n, w, ws) { return n + " " + (n === 1 ? w : (ws || w + "s")); }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function sorted(obj) { return Object.keys(obj).filter(function (k) { return obj[k]; }).sort(); }
+  function ranges(keys) {   /* ["2027-07-01","2027-07-02","2027-07-05"] -> "Jul 1–2, Jul 5, 2027" */
+    if (!keys.length) return "";
+    var out = [], s = parse(keys[0]), p = s, years = {};
+    function short(d) { return d.toLocaleDateString("en-US", { month: "short", day: "numeric" }); }
+    function push(a, b) { years[a.getFullYear()] = 1; years[b.getFullYear()] = 1; out.push(a.getTime() === b.getTime() ? short(a) : (a.getMonth() === b.getMonth() ? short(a) + "–" + b.getDate() : short(a) + " – " + short(b))); }
+    for (var i = 1; i < keys.length; i++) { var d = parse(keys[i]); if (d.getTime() !== addDays(p, 1).getTime()) { push(s, p); s = d; } p = d; }
+    push(s, p);
+    return out.join(", ") + ", " + Object.keys(years).join("/");
+  }
+  function evDays(e) { return e.season ? 0 : Math.round((parse(e.end) - parse(e.start)) / 864e5) + 1; }
+  function upcoming() { return EVENTS.filter(function (e) { return parse(e.end) >= T0; }); }
+  function evById(id) { for (var i = 0; i < EVENTS.length; i++) if (EVENTS[i].id === id) return EVENTS[i]; return null; }
+  function timeLabel(m) { var h = Math.floor(m / 60) % 24, mm = m % 60, ap = h >= 12 ? "PM" : "AM", hh = h % 12 || 12; return hh + ":" + ("0" + mm).slice(-2) + " " + ap; }
+  var toastEl, toastT;
+  function toast(msg, ms) { if (!toastEl) { toastEl = doc.createElement("div"); toastEl.className = "toast"; toastEl.setAttribute("role", "status"); doc.body.appendChild(toastEl); } toastEl.textContent = msg; toastEl.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(function () { toastEl.classList.remove("on"); }, ms || 3800); }
+
+  /* ================= the quote ================= */
+  function tierFor(days) { for (var i = 0; i < TIERS.length; i++) if (days <= TIERS[i].max) return TIERS[i]; return TIERS[TIERS.length - 1]; }
+  function exQuote() {
+    var ex = S.ex, H = ex.hours, days = 0, truckDays = 0, lines = [];
+    ex.cities.forEach(function (c) { var k = sorted(c.days); if (!k.length) return; days += k.length; truckDays += k.length * c.trucks; lines.push({ name: c.name, color: c.color, days: k, trucks: c.trucks, sub: 0 }); });
+    var tier = tierFor(Math.max(1, days)), raw = num(ex.rate), rateDay = ex.unit === "hr" ? raw * H : raw, creative = num(ex.creative);
+    lines.forEach(function (l) { l.sub = rateDay * l.days.length * l.trucks; });
+    var total = rateDay * truckDays + creative, perDay = (COST.driver + COST.ops) * H + (COST.gas + COST.diesel) * H / 8;
+    return { mode: "exclusive", tier: tier, hours: H, days: days, truckDays: truckDays, lines: lines, rateDay: rateDay, rateHr: H ? rateDay / H : 0, creative: creative,
+      total: total, commission: total * COMMISSION, min: tier.min, top: tier.top,
+      cost: { labor: (COST.driver + COST.ops) * H * truckDays, fuel: (COST.gas + COST.diesel) * H / 8 * truckDays, perTruckDay: perDay } };
+  }
+  function rtQuote() {
+    var lines = [], slots = 0, sound = 0, truckShare = 0, dayCost = (COST.driver + COST.ops) * 8 + COST.gas + COST.diesel;
+    upcoming().forEach(function (e) {
+      var s = S.rt.sel[e.id]; if (!s || e.soldout) return;
+      var p = num(s.price), d = e.season ? Math.max(1, s.dates || 1) : evDays(e);
+      lines.push({ ev: e, price: p, sound: !!s.sound, dates: d }); slots += p; if (s.sound) sound += SOUND; truckShare += dayCost * d / 3;
+    });
+    var creative = num(S.rt.creative), total = slots + sound + creative;
+    return { mode: "rotational", lines: lines, slots: slots, sound: sound, creative: creative, total: total, commission: total * COMMISSION, cost: { truckShare: truckShare, perTruckDay: dayCost } };
+  }
+  function pvQuote() {
+    var pv = S.pv, days = sorted(pv.days), rate = num(pv.rate), dh = pv.drive ? Math.max(1, pv.driveHrs) : 0;
+    var perDay = pv.trucks * (rate * pv.hours + PRIVATE.drive * dh), total = perDay * days.length, hrs = pv.hours + dh, truckDays = pv.trucks * days.length;
+    return { mode: "private", days: days, hours: pv.hours, trucks: pv.trucks, rate: rate, driveHrs: dh, total: total, commission: total * COMMISSION, min: PRIVATE.min, top: PRIVATE.top,
+      cost: { labor: (COST.driver + COST.ops) * hrs * truckDays, fuel: (COST.diesel / 8 * hrs + COST.gas / 8 * Math.max(1, dh)) * truckDays } };
+  }
+  function quote(m) { m = m || S.mode; return m === "exclusive" ? exQuote() : m === "rotational" ? rtQuote() : pvQuote(); }
+  function profit(q) {   /* email only */
+    var comm = q.commission, direct = q.mode === "rotational" ? q.cost.truckShare : q.cost.labor + q.cost.fuel;
+    var gp = q.total - comm - direct, vendor = Math.max(0, gp * COST.vendor);
+    return { comm: comm, direct: direct, gp: gp, vendor: vendor, gp2: gp - vendor };
   }
 
-  var WORDS = ["REACH", "RECALL", "AOTC", "VERIFIED", "ON ROUTE", "BRAND LIFT", "UNSKIPPABLE", "BOOKED"];
-  var wi = 0;
-
-  document.addEventListener("click", function (e) {
-    var t = e.target;
-    if (t && t.closest && t.closest("input,select,textarea,label,.cl-row")) return;
-    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion:reduce)").matches) return;
-    if (!e.clientX && !e.clientY) return;   /* keyboard activation */
-
-    var chip = document.createElement("div");
-    chip.className = "drop-chip";
-    chip.textContent = WORDS[wi++ % WORDS.length];
-    chip.style.left = e.clientX + "px";
-    chip.style.top = e.clientY + "px";
-    chip.style.transform = "translate(-50%,-50%)";
-    document.body.appendChild(chip);
-
-    var drift = (Math.random() * 160 - 80), spin = (Math.random() * 260 - 130);
-    chip.animate([
-      { transform: "translate(-50%,-50%) scale(.4) rotate(0deg)", opacity: 0 },
-      { transform: "translate(-50%,-90%) scale(1.08) rotate(" + (spin * .12) + "deg)", opacity: 1, offset: .18 },
-      { transform: "translate(calc(-50% + " + drift * .3 + "px),-70%) scale(1) rotate(" + (spin * .3) + "deg)", opacity: 1, offset: .42 },
-      { transform: "translate(calc(-50% + " + drift + "px)," + (window.innerHeight - e.clientY + 120) + "px) scale(.92) rotate(" + spin + "deg)", opacity: .9 }
-    ], { duration: 1250, easing: "cubic-bezier(.3,.6,.6,1)" }).onfinish = function () { chip.remove(); };
-
-    for (var i = 0; i < 5; i++) {
-      var px = document.createElement("div");
-      px.className = "drop-px";
-      px.style.left = e.clientX + "px";
-      px.style.top = e.clientY + "px";
-      document.body.appendChild(px);
-      var a = Math.random() * Math.PI * 2, d = 26 + Math.random() * 40;
-      px.animate([
-        { transform: "translate(-50%,-50%)", opacity: 1 },
-        { transform: "translate(" + (Math.cos(a) * d - 3) + "px," + (Math.sin(a) * d + 60) + "px)", opacity: 0 }
-      ], { duration: 600 + Math.random() * 300, easing: "cubic-bezier(.2,.7,.6,1)" })
-        .onfinish = function () { this.effect.target.remove(); };
+  /* ================= what's still missing before it can go ================= */
+  function needs(m) {
+    var n = [], q = quote(m);
+    if (v("fName").length < 2) n.push(["Their name", "#fName"]);
+    if (!v("fCo")) n.push(["Business name", "#fCo"]);
+    if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(v("fEmail"))) n.push(["A valid email", "#fEmail"]);
+    if (v("fPhone").replace(/\D/g, "").length < 10) n.push(["A 10-digit phone", "#fPhone"]);
+    if (m === "exclusive") {
+      if (!q.days) n.push(["A city and its days", "#cityIn"]);
+      if (!q.rateDay) n.push(["The rate", "#exRate"]); else if (q.rateDay < q.min) n.push(["A rate of at least " + money(q.min) + " a day", "#exRate"]);
+    } else if (m === "rotational") {
+      if (!q.lines.length) n.push(["At least one event", "#evList"]);
+      q.lines.forEach(function (l) { if (!l.price) n.push(["A price for " + l.ev.name, '[data-price="' + l.ev.id + '"]']); });
+    } else {
+      if (!v("pLoc")) n.push(["The event location", "#pLoc"]);
+      if (!v("pCity")) n.push(["The event city", "#pCity"]);
+      if (!q.days.length) n.push(["The event date", "#pCal"]);
+      if (!q.rate) n.push(["The hourly rate", "#pvRate"]); else if (q.rate < PRIVATE.min) n.push(["At least $200 an hour", "#pvRate"]);
     }
-  }, true);
-})();
+    return n;
+  }
 
+  /* ================= calendar: tap or drag to paint days ================= */
+  function Cal(host, cfg) {
+    var self = { view: new Date(T0.getFullYear(), T0.getMonth(), 1) }, painting = null, anchor = null, lastK = null;
+    self.draw = function () {
+      var m0 = self.view, html = '<div class="cal-hd"><button type="button" data-nav="-1" aria-label="Earlier month"' + (m0 <= new Date(T0.getFullYear(), T0.getMonth(), 1) ? " disabled" : "") + '>&#8249;</button><span class="help" style="margin:0">' + (cfg.note || "") + '</span><button type="button" data-nav="1" aria-label="Later month">&#8250;</button></div><div class="cal-ms">';
+      for (var mi = 0; mi < 2; mi++) {
+        var first = new Date(m0.getFullYear(), m0.getMonth() + mi, 1), last = new Date(first.getFullYear(), first.getMonth() + 1, 0);
+        html += '<div class="cal-m"><strong>' + MN[first.getMonth()] + " " + first.getFullYear() + '</strong><div class="dow"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div><div class="days">';
+        for (var p = 0; p < first.getDay(); p++) html += '<span class="day pad"></span>';
+        for (var n = 1; n <= last.getDate(); n++) {
+          var d = new Date(first.getFullYear(), first.getMonth(), n), k = key(d), cols = cfg.colors(k), act = cfg.active(k), past = d <= T0, rush = !past && d <= addDays(T0, 3);
+          html += '<button type="button" class="day' + (rush ? " rush" : "") + (cols.length ? " has" : "") + (act ? " act" : "") + '" data-k="' + k + '"' + (past && !cols.length ? " disabled" : "") + (act ? ' style="--cc:' + act + '"' : "") +
+            ' aria-label="' + d.toDateString() + (cols.length ? ", booked" : "") + (rush ? ", rush" : "") + '" aria-pressed="' + !!act + '">' + n + (cols.length ? '<span class="bars">' + cols.map(function (c) { return '<i style="background:' + c + '"></i>'; }).join("") + "</span>" : "") + "</button>";
+        }
+        html += "</div></div>";
+      }
+      host.innerHTML = html + "</div>";
+      host.classList.toggle("ro", !!cfg.readonly);
+    };
+    host.addEventListener("click", function (e) { var b = e.target.closest("[data-nav]"); if (!b || b.disabled) return; self.view = new Date(self.view.getFullYear(), self.view.getMonth() + (+b.getAttribute("data-nav")), 1); self.draw(); fit(); });
+    var paint = function (k) { if (parse(k) > T0) cfg.paint(k, painting); };
+    host.addEventListener("pointerdown", function (e) { var d = e.target.closest(".day[data-k]"); if (!d || d.disabled) return; e.preventDefault(); if (!cfg.ready()) { toast(cfg.notReady); return; } anchor = lastK = d.getAttribute("data-k"); painting = !cfg.active(anchor); paint(anchor); self.draw(); cfg.changed(); });
+    /* a drag fills every day between where it started and where the pointer is, so a fast drag never skips days */
+    host.addEventListener("pointermove", function (e) {
+      if (painting === null) return; var el = doc.elementFromPoint(e.clientX, e.clientY); el = el && el.closest && el.closest(".day[data-k]"); if (!el) return;
+      var k = el.getAttribute("data-k"); if (k === lastK) return; lastK = k;
+      var a = parse(anchor < k ? anchor : k), b = parse(anchor < k ? k : anchor);
+      for (var d = a; d <= b; d = addDays(d, 1)) paint(key(d));
+      self.draw(); cfg.changed();
+    });
+    doc.addEventListener("pointerup", function () { painting = null; });
+    host.addEventListener("keydown", function (e) { var d = e.target.closest(".day[data-k]"); if (!d || (e.key !== "Enter" && e.key !== " ")) return; e.preventDefault(); if (!cfg.ready()) { toast(cfg.notReady); return; } var k = d.getAttribute("data-k"); painting = !cfg.active(k); paint(k); painting = null; self.draw(); cfg.changed(); var again = host.querySelector('[data-k="' + k + '"]'); if (again) again.focus(); });
+    return self;
+  }
+  function exColors(k) { return S.ex.cities.filter(function (c) { return c.days[k]; }).map(function (c) { return c.color; }); }
+
+  /* ================= exclusive ================= */
+  var exCal = Cal($("#exCal"), { note: "Striped days are rush: check with dispatch", colors: exColors,
+    active: function (k) { var c = S.ex.cities[S.ex.active]; return c && c.days[k] ? c.color : ""; },
+    ready: function () { return S.ex.cities.length > 0; }, notReady: "Add a city first, then tap its days.",
+    paint: function (k, on) { var c = S.ex.cities[S.ex.active]; if (on) c.days[k] = 1; else delete c.days[k]; },
+    changed: function () { renderEx(); renderSide(); fit(); save(); } });
+  function renderEx() {
+    var ex = S.ex, q = exQuote();
+    $("#cityChips").innerHTML = ex.cities.map(function (c, i) { var n = sorted(c.days).length; return '<span class="city' + (i === ex.active ? " on" : "") + '" style="--cc:' + c.color + '"><button type="button" data-city="' + i + '"><i></i>' + esc(c.name) + " <small>" + plural(n, "day") + '</small></button><button type="button" class="x" data-uncity="' + i + '" aria-label="Remove ' + esc(c.name) + '">&times;</button></span>'; }).join("");
+    $("#cityHelp").textContent = ex.cities.length ? "Now tapping days for " + ex.cities[ex.active].name + ". Tap another city above to switch." : "Add a city to start picking days.";
+    exCal.draw();
+    $("#exSum").innerHTML = q.lines.map(function (l) { return '<div style="--cc:' + l.color + '"><i></i><b>' + esc(l.name) + "</b>" + plural(l.days.length, "day") + ": " + ranges(l.days) + "</div>"; }).join("");
+    var tl = $("#exTier"); tl.hidden = !q.days; tl.textContent = q.days ? plural(q.days, "day") + " in total, so the " + q.tier.name.toLowerCase() + " range applies: " + money(q.tier.min) + " to " + money(q.tier.top) + " a day" : "";
+    $("#exRngs").innerHTML = TIERS.map(function (t) { return '<div class="rng' + (t.id === q.tier.id ? " on" : "") + '"><small>' + t.name + " &middot; " + t.days + "</small><b>" + money(t.min) + " &ndash; " + money(t.top) + "</b></div>"; }).join("");
+    $$("[data-unit]").forEach(function (b) { b.setAttribute("aria-checked", String(b.getAttribute("data-unit") === ex.unit)); });
+    $$("[data-hours]").forEach(function (b) { b.setAttribute("aria-checked", String(+b.getAttribute("data-hours") === ex.hours)); });
+    $("#exTrucks").innerHTML = ex.cities.filter(function (c) { return sorted(c.days).length; }).map(function (c) { var i = ex.cities.indexOf(c), n = sorted(c.days).length;
+      return '<div class="row"><span><b>Trucks in ' + esc(c.name) + "</b><small>" + plural(n, "day") + ' &middot; each truck multiplies the day rate</small></span><div class="step" data-trucks="' + i + '"><button type="button" data-d="-1" aria-label="One truck less">&minus;</button><output>' + plural(c.trucks, "truck") + '</output><button type="button" data-d="1" aria-label="One truck more">+</button></div></div>'; }).join("");
+    if (doc.activeElement !== $("#exCreative")) $("#exCreative").value = ex.creative;
+    if (doc.activeElement !== $("#exRate")) $("#exRate").value = ex.rate;
+    exPrice();
+  }
+  function exPrice() {
+    var ex = S.ex, q = exQuote(), hr = ex.unit === "hr", top = hr ? q.top / ex.hours : q.top;
+    $("#exUnit").textContent = hr ? "per truck, per hour" : "per truck, per day";
+    $("#exRate").placeholder = hr ? "Try " + money(top, top % 1 !== 0) + " (pays you " + money(top * COMMISSION, true) + " an hour)" : "Try " + money(top).slice(1) + ": the top pays you " + money(top * COMMISSION) + " a day";
+    meter($("#exMeter"), q.rateDay, q.min, q.top);
+    pushHint($("#exHint"), q, q.rateDay, " a day", "for every truck, every day");
+  }
+  function addCity(name) {
+    name = (name || "").replace(/\s+/g, " ").trim(); if (!name) return;
+    var ex = S.ex, i;
+    for (i = 0; i < ex.cities.length; i++) if (ex.cities[i].name.toLowerCase() === name.toLowerCase()) { ex.active = i; renderEx(); save(); return; }
+    if (ex.cities.length >= COLORS.length) { toast("That's the most cities one booking holds. Send this one, then start another."); return; }
+    var used = ex.cities.map(function (c) { return c.color; }), color = COLORS.filter(function (c) { return used.indexOf(c) < 0; })[0];
+    ex.cities.push({ name: name, color: color, days: {}, trucks: 1 }); ex.active = ex.cities.length - 1;
+    $("#cityIn").value = ""; renderEx(); renderSide(); fit(); save();
+  }
+
+  /* ================= autocomplete ================= */
+  function Auto(input, list, onPick) {
+    var hits = [], at = -1;
+    function close() { list.hidden = true; input.setAttribute("aria-expanded", "false"); at = -1; }
+    function show() {
+      var q = input.value.trim().toLowerCase(); if (!q) { close(); return; }
+      var a = [], b = [];
+      CITIES.forEach(function (c) { var l = c.toLowerCase(); if (l.indexOf(q) === 0) a.push(c); else if (l.indexOf(q) > 0) b.push(c); });
+      hits = a.concat(b).slice(0, 7); at = hits.length ? 0 : -1;
+      if (!hits.length) { close(); return; }
+      list.innerHTML = hits.map(function (c, i) { var l = c.toLowerCase().indexOf(q); return '<li role="option" data-i="' + i + '"' + (i === at ? ' class="on" aria-selected="true"' : "") + ">" + esc(c.slice(0, l)) + "<b>" + esc(c.slice(l, l + q.length)) + "</b>" + esc(c.slice(l + q.length)) + "</li>"; }).join("");
+      list.hidden = false; input.setAttribute("aria-expanded", "true");
+    }
+    function mark() { $$("li", list).forEach(function (li, i) { li.classList.toggle("on", i === at); li.setAttribute("aria-selected", String(i === at)); }); }
+    input.addEventListener("input", show);
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown" && hits.length && !list.hidden) { e.preventDefault(); at = (at + 1) % hits.length; mark(); }
+      else if (e.key === "ArrowUp" && hits.length && !list.hidden) { e.preventDefault(); at = (at - 1 + hits.length) % hits.length; mark(); }
+      else if (e.key === "Enter") { e.preventDefault(); var pick = !list.hidden && at >= 0 ? hits[at] : input.value; close(); onPick(pick); }
+      else if (e.key === "Escape") close();
+    });
+    list.addEventListener("mousedown", function (e) { var li = e.target.closest("li"); if (!li) return; e.preventDefault(); var pick = hits[+li.getAttribute("data-i")]; close(); onPick(pick); });
+    input.addEventListener("blur", function () { setTimeout(close, 120); });
+  }
+
+  /* ================= rotational ================= */
+  function renderRt() {
+    var list = upcoming();
+    $("#evList").innerHTML = list.length ? list.map(function (e) {
+      var s = !e.soldout && S.rt.sel[e.id], tag = e.status === "season" ? "All season" : "";
+      if (e.soldout) return '<div class="evc out"><button type="button" class="evc-pick" disabled aria-disabled="true"><img src="' + esc(e.img) + '" alt="" loading="lazy" decoding="async"><span class="add">Sold out</span><span class="evc-t"><b>' + esc(e.name) + "</b><small>" + esc(e.when) + " &middot; " + esc(e.venue) + "</small></span></button></div>";
+      return '<div class="evc' + (s ? " on" : "") + '"><button type="button" class="evc-pick" data-ev="' + e.id + '" aria-pressed="' + !!s + '"><img src="' + esc(e.img) + '" alt="" loading="lazy" decoding="async">' + (tag ? '<span class="tag">' + tag + "</span>" : "") +
+        '<span class="add">' + (s ? "✓ Added" : "+ Add") + '</span><span class="evc-t"><b>' + esc(e.name) + "</b><small>" + esc(e.when) + " &middot; " + esc(e.venue) + "</small></span></button>" +
+        (s ? '<div class="evc-f"><label class="money" style="width:100%"><span>$</span><input type="text" inputmode="decimal" data-price="' + e.id + '" value="' + esc(s.price) + '" placeholder="' + (e.slot ? money(e.slot).slice(1) + " list price" : "Price for this slot") + '" aria-label="Price per slot, ' + esc(e.name) + '"></label>' +
+          '<label class="tog"><input type="checkbox" data-sound="' + e.id + '"' + (s.sound ? " checked" : "") + "> Sound +$150</label>" +
+          (e.season ? '<span class="step" data-dates="' + e.id + '"><button type="button" data-d="-1" aria-label="One date less">&minus;</button><output>' + plural(Math.max(1, s.dates || 1), "date") + '</output><button type="button" data-d="1" aria-label="One date more">+</button></span>' : "") + "</div>" : "") + "</div>";
+    }).join("") : '<p class="sub">No upcoming events on the list right now.</p>';
+    if (doc.activeElement !== $("#rtCreative")) $("#rtCreative").value = S.rt.creative;
+  }
+
+  /* ================= private ================= */
+  var pvCal = Cal($("#pCal"), { colors: function (k) { return S.pv.days[k] ? ["#2f6fe4"] : []; }, active: function (k) { return S.pv.days[k] ? "#2f6fe4" : ""; },
+    ready: function () { return true; }, paint: function (k, on) { if (on) S.pv.days[k] = 1; else delete S.pv.days[k]; }, changed: function () { renderPv(); renderSide(); fit(); save(); } });
+  function renderPv() {
+    var pv = S.pv;
+    $("#pHoursOut").textContent = plural(pv.hours, "hour"); $("#pTrucksOut").textContent = plural(pv.trucks, "truck");
+    $("#pDrive").checked = pv.drive; $("#pDriveOut").textContent = plural(Math.max(1, pv.driveHrs), "hour"); $("[data-stepper=pDriveHrs]").style.opacity = pv.drive ? "1" : ".4";
+    $("#pStart").value = pv.start || "";
+    pvCal.draw();
+    var d = sorted(pv.days);
+    $("#pSum").innerHTML = d.length ? '<div style="--cc:#2f6fe4"><i></i><b>' + plural(d.length, "date") + "</b>" + ranges(d) + (pv.start ? ", " + esc(timeLabel(+pv.start)) + " to " + esc(timeLabel(+pv.start + pv.hours * 60)) : "") + "</div>" : "";
+    if (doc.activeElement !== $("#pvRate")) $("#pvRate").value = pv.rate;
+    pvPrice();
+  }
+  function pvPrice() {
+    var p = pvQuote();
+    $("#pvRate").placeholder = "Try 400: that pays you $80 an hour";
+    meter($("#pvMeter"), p.rate, PRIVATE.min, PRIVATE.top);
+    pushHint($("#pvHint"), p, p.rate, " an hour", "for every truck, every hour");
+  }
+  (function () { var sel = $("#pStart"), o = '<option value="">We&rsquo;ll set it on the confirmation call</option>'; for (var m = 6 * 60; m <= 22 * 60; m += 30) o += '<option value="' + m + '">' + timeLabel(m) + "</option>"; sel.innerHTML = o; })();
+
+  /* ================= price helpers ================= */
+  function meter(el, val, min, top) {
+    var lo = min * 0.75, hi = top + (top - min) + min * 0.1, span = hi - lo, pct = function (x) { return Math.max(0, Math.min(100, (x - lo) / span * 100)); };
+    el.style.background = "linear-gradient(90deg,#f6d4d6 0 " + pct(min) + "%,#cdeedb " + pct(min) + "% " + pct(top) + "%,#ffe6a0 " + pct(top) + "%)";
+    el.innerHTML = (val ? '<i style="left:' + pct(val) + '%"></i>' : "") + '<span style="left:' + pct(min) + '%">' + money(min) + ' minimum</span><span style="left:' + pct(top) + '%">' + money(top) + " top</span>";
+  }
+  function pushHint(el, q, val, unit, per) {
+    var cut = COMMISSION;
+    if (!val) { el.className = "hint"; el.innerHTML = "Open at <b>" + money(q.top) + unit + "</b>. That pays you <b>" + money(q.top * cut) + "</b> " + per + "."; return; }
+    if (val < q.min) { el.className = "hint lo"; el.innerHTML = "That&rsquo;s under the " + money(q.min) + unit + " minimum, so it can&rsquo;t go out at this rate."; return; }
+    if (val < q.top) { el.className = "hint ok"; el.innerHTML = "In range. Each extra $100" + unit + " puts <b>" + money(100 * cut) + "</b> more in your pocket " + per + "."; return; }
+    el.className = "hint hi"; el.innerHTML = "Above the range. Nicely done: <b>" + money(val * cut) + "</b> to you " + per + ".";
+  }
+
+  /* ================= the overview (what the client sees) ================= */
+  function overviewRows(q) {
+    var r = [];
+    if (q.mode === "exclusive") {
+      r.push(["Service", "Exclusive use, 100% share of voice"]);
+      q.lines.forEach(function (l) { r.push([l.name, plural(l.days.length, "day") + " × " + plural(l.trucks, "truck") + "\n" + ranges(l.days)]); });
+      r.push(["Hours", q.hours + " hours a day"]);
+      if (q.rateDay) r.push(["Rate", money(q.rateDay) + " per truck, per day"]);
+      if (q.days) r.push(["Days of service", plural(q.days, "day") + (q.truckDays !== q.days ? " (" + plural(q.truckDays, "truck day") + ")" : "")]);
+      if (q.creative) r.push(["Creative design", money(q.creative)]);
+    } else if (q.mode === "rotational") {
+      r.push(["Service", "Rotational slot: 10 seconds, up to 33% share of voice"]);
+      q.lines.forEach(function (l) { r.push([l.ev.name, l.ev.when + (l.ev.season ? ", " + plural(l.dates, "date") : "") + "\n" + (l.price ? money(l.price) + " slot" : "price to set") + (l.sound ? " + sound $150" : "")]); });
+      if (q.creative) r.push(["Creative design", money(q.creative)]);
+    } else {
+      r.push(["Service", "Private event, parked screen"]);
+      if (v("pLoc") || v("pCity")) r.push(["Location", v("pLoc") + (v("pCity") ? "\n" + v("pCity") : "")]);
+      if (q.days.length) r.push(["Date", ranges(q.days)]);
+      r.push(["On site", plural(q.hours, "hour") + (S.pv.start ? " from " + timeLabel(+S.pv.start) : "")]);
+      r.push(["Trucks", plural(q.trucks, "truck")]);
+      if (q.rate) r.push(["Rate", money(q.rate) + " an hour per truck"]);
+      if (q.driveHrs) r.push(["Driving", plural(q.driveHrs, "hour") + " at $200 an hour"]);
+    }
+    return r;
+  }
+  function paintCom(com, q) {
+    var c = q.commission, old = com.getAttribute("data-c"), more = "", atTop = "";
+    if (q.mode === "exclusive" && q.truckDays) { more = "Every extra $100 a day adds <em>" + money(100 * COMMISSION * q.truckDays) + "</em> to your check."; if (q.rateDay < q.top) atTop = "<p>At " + money(q.top) + " a day you&rsquo;d make <em>" + money((q.top * q.truckDays + q.creative) * COMMISSION) + "</em>.</p>"; }
+    if (q.mode === "private" && q.days.length) { more = "Every extra $50 an hour adds <em>" + money(50 * COMMISSION * q.hours * q.trucks * q.days.length) + "</em> to your check."; if (q.rate < PRIVATE.top) atTop = "<p>At $400 an hour you&rsquo;d make <em>" + money((PRIVATE.top * q.hours + PRIVATE.drive * q.driveHrs) * q.trucks * q.days.length * COMMISSION) + "</em>.</p>"; }
+    if (q.mode === "rotational" && q.lines.length) more = "Every extra $100 on each slot adds <em>" + money(100 * COMMISSION * q.lines.length) + "</em> to your check.";
+    com.innerHTML = "<small>Your commission (20% of the sale)</small><b>" + money(c) + "</b><p>The more you type, the more you make. " + more + "</p>" + atTop;
+    if (old !== String(Math.round(c))) { com.setAttribute("data-c", String(Math.round(c))); com.classList.remove("pop"); void com.offsetWidth; com.classList.add("pop"); }
+  }
+  function renderSide() {
+    var q = quote(), rows = overviewRows(q), n = needs(S.mode);
+    $("#sideMode").textContent = MODE[S.mode];
+    $("#ov").innerHTML = rows.map(function (r) { return '<div class="r"><span>' + esc(r[0]) + "</span><b>" + esc(r[1]) + "</b></div>"; }).join("") +
+      (q.total ? '<div class="tot"><span>Total investment</span><b>' + money(q.total) + "</b></div>" : '<p class="empty">Fill in the page and the total shows here.</p>');
+    paintCom($("#com"), q);
+    $("#need").innerHTML = n.length ? "<span>Still needed:</span>" + n.map(function (x, i) { return '<button type="button" data-need="' + i + '">' + esc(x[0]) + "</button>"; }).join("") : '<span class="ok">✓ Ready to send</span>';
+    if (!sending) $("#send").textContent = "Send for an availability check";
+    $("#mTotal").textContent = money(q.total); $("#mMe").textContent = money(q.commission);
+  }
+  function renderAll() { renderEx(); renderRt(); renderPv(); renderSide(); fit(); }
+
+  /* ================= swiping between the three bookings ================= */
+  var sw = $("#sw"), pages = $$(".pg", sw), syncing = false;
+  function idx(m) { return MODES.indexOf(m); }
+  function fit() { var p = pages[idx(S.mode)]; if (p) sw.style.height = p.offsetHeight + "px"; }
+  function setMode(m, scroll) {
+    if (MODES.indexOf(m) < 0) m = "exclusive";
+    S.mode = m; doc.body.setAttribute("data-mode", m);
+    $$("[data-tab]").forEach(function (t) { t.setAttribute("aria-selected", String(t.getAttribute("data-tab") === m)); });
+    $$(".dots i").forEach(function (d, i) { d.classList.toggle("on", i === idx(m)); });
+    if (scroll) { syncing = true; sw.scrollTo({ left: idx(m) * sw.clientWidth, behavior: scroll === "now" ? "auto" : "smooth" }); setTimeout(function () { syncing = false; }, 600); }
+    renderSide(); fit(); save();
+    /* a new booking starts at its top: if the page is scrolled past the start of the bookings, go back up to it */
+    if (scroll !== "now") { var top = sw.getBoundingClientRect().top + scrollY - 150; if (scrollY > top + 4) window.scrollTo({ top: top, behavior: "smooth" }); }
+  }
+  var raf = 0;
+  sw.addEventListener("scroll", function () { cancelAnimationFrame(raf); raf = requestAnimationFrame(function () { if (syncing) return; var m = MODES[Math.round(sw.scrollLeft / sw.clientWidth)]; if (m && m !== S.mode) setMode(m, false); }); }, { passive: true });
+  if (window.ResizeObserver) { var ro = new ResizeObserver(function () { fit(); }); pages.forEach(function (p) { ro.observe(p); }); }
+  addEventListener("resize", function () { sw.scrollLeft = idx(S.mode) * sw.clientWidth; fit(); });
+
+  /* ================= sending ================= */
+  var sending = false;
+  function emailFields(q) {
+    var P = profit(q), F = [], add = function (k, val) { F.push([k, val == null || val === "" ? "—" : String(val)]); };
+    add("Booking type", MODE[q.mode]);
+    add("Client name", v("fName")); add("Company / brand", v("fCo")); add("Client email", v("fEmail")); add("Client phone", v("fPhone"));
+    add("AOTC rep", v("fRep")); add("Client industry", v("fIndustry"));
+    if (q.mode === "exclusive") { add("Problem to solve", S.goal.problem.trim()); add("Desired audience", S.goal.audience.trim()); }
+    if (q.mode === "exclusive") {
+      add("Cities & dates", q.lines.map(function (l) { return l.name + ": " + plural(l.days.length, "day") + " x " + plural(l.trucks, "truck") + " (" + ranges(l.days) + ") = " + money(l.sub); }).join("\n"));
+      add("Days of service", plural(q.days, "day") + " (" + q.tier.name + " range)"); add("Truck-days", q.truckDays); add("Hours per day", q.hours);
+      add("Suggested range", money(q.tier.min) + " to " + money(q.tier.top) + " per truck-day (minimum " + money(q.tier.min) + ")");
+      add("Rate", money(q.rateDay) + " per truck-day (" + money(q.rateHr, true) + "/hr), entered " + (S.ex.unit === "hr" ? "per hour" : "per day"));
+      add("Add-on: creative design", q.creative ? money(q.creative) : "None");
+    } else if (q.mode === "rotational") {
+      add("Events", q.lines.map(function (l) { return l.ev.name + " (" + l.ev.when + (l.ev.season ? ", " + plural(l.dates, "date") : "") + "): " + money(l.price) + " slot" + (l.sound ? " + sound $150" : ""); }).join("\n"));
+      add("Slots", q.lines.length); add("Add-on: sound", q.sound ? money(q.sound) : "None"); add("Add-on: creative design", q.creative ? money(q.creative) : "None");
+    } else {
+      add("Event location", v("pLoc")); add("City", v("pCity")); add("Date(s)", ranges(q.days)); add("Truck on site at", S.pv.start ? timeLabel(+S.pv.start) : "Set on the confirmation call");
+      add("Hours on site", q.hours); add("Trucks", q.trucks); add("Rate", money(q.rate) + " an hour per truck (suggested $200 to $400, minimum $200)");
+      add("Driving", q.driveHrs ? plural(q.driveHrs, "hour") + " at $200 an hour" : "None");
+    }
+    add("TOTAL INVESTMENT", money(q.total)); add("Rep commission (20%)", money(q.commission));
+    add("Notes", v("fNotes"));
+    /* internal: never shown in the console */
+    var ex = q.mode === "rotational" ? "Truck share (1/3 of a truck-day per event day, " + money(q.cost.perTruckDay, true) + " per 8-hour day): " + money(P.direct, true) :
+      "Driver $20/hr + photographer/ops $20/hr: " + money(q.cost.labor, true) + "\nFuel (gas + diesel): " + money(q.cost.fuel, true);
+    add("INTERNAL — est. expenses", "Commission (20%): " + money(P.comm, true) + "\n" + ex + "\nTotal: " + money(P.comm + P.direct, true));
+    add("INTERNAL — est. gross profit", money(P.gp, true) + " (" + (q.total ? Math.round(P.gp / q.total * 100) : 0) + "% of the sale)");
+    add("INTERNAL — with vendor outsourcing (20% of net profit)", "Vendor: " + money(P.vendor, true) + "\nEst. gross profit: " + money(P.gp2, true) + " (" + (q.total ? Math.round(P.gp2 / q.total * 100) : 0) + "% of the sale)");
+    add("INTERNAL — fuel basis", FUEL);
+    add("Submitted from", "Sales console (book.html)");
+    return F;
+  }
+  function jumpTo(sel) {
+    var el = $(sel); if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (el.matches("input,textarea,select")) setTimeout(function () { el.focus({ preventScroll: true }); el.classList.add("bad"); setTimeout(function () { el.classList.remove("bad"); }, 1600); }, 350);
+  }
+  function send() {
+    if (sending) return;
+    var n = needs(S.mode); if (n.length) { toast("Still needed: " + n.map(function (x) { return x[0].toLowerCase(); }).join(", ")); jumpTo(n[0][1]); return; }
+    var q = quote(), btn = $("#send"); sending = true; btn.disabled = true; btn.textContent = "Sending…";
+    var fd = new FormData();
+    fd.append("_subject", MODE[q.mode].toUpperCase() + " — " + v("fCo") + " — " + money(q.total) + (q.mode === "exclusive" ? " — " + plural(q.days, "day") + ", " + q.lines.map(function (l) { return l.name; }).join(" / ") : ""));
+    fd.append("_template", "table"); fd.append("_captcha", "false"); fd.append("_replyto", v("fEmail"));
+    emailFields(q).forEach(function (f) { fd.append(f[0], f[1]); });
+    fetch("https://formsubmit.co/ajax/info@adsofthecentury.net", { method: "POST", headers: { Accept: "application/json" }, body: fd })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok || String(j.success) === "false") throw 0; }); })
+      .then(function () { justSent = true; try { sessionStorage.removeItem(DRAFT); } catch (e) {} openSent(q); })
+      .catch(function () { toast("That didn't send. Check the connection and press Send again. Nothing is lost.", 6500); })
+      .then(function () { sending = false; btn.disabled = false; renderSide(); });
+  }
+
+  /* ================= the client's email ================= */
+  function clientEmail(q) {
+    var first = v("fName").split(/\s+/)[0] || "there", brand = v("fCo"), rows = overviewRows(q).concat([["Total investment", money(q.total)]]);
+    var subject = brand + " × AOTC: your campaign overview";
+    var inc = INC[q.mode].items.map(function (i) { return i[0]; }).concat(q.mode === "private" ? ["Not included: tables, chairs and tents"] : []);
+    var td = 'style="padding:11px 16px;border-top:1px solid #ece6dd;vertical-align:top;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;color:#1f1d1a"';
+    var html = '<div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#1f1d1a;max-width:640px">' +
+      "<p>Hi " + esc(first) + ",</p>" +
+      "<p>It&rsquo;s our pleasure to be of assistance in making <b>" + esc(brand) + "</b> stand out. Thank you for your time today. Here&rsquo;s the overview we put together; we&rsquo;re confirming availability now and will follow up shortly.</p>" +
+      '<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:640px;border-collapse:separate;border-spacing:0;border:1px solid #ece6dd;border-radius:12px;overflow:hidden;margin:18px 0">' +
+      '<tr><td colspan="2" style="background:#1f1d1a;color:#ffffff;padding:14px 16px;border-bottom:3px solid #e1252e;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:bold">AOTC &middot; ' + esc(MODE[q.mode]) + " overview</td></tr>" +
+      rows.map(function (r, i) { var last = i === rows.length - 1; return "<tr><td " + td.replace('style="', 'style="width:38%;background:#f8f5f0;font-weight:bold;') + ">" + esc(r[0]) + "</td><td " + (last ? td.replace('style="', 'style="font-size:18px;font-weight:bold;') : td) + ">" + esc(r[1]).replace(/\n/g, "<br>") + "</td></tr>"; }).join("") +
+      "</table>" +
+      '<p style="margin:0 0 6px"><b>What&rsquo;s included</b></p><ul style="margin:0 0 16px;padding-left:20px">' + inc.map(function (i) { return "<li>" + esc(i) + "</li>"; }).join("") + "</ul>" +
+      "<p>Please feel free to forward this to anyone on your team who needs to see it, or print it for your records. When you&rsquo;re ready, reply with your artwork (or a few lines on what you want the screens to say) and our Design Studio will take it from there.</p>" +
+      "<p>Talk soon,</p></div>";
+    var text = "Hi " + first + ",\n\nIt's our pleasure to be of assistance in making " + brand + " stand out. Thank you for your time today. Here's the overview we put together; we're confirming availability now and will follow up shortly.\n\n" +
+      "AOTC - " + MODE[q.mode].toUpperCase() + " OVERVIEW\n" + rows.map(function (r) { return r[0] + ": " + r[1].replace(/\n/g, " / "); }).join("\n") +
+      "\n\nWhat's included:\n" + inc.map(function (i) { return "- " + i; }).join("\n") +
+      "\n\nPlease feel free to forward this to anyone on your team who needs to see it, or print it for your records. When you're ready, reply with your artwork (or a few lines on what you want the screens to say) and our Design Studio will take it from there.\n\nTalk soon,\n";
+    return { to: v("fEmail"), subject: subject, html: html, text: text };
+  }
+  function copyRich(m) {
+    if (navigator.clipboard && window.ClipboardItem) {
+      return navigator.clipboard.write([new ClipboardItem({ "text/html": new Blob([m.html], { type: "text/html" }), "text/plain": new Blob([m.text], { type: "text/plain" }) })]).then(function () { return true; }, legacy);
+    }
+    return Promise.resolve(legacy());
+    function legacy() {
+      var box = doc.createElement("div"); box.contentEditable = "true"; box.innerHTML = m.html; box.style.cssText = "position:fixed;left:-9999px;top:0;background:#fff;color:#000";
+      doc.body.appendChild(box); var r = doc.createRange(); r.selectNodeContents(box); var sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      var ok = false; try { ok = doc.execCommand("copy"); } catch (e) {} sel.removeAllRanges(); box.remove(); return ok;
+    }
+  }
+  var lastMail = null, TOUCH = window.matchMedia && matchMedia("(pointer: coarse)").matches;
+  function openSent(q) {
+    var m = lastMail = clientEmail(q);
+    /* real links, so the new email opens from the click itself and no pop-up blocker gets in the way */
+    $("#snGmail").href = "https://mail.google.com/mail/?view=cm&fs=1&to=" + encodeURIComponent(m.to) + "&su=" + encodeURIComponent(m.subject);
+    $("#snMail").href = "mailto:" + encodeURIComponent(m.to) + "?subject=" + encodeURIComponent(m.subject);
+    $("#snName").textContent = v("fName").split(/\s+/)[0] || "the client";
+    $("#snHow").innerHTML = "It&rsquo;s written and addressed to <b>" + esc(m.to) + "</b>. Press a button below: it copies the overview and opens a new email to them. " + (TOUCH ? "Tap and hold in the message, choose <b>Paste</b>, then send." : "Click in the message, press <b>Ctrl+V</b> (<b>&#8984;V</b> on a Mac) and send.") + " Your signature adds itself.";
+    /* on a phone the phone's own mail app opens more reliably than the Gmail website, so it goes first */
+    var gm = $("#snGmail"), ml = $("#snMail"); gm.classList.toggle("p", !TOUCH); ml.classList.toggle("p", TOUCH); if (TOUCH) gm.parentNode.insertBefore(ml, gm); else gm.parentNode.insertBefore(gm, ml);
+    $("#snPrev").innerHTML = '<p style="font:13px Arial;color:#8a847b;margin-bottom:12px">To: ' + esc(m.to) + "<br>Subject: " + esc(m.subject) + "</p>" + m.html;
+    paintCom($("#snCom"), q);
+    $("#sent").hidden = false; doc.documentElement.style.overflow = "hidden";
+  }
+  function closeSent() { $("#sent").hidden = true; doc.documentElement.style.overflow = ""; }
+  function copyForMail() { if (!lastMail) return; copyRich(lastMail).then(function (ok) { toast(ok ? (TOUCH ? "Copied. In the new email, tap and hold, choose Paste, then send." : "Copied. Click in the new email, press Ctrl+V (⌘V on a Mac), then send.") : "Couldn't copy automatically: select the preview, copy it, and paste it into the email.", 8000); }); }
+
+  /* ================= saving a draft (this tab only; cleared on send or start over) ================= */
+  var DRAFT = "aotc_console_draft", REP = "aotc_console_rep", saveT;
+  function save() { clearTimeout(saveT); saveT = setTimeout(function () { try { var f = {}; FIELDS.forEach(function (id) { f[id] = v(id); }); sessionStorage.setItem(DRAFT, JSON.stringify({ s: S, f: f })); localStorage.setItem(REP, v("fRep")); } catch (e) {} }, 250); }
+  function dirty() { return !justSent && !!(v("fName") || v("fCo") || S.ex.cities.length || Object.keys(S.rt.sel).length || sorted(S.pv.days).length); }
+  function syncGoal() { $$("[data-bind]").forEach(function (t) { if (doc.activeElement !== t) t.value = S.goal[t.getAttribute("data-bind")] || ""; }); $$(".chips[data-for]").forEach(function (box) { var words = (S.goal[box.getAttribute("data-for")] || "").split(/\s*,\s*/); $$(".chip", box).forEach(function (c) { c.classList.toggle("on", words.indexOf(c.textContent) >= 0); }); }); }
+  function reset() {
+    try { sessionStorage.removeItem(DRAFT); } catch (e) {}
+    var rep = v("fRep"), mode = S.mode; S = fresh(); S.mode = mode; justSent = false;
+    FIELDS.forEach(function (id) { var el = doc.getElementById(id); if (el) el.value = ""; }); $("#fRep").value = rep;
+    exCal.view = pvCal.view = new Date(T0.getFullYear(), T0.getMonth(), 1);
+    closeSent(); syncGoal(); renderAll(); setMode(mode, "now"); window.scrollTo(0, 0);
+  }
+
+  /* ================= setting up ================= */
+  $$("[data-inc]").forEach(function (ul) { var c = INC[ul.getAttribute("data-inc")]; ul.innerHTML = c.items.map(function (i) { return "<li><span><b>" + i[0] + "</b>, " + i[1] + "</span></li>"; }).join(""); });
+  $$("[data-notes]").forEach(function (box) { var c = INC[box.getAttribute("data-notes")]; box.innerHTML = c.notes.map(function (n) { return "<span" + (n[0] ? ' class="' + n[0] + '"' : "") + ">" + n[1] + "</span>"; }).join(""); });
+  $$(".chips[data-for]").forEach(function (box) { box.innerHTML = CHIPS[box.getAttribute("data-for")].map(function (w) { return '<button type="button" class="chip">' + w + "</button>"; }).join(""); });
+  $("#objList").innerHTML = [
+    ["“It’s too expensive.”", "“Compared to what? What budget did you have in mind? I can shape the plan around it: fewer hours a day, fewer days or one city, and keep the impact where it matters most.” Then stop and let them answer."],
+    ["“Can you do it cheaper?”", "“I can change the plan, not the rate. What matters most to keep: the dates, the city or the hours?” Trade scope, never the minimum."],
+    ["“I need to think about it.”", "“Of course. What would you be weighing? I’ll email you the overview right now so it’s in front of you. Should I check the dates while you decide? The big dates go first.”"],
+    ["“I have to run it by my boss or partner.”", "“Makes sense. The overview I send is made to forward: the dates, the cities and the total in one table. Who else should get it, and when do you meet?”"],
+    ["“How do I know people saw it?”", "“Every booking comes with Golden Ticket access: the truck live on the map, the route it drove, estimated impressions and photos of your ad on the street.”"],
+    ["“We already do social and digital.”", "“Good. This is the piece nobody can scroll past or skip, in the places your customers already are, and your social gets the photos.”"],
+    ["“We don’t have a design.”", "“That’s what our Design Studio does. Send what you have, even a few lines, and the revisions are unlimited.”"],
+    ["“Just send me some information.”", "“Happy to. I’ll send the overview with your dates in the next five minutes. While I have you, which dates should I check?”"],
+    ["“Bad timing. Maybe next quarter.”", "“Which month would be right? Let’s check those dates now, because peak weekends and event dates book up first.”"]
+  ].map(function (o) { return '<details class="obj"><summary>' + esc(o[0]) + "</summary><p>" + esc(o[1]) + "</p></details>"; }).join("");
+  (function restore() {
+    try { $("#fRep").value = localStorage.getItem(REP) || ""; if (!localStorage.getItem("aotc_console_intro")) $("#intro").hidden = false; } catch (e) { $("#intro").hidden = false; }
+    var d = null; try { d = JSON.parse(sessionStorage.getItem(DRAFT) || "null"); } catch (e) {}
+    if (!d || !d.s || !d.s.ex) return;
+    S = d.s; Object.keys(d.f || {}).forEach(function (id) { var el = doc.getElementById(id); if (el && d.f[id]) el.value = d.f[id]; });
+    setTimeout(function () { toast("Picked up where you left off. “Start over” clears it."); }, 500);
+  })();
+
+  /* ================= wiring ================= */
+  $$("[data-tab]").forEach(function (t) { t.addEventListener("click", function () { setMode(t.getAttribute("data-tab"), true); }); });
+  $("#tab-exclusive").parentNode.addEventListener("keydown", function (e) { if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return; var i = (idx(S.mode) + (e.key === "ArrowRight" ? 1 : 2)) % 3; setMode(MODES[i], true); $("#tab-" + MODES[i]).focus(); });
+  $("#send").addEventListener("click", send);
+  $("#mGo").addEventListener("click", function () { $("#side").scrollIntoView({ behavior: "smooth", block: "start" }); });
+  $("#reset").addEventListener("click", function () { if (!dirty() || confirm("Clear this booking and start over?")) reset(); });
+  $("#introOk").addEventListener("click", function () { $("#intro").hidden = true; try { localStorage.setItem("aotc_console_intro", "1"); } catch (e) {} });
+  $("#objBtn").addEventListener("click", function () { $("#sheet").hidden = false; });
+  $("#sheet").addEventListener("click", function (e) { if (e.target === this || e.target.closest("[data-close]")) this.hidden = true; });
+  $("#sent").addEventListener("click", function (e) { if (e.target === this || e.target.closest("[data-close]")) closeSent(); });
+  $("#snNew").addEventListener("click", reset);
+  $("#snGmail").addEventListener("click", copyForMail);
+  $("#snMail").addEventListener("click", copyForMail);
+  $("#snCopy").addEventListener("click", copyForMail);
+  $("#snPrint").addEventListener("click", function () { window.print(); });
+  $("#cityAdd").addEventListener("click", function () { addCity($("#cityIn").value); });
+  Auto($("#cityIn"), $("#cityList"), addCity);
+  Auto($("#pCity"), $("#pCityList"), function (c) { $("#pCity").value = c || $("#pCity").value; renderSide(); save(); });
+  doc.addEventListener("keydown", function (e) { if (e.key === "Escape") { $("#sheet").hidden = true; } });
+
+  doc.addEventListener("input", function (e) {
+    var t = e.target, id = t.id;
+    if (t.hasAttribute("data-bind")) { S.goal[t.getAttribute("data-bind")] = t.value; syncGoal(); }
+    else if (id === "exRate") { S.ex.rate = t.value; exPrice(); }
+    else if (id === "exCreative") S.ex.creative = t.value;
+    else if (id === "rtCreative") S.rt.creative = t.value;
+    else if (id === "pvRate") { S.pv.rate = t.value; pvPrice(); }
+    else if (t.hasAttribute("data-price")) S.rt.sel[t.getAttribute("data-price")].price = t.value;
+    else if (id === "fEmail") t.classList.toggle("bad", !!t.value && !/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(t.value.trim()));
+    renderSide(); save();
+  });
+  doc.addEventListener("change", function (e) {
+    var t = e.target;
+    if (t.id === "pStart") { S.pv.start = t.value; renderPv(); }
+    if (t.id === "pDrive") { S.pv.drive = t.checked; renderPv(); }
+    if (t.hasAttribute("data-sound")) S.rt.sel[t.getAttribute("data-sound")].sound = t.checked;
+    renderSide(); save();
+  });
+  doc.addEventListener("focusout", function (e) { var t = e.target; if (/^(exRate|exCreative|rtCreative|pvRate)$/.test(t.id) || (t.hasAttribute && t.hasAttribute("data-price"))) { var n = num(t.value); if (n) t.value = n.toLocaleString("en-US", { maximumFractionDigits: 2 }); } });
+  doc.addEventListener("click", function (e) {
+    var t = e.target.closest("button"); if (!t) return;
+    if (t.classList.contains("chip")) { var k = t.parentNode.getAttribute("data-for"), word = t.textContent, parts = (S.goal[k] || "").split(/\s*,\s*/).filter(Boolean), i = parts.indexOf(word); if (i < 0) parts.unshift(word); else parts.splice(i, 1); S.goal[k] = parts.join(", "); syncGoal(); save(); return; }
+    if (t.hasAttribute("data-need")) { var n = needs(S.mode)[+t.getAttribute("data-need")]; if (n) jumpTo(n[1]); return; }
+    if (t.hasAttribute("data-city")) { S.ex.active = +t.getAttribute("data-city"); renderEx(); save(); return; }
+    if (t.hasAttribute("data-uncity")) { var ci = +t.getAttribute("data-uncity"), c = S.ex.cities[ci]; if (sorted(c.days).length && !confirm("Remove " + c.name + " and its days?")) return; S.ex.cities.splice(ci, 1); S.ex.active = Math.max(0, Math.min(S.ex.active, S.ex.cities.length - 1)); renderEx(); renderSide(); fit(); save(); return; }
+    if (t.hasAttribute("data-ev")) { var id = t.getAttribute("data-ev"), ev = evById(id); if (S.rt.sel[id]) delete S.rt.sel[id]; else S.rt.sel[id] = { price: ev && ev.slot ? String(ev.slot) : "", sound: false, dates: 1 }; renderRt(); renderSide(); fit(); save(); var f = $('[data-price="' + id + '"]'); if (f && !f.value) f.focus({ preventScroll: true }); return; }
+    if (t.hasAttribute("data-unit")) { var u = t.getAttribute("data-unit"); if (u !== S.ex.unit) { var r = num(S.ex.rate); if (r) S.ex.rate = String(u === "hr" ? Math.round(r / S.ex.hours * 100) / 100 : Math.round(r * S.ex.hours)); S.ex.unit = u; $("#exRate").value = S.ex.rate; } renderEx(); renderSide(); save(); return; }
+    if (t.hasAttribute("data-hours")) { S.ex.hours = +t.getAttribute("data-hours"); renderEx(); renderSide(); save(); return; }
+    var stp = t.closest(".step"), d = +t.getAttribute("data-d");
+    if (stp && d) {
+      if (stp.hasAttribute("data-trucks")) { var cc = S.ex.cities[+stp.getAttribute("data-trucks")]; cc.trucks = Math.max(1, Math.min(9, cc.trucks + d)); renderEx(); }
+      else if (stp.hasAttribute("data-dates")) { var s = S.rt.sel[stp.getAttribute("data-dates")]; s.dates = Math.max(1, Math.min(60, (s.dates || 1) + d)); renderRt(); }
+      else { var w = stp.getAttribute("data-stepper"); if (w === "pHours") S.pv.hours = Math.max(1, Math.min(16, S.pv.hours + d)); if (w === "pTrucks") S.pv.trucks = Math.max(1, Math.min(9, S.pv.trucks + d)); if (w === "pDriveHrs") { S.pv.drive = true; S.pv.driveHrs = Math.max(1, Math.min(12, S.pv.driveHrs + d)); } renderPv(); }
+      renderSide(); save();
+    }
+  });
+  addEventListener("beforeunload", function (e) { if (dirty()) { e.preventDefault(); e.returnValue = ""; } });
+
+  syncGoal(); renderAll(); setMode(S.mode, "now");
+})();
 </script>
 <script>
-/* AOTC — internal booking-form gate.
-   The booking form is a sales tool, not a public page: it is not in the nav.
-   To open it: double-click the AOTC logo, then enter the passphrase.
-   Access is per-page-load only — leaving or reloading the page re-locks it. */
+/* AOTC internal gate: double-click the AOTC logo (counted in assets/logo.js), then the passphrase.
+   Only a SHA-256 fingerprint of the passphrase lives here; access lasts one page load. */
 (function () {
   var PASS_H = "4dcab0d82ccb503fea0f6f7a4d63440981cf2755d9fba55733489e8c8091fdf5";
   function sha(s){ if(!(window.crypto&&crypto.subtle&&window.TextEncoder)) return Promise.resolve(""); return crypto.subtle.digest("SHA-256",new TextEncoder().encode(s)).then(function(b){return Array.prototype.map.call(new Uint8Array(b),function(x){return ("0"+x.toString(16)).slice(-2);}).join("");}); }
-  var DEST = "book.html";
-  var clicks = 0, timer = null, box = null;
-
-  /* book.html itself: refuse to render unless this load was granted a token */
-  if (/book\.html(\?|#|$)/i.test(location.pathname + location.search + location.hash)) {
-    var ok = false;
-    try { ok = sessionStorage.getItem("aotc_gate_once") === "1"; } catch (e) {}
-    if (ok) { try { sessionStorage.removeItem("aotc_gate_once"); } catch (e) {} }
-    else { location.replace("index.html"); return; }
-  }
-
+  var DEST = "book.html", box = null;
   function css() {
     if (document.getElementById("aotcGateCss")) return;
-    var s = document.createElement("style");
-    s.id = "aotcGateCss";
-    s.textContent =
-      ".gate-scrim{position:fixed;inset:0;z-index:2147483200;display:flex;align-items:center;justify-content:center;padding:20px;" +
-        "background:rgba(4,4,6,.9);backdrop-filter:blur(8px);opacity:0;transition:opacity .25s ease}" +
-      ".gate-scrim.on{opacity:1}" +
-      ".gate{width:min(380px,100%);background:linear-gradient(168deg,#15131a,#0b0a0d);border:1px solid rgba(255,255,255,.14);" +
-        "border-radius:4px;box-shadow:0 30px 90px rgba(0,0,0,.8);padding:26px;font-family:'Barlow',system-ui,sans-serif;" +
-        "transform:translateY(14px) scale(.98);transition:transform .3s cubic-bezier(.2,.8,.25,1)}" +
-      ".gate-scrim.on .gate{transform:none}" +
-      ".gate p.k{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:#ff3b48;margin:0 0 12px}" +
-      ".gate h4{font-family:'Barlow Condensed',Impact,sans-serif;font-weight:800;text-transform:uppercase;font-size:23px;" +
-        "letter-spacing:.02em;color:#fff;margin:0 0 6px;line-height:1}" +
-      ".gate p.s{font-size:12.5px;line-height:1.5;color:#8b847a;margin:0 0 18px}" +
-      ".gate input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:3px;color:#fff;" +
-        "padding:13px 14px;font:inherit;font-size:15px;letter-spacing:.12em;box-sizing:border-box}" +
-      ".gate input:focus{outline:0;border-color:rgba(255,21,32,.7);background:rgba(255,255,255,.09)}" +
-      ".gate input.bad{border-color:#ff1520;animation:gshake .32s}" +
-      "@keyframes gshake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}" +
-      ".gate-row{display:flex;gap:9px;margin-top:14px}" +
-      ".gate-row button{flex:1;font-family:'Barlow Condensed',Impact,sans-serif;font-weight:800;text-transform:uppercase;" +
-        "letter-spacing:.05em;font-size:15px;padding:13px;border:0;border-radius:3px;cursor:pointer;color:#fff;" +
-        "background:linear-gradient(#ff1520,#b30009)}" +
-      ".gate-row button.g{background:transparent;border:1px solid rgba(255,255,255,.2);color:#b8b2a8;flex:0 0 auto;padding:13px 18px}" +
-      ".gate small{display:block;margin-top:14px;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.14em;" +
-        "text-transform:uppercase;color:#6f6a62;line-height:1.7}";
+    var s = document.createElement("style"); s.id = "aotcGateCss";
+    s.textContent = ".gate-scrim{position:fixed;inset:0;z-index:2147483200;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(31,29,26,.4);backdrop-filter:blur(6px)}" +
+      ".gate{width:min(380px,100%);background:#fff;border-radius:24px;padding:26px;font-family:Figtree,system-ui,sans-serif;box-shadow:0 30px 80px rgba(0,0,0,.3)}" +
+      ".gate h4{font-size:21px;font-weight:800;color:#1f1d1a;margin:0 0 4px}.gate p{font-size:14px;color:#8a847b;margin:0 0 16px}" +
+      ".gate input{width:100%;border:1.5px solid #ddd5ca;border-radius:13px;padding:12px 14px;font-size:16px;box-sizing:border-box}" +
+      ".gate input.bad{border-color:#e1252e}.gate div{display:flex;gap:9px;margin-top:14px}" +
+      ".gate button{flex:1;font:inherit;font-weight:800;font-size:15px;height:46px;border:0;border-radius:999px;color:#fff;background:#e1252e;cursor:pointer}" +
+      ".gate button.g{flex:0 0 auto;padding:0 18px;background:#fff;border:1.5px solid #ddd5ca;color:#55504a}";
     document.head.appendChild(s);
   }
-
   function prompt() {
-    if (box) return;
-    css();
-    box = document.createElement("div");
-    box.className = "gate-scrim";
-    box.innerHTML =
-      '<div class="gate" role="dialog" aria-modal="true" aria-label="Internal access">' +
-        '<p class="k">AOTC internal</p>' +
-        '<h4>Sales console</h4>' +
-        '<p class="s">Booking form access. Staff only.</p>' +
-        '<input type="password" id="gatePass" placeholder="Passphrase" autocomplete="off" autocapitalize="off" spellcheck="false" />' +
-        '<div class="gate-row"><button type="button" id="gateGo">Unlock</button>' +
-        '<button type="button" class="g" id="gateNo">Cancel</button></div>' +
-        '<small>Access expires when this page is closed</small>' +
-      '</div>';
+    if (box) return; css();
+    box = document.createElement("div"); box.className = "gate-scrim";
+    box.innerHTML = '<div class="gate" role="dialog" aria-modal="true" aria-label="Staff access"><h4>Sales console</h4><p>Staff only. Enter the passphrase.</p><input type="password" placeholder="Passphrase" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Passphrase" /><div><button type="button" data-go>Open</button><button type="button" class="g" data-no>Cancel</button></div></div>';
     document.body.appendChild(box);
-    void box.offsetWidth;
-    box.classList.add("on");
-
-    var inp = box.querySelector("#gatePass");
-    setTimeout(function () { try { inp.focus(); } catch (e) {} }, 260);
-
-    function bail() {
-      if (!box) return;
-      box.classList.remove("on");
-      var b = box; box = null;
-      setTimeout(function () { b.remove(); }, 260);
-    }
+    var inp = box.querySelector("input"); setTimeout(function () { inp.focus(); }, 60);
+    function bail() { if (box) { box.remove(); box = null; } }
     function tryIt() {
       sha(inp.value.trim()).then(function (h) {
         if (h === PASS_H) { try { sessionStorage.setItem("aotc_gate_once", "1"); } catch (e) {} window.location.href = "/" + DEST; }
         else { inp.classList.remove("bad"); void inp.offsetWidth; inp.classList.add("bad"); inp.select(); }
       });
     }
-    box.querySelector("#gateGo").addEventListener("click", tryIt);
-    box.querySelector("#gateNo").addEventListener("click", bail);
-    inp.addEventListener("keydown", function (e) {
-      if (e.key === "Enter") { e.preventDefault(); tryIt(); }
-      if (e.key === "Escape") bail();
-    });
+    box.querySelector("[data-go]").addEventListener("click", tryIt);
+    box.querySelector("[data-no]").addEventListener("click", bail);
+    inp.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); tryIt(); } if (e.key === "Escape") bail(); });
     box.addEventListener("click", function (e) { if (e.target === box) bail(); });
   }
-
-  /* two clicks on the logo inside 700ms */
-  function arm() {
-    var logo = document.querySelector(".brand");
-    if (!logo) return;
-    logo.addEventListener("click", function (e) {
-      clicks++;
-      if (clicks === 1) {
-        timer = setTimeout(function () { clicks = 0; }, 700);
-        return;   /* first click still navigates home as normal */
-      }
-      e.preventDefault();
-      e.stopPropagation();
-      clearTimeout(timer);
-      clicks = 0;
-      prompt();
-    });
-  }
-
   window.AOTCStaffGate = prompt;   /* the logo's clicks are counted in assets/logo.js */
 })();
-
-</script>
-<script>
-/* AOTC unified navigation — one canonical menu, rendered into every page */
-(function () {
-  var ITEMS = [
-    ["index.html","Home","Start here"],
-        ["faq.html","FAQ","Questions, answered"],
-    ["disclosures.html","Disclosures","Legal"]
-  ];
-  var SOCIAL = [
-    ["https://www.instagram.com/aotc.media/","Instagram"],
-    ["https://www.facebook.com/profile.php?id=61591701875497","Facebook"],
-    ["https://www.threads.com/@aotc.media","Threads"],
-    ["https://linkedin.com/company/advertisements-of-the-century","LinkedIn"],
-    ["https://www.tiktok.com/@adsofthecentury","TikTok"],
-    ["https://linktr.ee/AOTC","Linktree"]
-  ];
-
-  function here() {
-    var p = (location.pathname || "").split("/").pop();
-    return (!p || p === "" || p === "index.html") ? "index.html" : p;
-  }
-  function panelHTML() {
-    var cur = here(), out = "";
-    out += '<div class="aotc-col"><p class="aotc-h">Explore</p><div class="aotc-list">';
-    ITEMS.forEach(function (it) {
-      out += '<a class="aotc-item" href="' + it[0] + '"' + (it[0] === cur ? ' aria-current="page"' : '') +
-             ' role="menuitem">' + it[1] + '<span class="d">' + it[2] + '</span></a>';
-    });
-    out += '</div></div>';
-    out += '<div class="aotc-col"><p class="aotc-h">Contact Us</p><div class="aotc-list">' +
-           '<a class="aotc-item" href="sms:+17737081400?&body=LET%27S%20MAKE%20MONEY" role="menuitem">Text 24/7<span class="d">(773) 708-1400</span></a>' +
-           '<a class="aotc-item" href="mailto:info@adsofthecentury.net" role="menuitem">Email 24/7<span class="d">info@adsofthecentury.net</span></a>' +
-           '</div></div>';
-    out += '<div class="aotc-col wide"><p class="aotc-h">Follow</p><div class="aotc-social">';
-    SOCIAL.forEach(function (s) {
-      out += '<a class="aotc-chip" href="' + s[0] + '" target="_blank" rel="noopener">' + s[1] + '</a>';
-    });
-    out += '</div><a class="aotc-book" href="book.html" role="menuitem">Book a campaign &rarr;</a></div>';
-    return out;
-  }
-
-  function wire(wrap) {
-    if (!wrap || wrap.dataset.aotcWired) return;
-    wrap.dataset.aotcWired = "1";
-
-    var tab = wrap.querySelector(".aotc-tab");
-    var scrim = wrap.querySelector(".aotc-scrim");
-    var panel = wrap.querySelector(".aotc-panel");
-    if (!tab || !panel) return;
-
-    panel.innerHTML = panelHTML();   /* every page gets the identical menu */
-
-    function clamp() {
-      panel.style.left = ""; panel.style.right = "";
-      var rc = panel.getBoundingClientRect(), wr = wrap.getBoundingClientRect();
-      if (rc.left < 16) { panel.style.right = "auto"; panel.style.left = (16 - wr.left) + "px"; }
-      else if (rc.right > innerWidth - 16) { panel.style.left = "auto"; panel.style.right = (wr.right - (innerWidth - 16)) + "px"; }
-    }
-    function open() { wrap.classList.add("open"); tab.setAttribute("aria-expanded", "true"); clamp(); }
-    function close() { wrap.classList.remove("open"); tab.setAttribute("aria-expanded", "false"); }
-    function toggle() { wrap.classList.contains("open") ? close() : open(); }
-
-    var hoverDevice = window.matchMedia("(hover: hover) and (min-width: 721px)").matches;
-    tab.addEventListener("click", function (e) {
-      e.stopPropagation();
-      if (hoverDevice) open(); else toggle();
-    });
-    if (scrim) scrim.addEventListener("click", close);
-    panel.addEventListener("click", function (e) { e.stopPropagation(); });
-    document.addEventListener("click", function () { if (wrap.classList.contains("open")) close(); });
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && wrap.classList.contains("open")) { close(); tab.focus(); }
-    });
-    window.addEventListener("resize", function () { if (wrap.classList.contains("open")) clamp(); });
-
-    if (hoverDevice) {
-      var t;
-      wrap.addEventListener("mouseenter", function () { clearTimeout(t); open(); });
-      wrap.addEventListener("mouseleave", function () { t = setTimeout(close, 220); });
-    }
-  }
-
-  function init() {
-    var host = document.querySelector(".nav-links");
-    if (host) host.classList.add("aotc-host");
-    document.querySelectorAll(".aotc-nav").forEach(wire);
-  }
-
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
-  else init();
-})();
-
 </script>
 <script src="assets/logo.js" defer></script>
 </body>
