@@ -48,7 +48,7 @@
   .ghost.dark:before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--gold);margin-right:7px;vertical-align:1px}
   .ghost.dark:hover{color:#fff;filter:brightness(1.25)}
 
-  .wrap{max-width:1260px;margin:0 auto;padding:22px clamp(14px,3vw,32px) 130px}
+  .wrap{max-width:1260px;margin:0 auto;padding:22px clamp(14px,3vw,32px) 24px}
   .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);padding:clamp(16px,2vw,24px)}
   .card + .card{margin-top:16px}
   h1{font-size:clamp(23px,2.4vw,28px);font-weight:800;letter-spacing:-.02em;line-height:1.15}
@@ -216,7 +216,7 @@
   .tog input{width:19px;height:19px;accent-color:var(--ac)}
 
   /* ---------- the summary (stays beside the page) ---------- */
-  .side{position:sticky;top:150px;max-height:calc(100vh - 166px);overflow:auto;padding:2px 4px 6px;margin:0 -4px;scrollbar-width:thin}
+  .side{position:sticky;top:150px;max-height:calc(100vh - 176px);overflow:auto;padding:2px 4px 6px;margin:0 -4px;scrollbar-width:thin}
   .sum-h{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 10px;margin-bottom:6px}
   .sum-h .pill{background:var(--ac-s);color:var(--ac-d)}
   .ov .r{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-top:1px solid var(--line);font-size:14px}
@@ -274,7 +274,7 @@
 
   @media(max-width:1060px){
     .layout{grid-template-columns:minmax(0,1fr)}
-    .side{position:static;max-height:none;overflow:visible;margin:0;padding:0}
+    .wrap{padding-bottom:130px}
     .mbar{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;align-items:center;gap:14px;padding:10px clamp(14px,3vw,24px) calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-top:1px solid var(--line)}
     .mbar div{min-width:0}
     .mbar small{display:block;font-size:12px;color:var(--mute);font-weight:600}
@@ -789,7 +789,7 @@
     if (!val) { el.className = "hint"; el.innerHTML = "Open at <b>" + money(q.top) + unit + "</b>. That pays you <b>" + money(q.top * cut) + "</b> " + per + "."; return; }
     if (val < q.min) { el.className = "hint lo"; el.innerHTML = "That&rsquo;s under the " + money(q.min) + unit + " minimum, so it can&rsquo;t go out at this rate."; return; }
     if (val < q.top) { el.className = "hint ok"; el.innerHTML = "In range. Each extra $100" + unit + " puts <b>" + money(100 * cut) + "</b> more in your pocket " + per + "."; return; }
-    el.className = "hint hi"; el.innerHTML = "Above the range. Nicely done: <b>" + money(val * cut) + "</b> to you " + per + ".";
+    el.className = "hint hi"; el.innerHTML = (val > q.top ? "Above the range." : "Top of the range.") + " Nicely done: <b>" + money(val * cut) + "</b> to you " + per + ".";
   }
 
   /* ================= the overview (what the client sees) ================= */
@@ -904,9 +904,10 @@
     fd.append("_template", "table"); fd.append("_captcha", "false"); fd.append("_replyto", v("fEmail"));
     emailFields(q).forEach(function (f) { fd.append(f[0], f[1]); });
     fetch("https://formsubmit.co/ajax/info@adsofthecentury.net", { method: "POST", headers: { Accept: "application/json" }, body: fd })
-      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok || String(j.success) === "false") throw 0; }); })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok || String(j.success) === "false") throw { said: String(j.message || ("error " + r.status)) }; }); })
       .then(function () { justSent = true; try { sessionStorage.removeItem(DRAFT); } catch (e) {} openSent(q); })
-      .catch(function () { toast("That didn't send. Check the connection and press Send again. Nothing is lost.", 6500); })
+      .catch(function (e) {   /* show the email service's own reason when it gives one */
+        toast(e && e.said ? "That didn't send. The email service said: “" + e.said.slice(0, 160) + "” Nothing is lost; tell leadership if it keeps happening." : "That didn't send. Check the connection and press Send again. Nothing is lost.", 9000); })
       .then(function () { sending = false; btn.disabled = false; renderSide(); });
   }
 
