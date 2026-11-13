@@ -43,11 +43,16 @@
 
   /* ───────── Book the truck: the live booking panel's fields, as a drawer on every page ───────── */
   var bk = $("#bk"), form = bk && $("form", bk), last = null;
-  function openBook(ctx) {
+  function openBook(ctx, dates) {
     if (!bk) { location.href = "/#book"; return; }
     if (window.AOTC.closeMenu) window.AOTC.closeMenu();
     bk.classList.remove("sent");
-    var c = $("[name='Interested in']", bk); if (c && ctx) c.value = ctx;
+    var c = $("[name='Interested in']", bk); if (c) c.value = ctx || "";
+    // an event card's link: say which slot this is and fill in the event's dates
+    var slot = /^Rotational slot: /.test(ctx || ""), forEl = $(".bk-for", bk), dt = $("[name=Dates]", bk);
+    if (forEl) { forEl.hidden = !slot; forEl.innerHTML = slot ? "<b>Rotational slot</b> " + ctx.replace(/^Rotational slot: /, "").replace(/[<>&]/g, "") : ""; }
+    if (dt && dates) { dt.value = dates; dt.setAttribute("data-pre", dates); }
+    else if (dt && dt.value && dt.value === dt.getAttribute("data-pre")) dt.value = "";
     bk.classList.add("on"); bk.setAttribute("aria-hidden", "false"); root.style.overflow = "hidden"; last = doc.activeElement;
     setTimeout(function () { var f = $("input[name=Name]", bk); if (f) f.focus(); }, 380);
   }
@@ -56,7 +61,7 @@
   doc.addEventListener("click", function (e) {
     var t = e.target.closest && e.target.closest("[data-book], a[href='/#book'], a[href='index.html#book']");
     if (!t) return;
-    if (bk) { e.preventDefault(); openBook(t.getAttribute("data-book") || doc.body.getAttribute("data-context") || ""); }
+    if (bk) { e.preventDefault(); openBook(t.getAttribute("data-book") || doc.body.getAttribute("data-context") || "", t.getAttribute("data-dates")); }
     else if (window.openAOTCPanel) { e.preventDefault(); window.openAOTCPanel(); }
   });
   if (bk) {
@@ -70,9 +75,10 @@
       var file = fd.get("attachment"); if (file && !file.size) fd.delete("attachment");
       if (file && file.size > 9.5 * 1048576) { toast("That file is over 10 MB. Text it to (773) 708-1400 instead."); return; }
       fd.delete("_honey");
-      fd.append("_subject", "[AOTC] Call Request - " + String(fd.get("Name")).trim());
+      var kind = /^Rotational slot: /.test(String(fd.get("Interested in") || "")) ? "Rotational Slot Request" : "Call Request";
+      fd.append("_subject", "[AOTC] " + kind + " - " + String(fd.get("Name")).trim());
       fd.append("_template", "table"); fd.append("_captcha", "false");
-      fd.append("Submission Type", "Call Request"); fd.append("Page", location.href);
+      fd.append("Submission Type", kind); fd.append("Page", location.href);
       btn.disabled = true; var label = btn.innerHTML; btn.textContent = "Sending...";
       fetch(FORM, { method: "POST", headers: { Accept: "application/json" }, body: fd })
         .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok || String(j.success) === "false") throw 0; }); })   // FormSubmit can answer 200 without sending

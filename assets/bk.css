@@ -44,3 +44,7 @@
 /* the Display Studio has its own "Send this to AOTC" button in that corner */
 .toast{position:fixed;left:50%;bottom:24px;z-index:2147483200;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#0b0b0c;border:1px solid var(--red2);color:#fff;font:600 10px var(--fm);letter-spacing:.16em;text-transform:uppercase;padding:12px 16px;transition:all .35s var(--ease)}
 .toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* the event a rotational-slot request is for (opened from a homepage event card) */
+.bk-for{margin:0 0 14px;padding:10px 12px;border:1px solid rgba(255,21,32,.4);border-left:3px solid var(--red2);border-radius:4px;background:rgba(217,0,13,.1);font-size:13.5px;line-height:1.4;color:#f1ece4}
+.bk-for b{display:block;margin-bottom:2px;font-family:var(--fm,monospace);font-size:9.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#ff4a52}
