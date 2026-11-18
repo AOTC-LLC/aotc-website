@@ -172,28 +172,9 @@
     addEventListener("resize", function () { size(); draw(performance.now()); });
   })();
 
-  /* ───────── staff gate: double-click the AOTC logo for the sales console (assets/logo.js counts the clicks).
-     Only a SHA-256 fingerprint of the passphrase lives here; access lasts one page load. ───────── */
-  var GATE = "4dcab0d82ccb503fea0f6f7a4d63440981cf2755d9fba55733489e8c8091fdf5", gateEl = null;
-  function sha(s) {
-    if (!(window.crypto && crypto.subtle && window.TextEncoder)) return Promise.resolve("");
-    return crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)).then(function (b) { return Array.prototype.map.call(new Uint8Array(b), function (x) { return ("0" + x.toString(16)).slice(-2); }).join(""); });
-  }
-  function staffGate() {
-    if (gateEl) return;
-    gateEl = doc.createElement("div"); gateEl.className = "dlg";
-    gateEl.innerHTML = '<div class="dlg-box" role="dialog" aria-modal="true" aria-label="Internal access"><p class="k">AOTC internal</p><h2>Sales console</h2><p>Booking form access. Staff only.</p>' +
-      '<input type="password" placeholder="Passphrase" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Passphrase"><div class="dlg-row"><button type="button" data-go>Unlock</button><button type="button" class="g" data-no>Cancel</button></div><small>Access expires when this page is closed</small></div>';
-    doc.body.appendChild(gateEl); void gateEl.offsetWidth; gateEl.classList.add("on");
-    var inp = $("input", gateEl); setTimeout(function () { inp.focus(); }, 200);
-    function bail() { if (!gateEl) return; var g = gateEl; gateEl = null; g.classList.remove("on"); setTimeout(function () { g.remove(); }, 260); }
-    function go() { sha(inp.value.trim()).then(function (h) { if (h === GATE) { try { sessionStorage.setItem("aotc_gate_once", "1"); } catch (e) {} location.href = ROOT + "book.html"; } else { inp.classList.remove("bad"); void inp.offsetWidth; inp.classList.add("bad"); inp.select(); } }); }
-    $("[data-go]", gateEl).addEventListener("click", go); $("[data-no]", gateEl).addEventListener("click", bail);
-    inp.addEventListener("keydown", function (e) { if (e.key === "Enter") go(); if (e.key === "Escape") bail(); });
-    gateEl.addEventListener("click", function (e) { if (e.target === gateEl) bail(); });
-  }
-  // the logo's clicks (one: home, two: this gate, three: the receipt tool) are counted in assets/logo.js
-  if (!HOME) window.AOTCStaffGate = staffGate;
+  /* ───────── staff: double-click the AOTC logo for the sales console (assets/logo.js counts the clicks).
+     Each rep signs in on the console page itself (book.html, assets/crm.js). ───────── */
+  if (!HOME) window.AOTCStaffGate = function () { location.href = ROOT + "book.html"; };
 
   /* ───────── privacy choices (footer) ───────── */
   doc.addEventListener("click", function (e) {
