@@ -11,10 +11,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-<script>
-/* the sales console only opens from the staff gate (double-click the AOTC logo, then the passphrase); a reload re-locks it */
-(function () { var ok = false; try { ok = sessionStorage.getItem("aotc_gate_once") === "1"; } catch (e) {} if (ok) { try { sessionStorage.removeItem("aotc_gate_once"); } catch (e) {} } else { location.replace("index.html"); } })();
-</script>
 <style>
   :root{--bg:#f6f3ee;--card:#fff;--ink:#1f1d1a;--ink2:#55504a;--mute:#8a847b;--line:#ece6dd;--line2:#ddd5ca;--soft:#f8f5f0;
     --red:#e1252e;--red-d:#b5141c;--red-s:#fdeced;--gold:#efab12;--gold-d:#8a5a00;--gold-s:#fff3d2;--blue:#2f6fe4;--blue-d:#1f55b8;--blue-s:#e9f0ff;--green:#1d9a5f;--green-s:#e4f5ea;
@@ -173,6 +169,7 @@
   .evc-t b{display:block;font-size:15px;font-weight:700;line-height:1.25}
   .evc-t small{display:block;font-size:13px;color:var(--mute);margin-top:3px}
   .evc-f{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:0 13px 13px}
+  .evc-p{margin-left:auto;font-size:17px;font-weight:800}
   .evc.out{background:var(--soft);border-color:var(--line)}
   .evc.out .evc-pick{cursor:not-allowed}
   .evc.out img{filter:grayscale(1);opacity:.55}
@@ -321,11 +318,13 @@
   }
   @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
+<link rel="stylesheet" href="assets/crm.css" />
 </head>
-<body data-mode="exclusive">
+<body data-mode="exclusive" data-view="signin">
+<div id="crm"></div>
 <header class="top">
   <a class="brand" href="index.html" aria-label="AOTC home" data-site-logo><img src="aotc_final.gif" alt="AOTC" /><div><b>Sales console</b><span>AOTC, Ads of the Century</span></div></a>
-  <div class="top-r"><span class="pill staff">Staff only</span><button type="button" class="ghost dark" id="objBtn">If they say&hellip;</button><button type="button" class="ghost" id="reset">Start over</button></div>
+  <div class="top-r"><button type="button" class="ghost" id="crmHomeBtn" hidden>&#8249; My home</button><span class="pill staff">Staff only</span><button type="button" class="ghost dark" id="objBtn">If they say&hellip;</button><button type="button" class="ghost" id="reset">Start over</button></div>
 </header>
 
 <main class="wrap">
@@ -337,7 +336,7 @@
 
   <section class="card" aria-labelledby="hClient">
     <div class="card-h"><div><h1 id="hClient">Who&rsquo;s on the phone?</h1><p class="sub">Get the email right: their overview goes there at the end.</p></div></div>
-    <p class="say"><b>Say</b>&ldquo;Thanks for calling AOTC! Who do I have the pleasure of speaking with, and what&rsquo;s the business?&rdquo;</p>
+    <p class="say" id="clientSay"><b>Say</b>&ldquo;Thanks for calling AOTC! Who do I have the pleasure of speaking with, and what&rsquo;s the business?&rdquo;</p>
     <div class="grid3">
       <div><label class="l" for="fName">Their name <i>*</i></label><input type="text" id="fName" autocomplete="off" placeholder="First and last name" /></div>
       <div><label class="l" for="fCo">Business or brand <i>*</i></label><input type="text" id="fCo" autocomplete="off" placeholder="The name on the screens" /></div>
@@ -410,12 +409,12 @@
           <div class="notes" data-notes="rotational"></div>
         </div>
         <div class="card">
-          <div class="card-h"><span class="num">2</span><div><h2>Pick the events</h2><p class="sub">Every event on the homepage is here. Tap to add it, then price the slot right on the card.</p></div></div>
+          <div class="card-h"><span class="num">2</span><div><h2>Pick the events</h2><p class="sub">Every event on the homepage is here. Tap to add it, then set the hours on the card: $75 an hour, 8 hours at least.</p></div></div>
           <p class="say"><b>Ask</b>&ldquo;Which of these will your customers be at? One event, or a few through the summer?&rdquo;</p>
           <div class="evs" id="evList"></div>
         </div>
         <div class="card">
-          <div class="card-h"><span class="num">3</span><div><h2>Add-ons</h2><p class="sub">Sound is on each event card ($150). Creative design is priced by what we make.</p></div></div>
+          <div class="card-h"><span class="num">3</span><div><h2>Add-ons</h2><p class="sub">Sound is on each event card ($125 flat). Creative design is priced by what we make.</p></div></div>
           <div class="row"><span><b>Creative design fee</b> <span class="opt">optional</span></span><label class="money"><span>$</span><input type="text" id="rtCreative" inputmode="decimal" placeholder="0" aria-label="Creative design fee" /></label></div>
         </div>
       </section>
@@ -479,10 +478,11 @@
     <span class="ok-pill">&#10003; Sent to info@adsofthecentury.net</span>
     <h1 id="hSent">Now email <span id="snName">the client</span> their overview</h1>
     <p class="sub" id="snHow" style="font-size:15px;max-width:70ch;margin-top:6px"></p>
+    <p class="sn-cal" id="snCal" hidden></p>
     <div class="acts">
       <a class="btn p" id="snGmail" href="#" target="_blank" rel="noopener">Open in Gmail</a>
       <a class="btn" id="snMail" href="#">Open in my email app</a>
-      <button type="button" class="btn" id="snCopy">Just copy it</button>
+      <button type="button" class="btn" id="snCopy">Copy the formatted version</button>
       <button type="button" class="btn" id="snPrint">Print or save as PDF</button>
     </div>
     <div class="two">
@@ -523,7 +523,8 @@
     { id: "weekly", name: "Weekly", days: "1 to 3 weeks", max: 27, min: 1100, top: 1200 },
     { id: "monthly", name: "Monthly", days: "28 days or more", max: 1e9, min: 800, top: 1000 }];
   var PRIVATE = { min: 200, top: 400, drive: 200 };
-  var SOUND = 150;                       // rotational add-on
+  var SOUND = 125;                       // rotational add-on: flat, per event (per date on a residency)
+  var ROT = { rate: 75, min: 8, max: 72 }; // rotational slot: $75 an hour per event, per business, 8-hour minimum
   var COST = { driver: 20, ops: 20,      // per hour, per truck
     gas: 81.22, diesel: 51.17,           // per 8-hour truck-day, from the receipt log (see FUEL)
     vendor: 0.20 };                      // vendor outsourcing: 20% of the net profit (second estimate)
@@ -536,9 +537,9 @@
     exclusive: { items: [["Multi-market coverage", "one city or several"], ["Premium placement", "prime spots for their audience"], ["100% share of voice", "no other brand on the screens"],
       ["Up to 2 displays per rotation", "the same design, or one for the sides and one for the rear"], ["3 LED billboards", "both sides and the rear, full motion"], ["Sound", "included"],
       ["Unlimited creative revisions", "with our Design Studio experts"]], notes: [["", "<b>Add-on:</b> creative design, priced by what we make and the return they need"]] },
-    rotational: { items: [["Premium placement", "guaranteed at every event"], ["A 10-second slot", "full motion, on every screen in the loop"], ["Up to 33% share of voice", "one of no more than three brands"],
-      ["Industry exclusivity", "never a competitor in their rotation"], ["Unlimited creative revisions", "with our Design Studio experts"]],
-      notes: [["", "<b>Add-ons:</b> creative design (varies) and sound ($150)"], ["no", "<b>Not included:</b> the truck to themselves. That&rsquo;s Exclusive use"]] },
+    rotational: { items: [["Premium placement", "guaranteed at every event"], ["A 10-second slot", "full motion, on every screen in the loop"], ["25% share of voice", "one of four non-competing businesses in the loop"],
+      ["Industry exclusivity", "never a competitor in their loop"], ["Unlimited creative revisions", "with our Design Studio experts"]],
+      notes: [["", "<b>Price:</b> $75 an hour per event, 8 hours at least ($600)"], ["", "<b>Add-ons:</b> sound ($125 flat per event) and creative design (varies)"], ["no", "<b>Not included:</b> choosing the streets and hours (AOTC sets them). Their own route is Exclusive use"]] },
     private: { items: [["Parked right at the event", "where they want it, for as long as they book"], ["Movies, video games, videos and photos", "anything they want on the screens"],
       ["Creative included", "no add-ons"], ["Sound included", "their playlist, mic or movie audio"]],
       notes: [["", "<b>Extra:</b> driving, $200 an hour, 1-hour minimum"], ["no", "<b>Not included:</b> tables, chairs and tents"]] }
@@ -600,8 +601,9 @@
     var lines = [], slots = 0, sound = 0, truckShare = 0, dayCost = (COST.driver + COST.ops) * 8 + COST.gas + COST.diesel;
     upcoming().forEach(function (e) {
       var s = S.rt.sel[e.id]; if (!s || e.soldout) return;
-      var p = num(s.price), d = e.season ? Math.max(1, s.dates || 1) : evDays(e);
-      lines.push({ ev: e, price: p, sound: !!s.sound, dates: d }); slots += p; if (s.sound) sound += SOUND; truckShare += dayCost * d / 3;
+      /* $75 for every hour the truck runs at the event (8 at least); a residency multiplies by its number of dates */
+      var hrs = Math.max(ROT.min, +s.hours || ROT.min), d = e.season ? Math.max(1, s.dates || 1) : 1, p = ROT.rate * hrs * d, snd = s.sound ? SOUND * d : 0;
+      lines.push({ ev: e, price: p, hours: hrs, sound: !!s.sound, soundCost: snd, dates: d }); slots += p; sound += snd; truckShare += dayCost * (hrs / 8) * d / 4;
     });
     var creative = num(S.rt.creative), total = slots + sound + creative;
     return { mode: "rotational", lines: lines, slots: slots, sound: sound, creative: creative, total: total, commission: total * COMMISSION, cost: { truckShare: truckShare, perTruckDay: dayCost } };
@@ -631,7 +633,6 @@
       if (!q.rateDay) n.push(["The rate", "#exRate"]); else if (q.rateDay < q.min) n.push(["A rate of at least " + money(q.min) + " a day", "#exRate"]);
     } else if (m === "rotational") {
       if (!q.lines.length) n.push(["At least one event", "#evList"]);
-      q.lines.forEach(function (l) { if (!l.price) n.push(["A price for " + l.ev.name, '[data-price="' + l.ev.id + '"]']); });
     } else {
       if (!v("pLoc")) n.push(["The event location", "#pLoc"]);
       if (!v("pCity")) n.push(["The event city", "#pCity"]);
@@ -749,9 +750,10 @@
       if (e.soldout) return '<div class="evc out"><button type="button" class="evc-pick" disabled aria-disabled="true"><img src="' + esc(e.img) + '" alt="" loading="lazy" decoding="async"><span class="add">Sold out</span><span class="evc-t"><b>' + esc(e.name) + "</b><small>" + esc(e.when) + " &middot; " + esc(e.venue) + "</small></span></button></div>";
       return '<div class="evc' + (s ? " on" : "") + '"><button type="button" class="evc-pick" data-ev="' + e.id + '" aria-pressed="' + !!s + '"><img src="' + esc(e.img) + '" alt="" loading="lazy" decoding="async">' + (tag ? '<span class="tag">' + tag + "</span>" : "") +
         '<span class="add">' + (s ? "✓ Added" : "+ Add") + '</span><span class="evc-t"><b>' + esc(e.name) + "</b><small>" + esc(e.when) + " &middot; " + esc(e.venue) + "</small></span></button>" +
-        (s ? '<div class="evc-f"><label class="money" style="width:100%"><span>$</span><input type="text" inputmode="decimal" data-price="' + e.id + '" value="' + esc(s.price) + '" placeholder="' + (e.slot ? money(e.slot).slice(1) + " list price" : "Price for this slot") + '" aria-label="Price per slot, ' + esc(e.name) + '"></label>' +
-          '<label class="tog"><input type="checkbox" data-sound="' + e.id + '"' + (s.sound ? " checked" : "") + "> Sound +$150</label>" +
-          (e.season ? '<span class="step" data-dates="' + e.id + '"><button type="button" data-d="-1" aria-label="One date less">&minus;</button><output>' + plural(Math.max(1, s.dates || 1), "date") + '</output><button type="button" data-d="1" aria-label="One date more">+</button></span>' : "") + "</div>" : "") + "</div>";
+        (s ? '<div class="evc-f"><span class="step" data-hrs="' + e.id + '"><button type="button" data-d="-1" aria-label="One hour less">&minus;</button><output>' + plural(Math.max(ROT.min, s.hours || ROT.min), "hour") + (e.season ? " a date" : "") + '</output><button type="button" data-d="1" aria-label="One hour more">+</button></span>' +
+          (e.season ? '<span class="step" data-dates="' + e.id + '"><button type="button" data-d="-1" aria-label="One date less">&minus;</button><output>' + plural(Math.max(1, s.dates || 1), "date") + '</output><button type="button" data-d="1" aria-label="One date more">+</button></span>' : "") +
+          '<label class="tog"><input type="checkbox" data-sound="' + e.id + '"' + (s.sound ? " checked" : "") + "> Sound +$125" + (e.season ? " a date" : "") + "</label>" +
+          '<b class="evc-p">' + money(ROT.rate * Math.max(ROT.min, s.hours || ROT.min) * (e.season ? Math.max(1, s.dates || 1) : 1)) + "</b></div>" : "") + "</div>";
     }).join("") : '<p class="sub">No upcoming events on the list right now.</p>';
     if (doc.activeElement !== $("#rtCreative")) $("#rtCreative").value = S.rt.creative;
   }
@@ -803,8 +805,8 @@
       if (q.days) r.push(["Days of service", plural(q.days, "day") + (q.truckDays !== q.days ? " (" + plural(q.truckDays, "truck day") + ")" : "")]);
       if (q.creative) r.push(["Creative design", money(q.creative)]);
     } else if (q.mode === "rotational") {
-      r.push(["Service", "Rotational slot: 10 seconds, up to 33% share of voice"]);
-      q.lines.forEach(function (l) { r.push([l.ev.name, l.ev.when + (l.ev.season ? ", " + plural(l.dates, "date") : "") + "\n" + (l.price ? money(l.price) + " slot" : "price to set") + (l.sound ? " + sound $150" : "")]); });
+      r.push(["Service", "Rotational slot: 10 seconds, 25% share of voice"]);
+      q.lines.forEach(function (l) { r.push([l.ev.name, l.ev.when + (l.ev.season ? ", " + plural(l.dates, "date") : "") + "\n" + plural(l.hours, "hour") + (l.ev.season ? " a date" : "") + " × $75 = " + money(l.price) + (l.sound ? " + sound " + money(l.soundCost) : "")]); });
       if (q.creative) r.push(["Creative design", money(q.creative)]);
     } else {
       r.push(["Service", "Private event, parked screen"]);
@@ -821,7 +823,7 @@
     var c = q.commission, old = com.getAttribute("data-c"), more = "", atTop = "";
     if (q.mode === "exclusive" && q.truckDays) { more = "Every extra $100 a day adds <em>" + money(100 * COMMISSION * q.truckDays) + "</em> to your check."; if (q.rateDay < q.top) atTop = "<p>At " + money(q.top) + " a day you&rsquo;d make <em>" + money((q.top * q.truckDays + q.creative) * COMMISSION) + "</em>.</p>"; }
     if (q.mode === "private" && q.days.length) { more = "Every extra $50 an hour adds <em>" + money(50 * COMMISSION * q.hours * q.trucks * q.days.length) + "</em> to your check."; if (q.rate < PRIVATE.top) atTop = "<p>At $400 an hour you&rsquo;d make <em>" + money((PRIVATE.top * q.hours + PRIVATE.drive * q.driveHrs) * q.trucks * q.days.length * COMMISSION) + "</em>.</p>"; }
-    if (q.mode === "rotational" && q.lines.length) more = "Every extra $100 on each slot adds <em>" + money(100 * COMMISSION * q.lines.length) + "</em> to your check.";
+    if (q.mode === "rotational" && q.lines.length) more = "Every extra hour at an event adds <em>" + money(ROT.rate * COMMISSION) + "</em> to your check. Fill the loop: each of the 4 businesses is its own commission.";
     com.innerHTML = "<small>Your commission (20% of the sale)</small><b>" + money(c) + "</b><p>The more you type, the more you make. " + more + "</p>" + atTop;
     if (old !== String(Math.round(c))) { com.setAttribute("data-c", String(Math.round(c))); com.classList.remove("pop"); void com.offsetWidth; com.classList.add("pop"); }
   }
@@ -871,7 +873,7 @@
       add("Rate", money(q.rateDay) + " per truck-day (" + money(q.rateHr, true) + "/hr), entered " + (S.ex.unit === "hr" ? "per hour" : "per day"));
       add("Add-on: creative design", q.creative ? money(q.creative) : "None");
     } else if (q.mode === "rotational") {
-      add("Events", q.lines.map(function (l) { return l.ev.name + " (" + l.ev.when + (l.ev.season ? ", " + plural(l.dates, "date") : "") + "): " + money(l.price) + " slot" + (l.sound ? " + sound $150" : ""); }).join("\n"));
+      add("Events", q.lines.map(function (l) { return l.ev.name + " (" + l.ev.when + (l.ev.season ? ", " + plural(l.dates, "date") : "") + "): " + plural(l.hours, "hour") + (l.ev.season ? " a date" : "") + " x $75 = " + money(l.price) + (l.sound ? " + sound " + money(l.soundCost) : ""); }).join("\n"));
       add("Slots", q.lines.length); add("Add-on: sound", q.sound ? money(q.sound) : "None"); add("Add-on: creative design", q.creative ? money(q.creative) : "None");
     } else {
       add("Event location", v("pLoc")); add("City", v("pCity")); add("Date(s)", ranges(q.days)); add("Truck on site at", S.pv.start ? timeLabel(+S.pv.start) : "Set on the confirmation call");
@@ -881,7 +883,7 @@
     add("TOTAL INVESTMENT", money(q.total)); add("Rep commission (20%)", money(q.commission));
     add("Notes", v("fNotes"));
     /* internal: never shown in the console */
-    var ex = q.mode === "rotational" ? "Truck share (1/3 of a truck-day per event day, " + money(q.cost.perTruckDay, true) + " per 8-hour day): " + money(P.direct, true) :
+    var ex = q.mode === "rotational" ? "Truck share (1/4 of the truck's hours, " + money(q.cost.perTruckDay, true) + " per 8-hour day): " + money(P.direct, true) :
       "Driver $20/hr + photographer/ops $20/hr: " + money(q.cost.labor, true) + "\nFuel (gas + diesel): " + money(q.cost.fuel, true);
     add("INTERNAL — est. expenses", "Commission (20%): " + money(P.comm, true) + "\n" + ex + "\nTotal: " + money(P.comm + P.direct, true));
     add("INTERNAL — est. gross profit", money(P.gp, true) + " (" + (q.total ? Math.round(P.gp / q.total * 100) : 0) + "% of the sale)");
@@ -889,6 +891,11 @@
     add("INTERNAL — fuel basis", FUEL);
     add("Submitted from", "Sales console (book.html)");
     return F;
+  }
+  function quotePayload(q) {
+    var fields = emailFields(q).filter(function (f) { return !/^INTERNAL/.test(f[0]) && f[0] !== "Submitted from" && f[0] !== "Notes"; });
+    return { mode: MODE[q.mode], company: v("fCo"), contact: v("fName"), email: v("fEmail"), phone: v("fPhone"), total: q.total, notes: v("fNotes"),
+      details: fields.map(function (f) { return f[0] + ": " + f[1]; }).join("\n") };
   }
   function jumpTo(sel) {
     var el = $(sel); if (!el) return;
@@ -905,14 +912,19 @@
     emailFields(q).forEach(function (f) { fd.append(f[0], f[1]); });
     fetch("https://formsubmit.co/ajax/info@adsofthecentury.net", { method: "POST", headers: { Accept: "application/json" }, body: fd })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok || String(j.success) === "false") throw { said: String(j.message || ("error " + r.status)) }; }); })
-      .then(function () { justSent = true; try { sessionStorage.removeItem(DRAFT); } catch (e) {} openSent(q); })
+      .then(function () { justSent = true; try { sessionStorage.removeItem(DRAFT); } catch (e) {} openSent(q);
+        /* the rep's call log (assets/crm.js) adds the quote and a 24-hour confirm reminder to the calendar */
+        try { window.dispatchEvent(new CustomEvent("aotc:quote", { detail: quotePayload(q) })); } catch (e) {} })
       .catch(function (e) {   /* show the email service's own reason when it gives one */
         toast(e && e.said ? "That didn't send. The email service said: “" + e.said.slice(0, 160) + "” Nothing is lost; tell leadership if it keeps happening." : "That didn't send. Check the connection and press Send again. Nothing is lost.", 9000); })
       .then(function () { sending = false; btn.disabled = false; renderSide(); });
   }
 
   /* ================= the client's email ================= */
+  function signature() { return ["Best regards,", "", v("fRep") || "The AOTC team", "OOH-Vantage Strategist", "AOTC, LLC · 49 Markets Nationwide", "Direct / Text: (773) 708-1400 | adsofthecentury.net", "Real brands. Real streets."]; }
+  var SIG = [];
   function clientEmail(q) {
+    SIG = signature();
     var first = v("fName").split(/\s+/)[0] || "there", brand = v("fCo"), rows = overviewRows(q).concat([["Total investment", money(q.total)]]);
     var subject = brand + " × AOTC: your campaign overview";
     var inc = INC[q.mode].items.map(function (i) { return i[0]; }).concat(q.mode === "private" ? ["Not included: tables, chairs and tents"] : []);
@@ -926,12 +938,12 @@
       "</table>" +
       '<p style="margin:0 0 6px"><b>What&rsquo;s included</b></p><ul style="margin:0 0 16px;padding-left:20px">' + inc.map(function (i) { return "<li>" + esc(i) + "</li>"; }).join("") + "</ul>" +
       "<p>Please feel free to forward this to anyone on your team who needs to see it, or print it for your records. When you&rsquo;re ready, reply with your artwork (or a few lines on what you want the screens to say) and our Design Studio will take it from there.</p>" +
-      "<p>Talk soon,</p></div>";
+      "<p>" + SIG.map(function (l, i) { return i === 2 ? "<b>" + esc(l) + "</b>" : esc(l); }).join("<br>").replace("<br><br>", "</p><p>") + "</p></div>";
     var text = "Hi " + first + ",\n\nIt's our pleasure to be of assistance in making " + brand + " stand out. Thank you for your time today. Here's the overview we put together; we're confirming availability now and will follow up shortly.\n\n" +
       "AOTC - " + MODE[q.mode].toUpperCase() + " OVERVIEW\n" + rows.map(function (r) { return r[0] + ": " + r[1].replace(/\n/g, " / "); }).join("\n") +
       "\n\nWhat's included:\n" + inc.map(function (i) { return "- " + i; }).join("\n") +
-      "\n\nPlease feel free to forward this to anyone on your team who needs to see it, or print it for your records. When you're ready, reply with your artwork (or a few lines on what you want the screens to say) and our Design Studio will take it from there.\n\nTalk soon,\n";
-    return { to: v("fEmail"), subject: subject, html: html, text: text };
+      "\n\nPlease feel free to forward this to anyone on your team who needs to see it, or print it for your records. When you're ready, reply with your artwork (or a few lines on what you want the screens to say) and our Design Studio will take it from there.\n\n" + SIG.join("\n");
+    return { to: v("fEmail"), cc: "info@adsofthecentury.net", subject: subject, html: html, text: text };
   }
   function copyRich(m) {
     if (navigator.clipboard && window.ClipboardItem) {
@@ -948,18 +960,22 @@
   function openSent(q) {
     var m = lastMail = clientEmail(q);
     /* real links, so the new email opens from the click itself and no pop-up blocker gets in the way */
-    $("#snGmail").href = "https://mail.google.com/mail/?view=cm&fs=1&to=" + encodeURIComponent(m.to) + "&su=" + encodeURIComponent(m.subject);
-    $("#snMail").href = "mailto:" + encodeURIComponent(m.to) + "?subject=" + encodeURIComponent(m.subject);
+    /* To, CC, subject and the message (with your signature) are all filled in: the rep only presses Send */
+    var E = encodeURIComponent;
+    $("#snGmail").href = "https://mail.google.com/mail/?view=cm&fs=1&to=" + E(m.to) + "&cc=" + E(m.cc) + "&su=" + E(m.subject) + "&body=" + E(m.text);
+    $("#snMail").href = "mailto:" + m.to + "?cc=" + E(m.cc) + "&subject=" + E(m.subject) + "&body=" + E(m.text);
     $("#snName").textContent = v("fName").split(/\s+/)[0] || "the client";
-    $("#snHow").innerHTML = "It&rsquo;s written and addressed to <b>" + esc(m.to) + "</b>. Press a button below: it copies the overview and opens a new email to them. " + (TOUCH ? "Tap and hold in the message, choose <b>Paste</b>, then send." : "Click in the message, press <b>Ctrl+V</b> (<b>&#8984;V</b> on a Mac) and send.") + " Your signature adds itself.";
+    $("#snHow").innerHTML = "It&rsquo;s written and addressed to <b>" + esc(m.to) + "</b>, with <b>info@adsofthecentury.net</b> copied. Press a button below: the new email opens with everything filled in, your signature included. Read it, then press Send. " +
+      "Want the formatted table instead? Press <b>Copy the formatted version</b>, select the message in the email and paste over it.";
+    var cal = $("#snCal"); if (cal) { cal.hidden = true; cal.textContent = ""; }
     /* on a phone the phone's own mail app opens more reliably than the Gmail website, so it goes first */
     var gm = $("#snGmail"), ml = $("#snMail"); gm.classList.toggle("p", !TOUCH); ml.classList.toggle("p", TOUCH); if (TOUCH) gm.parentNode.insertBefore(ml, gm); else gm.parentNode.insertBefore(gm, ml);
-    $("#snPrev").innerHTML = '<p style="font:13px Arial;color:#8a847b;margin-bottom:12px">To: ' + esc(m.to) + "<br>Subject: " + esc(m.subject) + "</p>" + m.html;
+    $("#snPrev").innerHTML = '<p style="font:13px Arial;color:#8a847b;margin-bottom:12px">To: ' + esc(m.to) + "<br>CC: " + esc(m.cc) + "<br>Subject: " + esc(m.subject) + "</p>" + m.html;
     paintCom($("#snCom"), q);
     $("#sent").hidden = false; doc.documentElement.style.overflow = "hidden";
   }
   function closeSent() { $("#sent").hidden = true; doc.documentElement.style.overflow = ""; }
-  function copyForMail() { if (!lastMail) return; copyRich(lastMail).then(function (ok) { toast(ok ? (TOUCH ? "Copied. In the new email, tap and hold, choose Paste, then send." : "Copied. Click in the new email, press Ctrl+V (⌘V on a Mac), then send.") : "Couldn't copy automatically: select the preview, copy it, and paste it into the email.", 8000); }); }
+  function copyForMail() { if (!lastMail) return; copyRich(lastMail).then(function (ok) { toast(ok ? (TOUCH ? "Copied with the table. In the email, select the message, tap and hold, choose Paste." : "Copied with the table. In the email, select the message (Ctrl+A), then press Ctrl+V (⌘V on a Mac).") : "Couldn't copy automatically: select the preview, copy it, and paste it into the email.", 8000); }); }
 
   /* ================= saving a draft (this tab only; cleared on send or start over) ================= */
   var DRAFT = "aotc_console_draft", REP = "aotc_console_rep", saveT;
@@ -994,7 +1010,8 @@
     var d = null; try { d = JSON.parse(sessionStorage.getItem(DRAFT) || "null"); } catch (e) {}
     if (!d || !d.s || !d.s.ex) return;
     S = d.s; Object.keys(d.f || {}).forEach(function (id) { var el = doc.getElementById(id); if (el && d.f[id]) el.value = d.f[id]; });
-    setTimeout(function () { toast("Picked up where you left off. “Start over” clears it."); }, 500);
+    if (S.rt && S.rt.sel) Object.keys(S.rt.sel).forEach(function (k) { var s = S.rt.sel[k]; if (!s.hours) s.hours = ROT.min; });   /* drafts from before hourly pricing */
+    setTimeout(function () { if (doc.body.getAttribute("data-view") === "console") toast("Picked up where you left off. “Start over” clears it."); }, 600);
   })();
 
   /* ================= wiring ================= */
@@ -1007,9 +1024,7 @@
   $("#objBtn").addEventListener("click", function () { $("#sheet").hidden = false; });
   $("#sheet").addEventListener("click", function (e) { if (e.target === this || e.target.closest("[data-close]")) this.hidden = true; });
   $("#sent").addEventListener("click", function (e) { if (e.target === this || e.target.closest("[data-close]")) closeSent(); });
-  $("#snNew").addEventListener("click", reset);
-  $("#snGmail").addEventListener("click", copyForMail);
-  $("#snMail").addEventListener("click", copyForMail);
+  $("#snNew").addEventListener("click", function () { reset(); if (window.AOTCCrmHome) window.AOTCCrmHome(); });
   $("#snCopy").addEventListener("click", copyForMail);
   $("#snPrint").addEventListener("click", function () { window.print(); });
   $("#cityAdd").addEventListener("click", function () { addCity($("#cityIn").value); });
@@ -1042,62 +1057,47 @@
     if (t.hasAttribute("data-need")) { var n = needs(S.mode)[+t.getAttribute("data-need")]; if (n) jumpTo(n[1]); return; }
     if (t.hasAttribute("data-city")) { S.ex.active = +t.getAttribute("data-city"); renderEx(); save(); return; }
     if (t.hasAttribute("data-uncity")) { var ci = +t.getAttribute("data-uncity"), c = S.ex.cities[ci]; if (sorted(c.days).length && !confirm("Remove " + c.name + " and its days?")) return; S.ex.cities.splice(ci, 1); S.ex.active = Math.max(0, Math.min(S.ex.active, S.ex.cities.length - 1)); renderEx(); renderSide(); fit(); save(); return; }
-    if (t.hasAttribute("data-ev")) { var id = t.getAttribute("data-ev"), ev = evById(id); if (S.rt.sel[id]) delete S.rt.sel[id]; else S.rt.sel[id] = { price: ev && ev.slot ? String(ev.slot) : "", sound: false, dates: 1 }; renderRt(); renderSide(); fit(); save(); var f = $('[data-price="' + id + '"]'); if (f && !f.value) f.focus({ preventScroll: true }); return; }
+    if (t.hasAttribute("data-ev")) { var id = t.getAttribute("data-ev"); if (S.rt.sel[id]) delete S.rt.sel[id]; else S.rt.sel[id] = { hours: ROT.min, sound: false, dates: 1 }; renderRt(); renderSide(); fit(); save(); return; }
     if (t.hasAttribute("data-unit")) { var u = t.getAttribute("data-unit"); if (u !== S.ex.unit) { var r = num(S.ex.rate); if (r) S.ex.rate = String(u === "hr" ? Math.round(r / S.ex.hours * 100) / 100 : Math.round(r * S.ex.hours)); S.ex.unit = u; $("#exRate").value = S.ex.rate; } renderEx(); renderSide(); save(); return; }
     if (t.hasAttribute("data-hours")) { S.ex.hours = +t.getAttribute("data-hours"); renderEx(); renderSide(); save(); return; }
     var stp = t.closest(".step"), d = +t.getAttribute("data-d");
     if (stp && d) {
       if (stp.hasAttribute("data-trucks")) { var cc = S.ex.cities[+stp.getAttribute("data-trucks")]; cc.trucks = Math.max(1, Math.min(9, cc.trucks + d)); renderEx(); }
       else if (stp.hasAttribute("data-dates")) { var s = S.rt.sel[stp.getAttribute("data-dates")]; s.dates = Math.max(1, Math.min(60, (s.dates || 1) + d)); renderRt(); }
+      else if (stp.hasAttribute("data-hrs")) { var sh = S.rt.sel[stp.getAttribute("data-hrs")]; sh.hours = Math.max(ROT.min, Math.min(ROT.max, (+sh.hours || ROT.min) + d)); renderRt(); }
       else { var w = stp.getAttribute("data-stepper"); if (w === "pHours") S.pv.hours = Math.max(1, Math.min(16, S.pv.hours + d)); if (w === "pTrucks") S.pv.trucks = Math.max(1, Math.min(9, S.pv.trucks + d)); if (w === "pDriveHrs") { S.pv.drive = true; S.pv.driveHrs = Math.max(1, Math.min(12, S.pv.driveHrs + d)); } renderPv(); }
       renderSide(); save();
     }
   });
   addEventListener("beforeunload", function (e) { if (dirty()) { e.preventDefault(); e.returnValue = ""; } });
 
+  /* ================= the rep's call log (assets/crm.js) drives the console through this ================= */
+  var SAY0 = $("#clientSay").innerHTML;
+  window.AOTCConsole = {
+    /* a real conversation: start a clean booking with who's on the phone already filled in */
+    start: function (c) {
+      reset(); setMode("exclusive", "now");
+      if (!c || c.inbound) { $("#clientSay").innerHTML = SAY0; return; }
+      $("#fName").value = c.name || ""; $("#fCo").value = c.company || ""; $("#fEmail").value = c.email || ""; $("#fPhone").value = c.phone || ""; $("#fNotes").value = c.notes || "";
+      $("#clientSay").innerHTML = "<b>Say</b>&ldquo;Hi " + esc((c.name || "").split(/\s+/)[0]) + ", this is " + esc(v("fRep") || "[your name]") + " with AOTC. I understand you lead marketing at " + esc(c.company || "") +
+        "?&rdquo; Pause and let them confirm. Then: what are they running now, what&rsquo;s working, and where it falls short.";
+      renderSide(); save();
+    },
+    rep: function (name) { var r = $("#fRep"); r.value = name; r.readOnly = true; r.title = "Signed in as " + name; $("#snNew").textContent = "Done: back to my home"; save(); },
+    reset: function () { reset(); },
+    dirty: function () { return dirty(); },
+    sent: function () { return justSent; }
+  };
+
   syncGoal(); renderAll(); setMode(S.mode, "now");
 })();
 </script>
 <script>
-/* AOTC internal gate: double-click the AOTC logo (counted in assets/logo.js), then the passphrase.
-   Only a SHA-256 fingerprint of the passphrase lives here; access lasts one page load. */
-(function () {
-  var PASS_H = "4dcab0d82ccb503fea0f6f7a4d63440981cf2755d9fba55733489e8c8091fdf5";
-  function sha(s){ if(!(window.crypto&&crypto.subtle&&window.TextEncoder)) return Promise.resolve(""); return crypto.subtle.digest("SHA-256",new TextEncoder().encode(s)).then(function(b){return Array.prototype.map.call(new Uint8Array(b),function(x){return ("0"+x.toString(16)).slice(-2);}).join("");}); }
-  var DEST = "book.html", box = null;
-  function css() {
-    if (document.getElementById("aotcGateCss")) return;
-    var s = document.createElement("style"); s.id = "aotcGateCss";
-    s.textContent = ".gate-scrim{position:fixed;inset:0;z-index:2147483200;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(31,29,26,.4);backdrop-filter:blur(6px)}" +
-      ".gate{width:min(380px,100%);background:#fff;border-radius:24px;padding:26px;font-family:Figtree,system-ui,sans-serif;box-shadow:0 30px 80px rgba(0,0,0,.3)}" +
-      ".gate h4{font-size:21px;font-weight:800;color:#1f1d1a;margin:0 0 4px}.gate p{font-size:14px;color:#8a847b;margin:0 0 16px}" +
-      ".gate input{width:100%;border:1.5px solid #ddd5ca;border-radius:13px;padding:12px 14px;font-size:16px;box-sizing:border-box}" +
-      ".gate input.bad{border-color:#e1252e}.gate div{display:flex;gap:9px;margin-top:14px}" +
-      ".gate button{flex:1;font:inherit;font-weight:800;font-size:15px;height:46px;border:0;border-radius:999px;color:#fff;background:#e1252e;cursor:pointer}" +
-      ".gate button.g{flex:0 0 auto;padding:0 18px;background:#fff;border:1.5px solid #ddd5ca;color:#55504a}";
-    document.head.appendChild(s);
-  }
-  function prompt() {
-    if (box) return; css();
-    box = document.createElement("div"); box.className = "gate-scrim";
-    box.innerHTML = '<div class="gate" role="dialog" aria-modal="true" aria-label="Staff access"><h4>Sales console</h4><p>Staff only. Enter the passphrase.</p><input type="password" placeholder="Passphrase" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Passphrase" /><div><button type="button" data-go>Open</button><button type="button" class="g" data-no>Cancel</button></div></div>';
-    document.body.appendChild(box);
-    var inp = box.querySelector("input"); setTimeout(function () { inp.focus(); }, 60);
-    function bail() { if (box) { box.remove(); box = null; } }
-    function tryIt() {
-      sha(inp.value.trim()).then(function (h) {
-        if (h === PASS_H) { try { sessionStorage.setItem("aotc_gate_once", "1"); } catch (e) {} window.location.href = "/" + DEST; }
-        else { inp.classList.remove("bad"); void inp.offsetWidth; inp.classList.add("bad"); inp.select(); }
-      });
-    }
-    box.querySelector("[data-go]").addEventListener("click", tryIt);
-    box.querySelector("[data-no]").addEventListener("click", bail);
-    inp.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); tryIt(); } if (e.key === "Escape") bail(); });
-    box.addEventListener("click", function (e) { if (e.target === box) bail(); });
-  }
-  window.AOTCStaffGate = prompt;   /* the logo's clicks are counted in assets/logo.js */
-})();
+/* the logo's double-click (assets/logo.js) on this page just brings the sign-in back */
+window.AOTCStaffGate = function () { location.href = "book.html"; };
 </script>
+<script src="assets/crm-config.js"></script>
+<script src="assets/crm.js" defer></script>
 <script src="assets/logo.js" defer></script>
 </body>
 </html>
