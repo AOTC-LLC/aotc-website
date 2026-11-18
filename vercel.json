@@ -1,6 +1,6 @@
 {
   "headers": [
-    { "source": "/((?!book\\.html|route\\.html|receipts).*)", "headers": [
+    { "source": "/((?!book\\.html|route\\.html|admin\\.html|receipts).*)", "headers": [
       { "key": "Strict-Transport-Security", "value": "max-age=63072000" },
       { "key": "X-Content-Type-Options", "value": "nosniff" },
       { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
@@ -18,7 +18,18 @@
       { "key": "Cross-Origin-Opener-Policy", "value": "same-origin-allow-popups" },
       { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
       { "key": "Cache-Control", "value": "no-store" },
-      { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'sha256-GIgCNwxGMQuqVVPtaxH9O0iM4stI1+TjcGOhGl2nrK8=' 'sha256-fkSgacrR4GPnPg0qgrUNGnmlZ8fDnSfupfIIFZE14zo=' 'sha256-wnFpN6tK2xSIS0GxuW/8kH0BmUeFVFietpca65jJc9o=' 'sha256-qXEsw+9yHb8bdI09dGzbfecCb1VETbATmMaI16y1NJY=' 'sha256-LmnWvWy4jb9CaAiLZIAxNhhrwwjo4skVjIOAxrY/jjc='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://aotc-route.weathered-lab-b15b.workers.dev https://tile.openstreetmap.org; connect-src 'self' https://formsubmit.co; frame-src 'none'; form-action 'self' https://formsubmit.co; base-uri 'self'; object-src 'none'; frame-ancestors 'self'" }
+      { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'sha256-fkSgacrR4GPnPg0qgrUNGnmlZ8fDnSfupfIIFZE14zo=' 'sha256-wnFpN6tK2xSIS0GxuW/8kH0BmUeFVFietpca65jJc9o=' 'sha256-ycwYVi9cTfzS2xR8YpJwbMBYktJwSen1lXHLAQh/evY=' 'sha256-XuqVZlbqNSXBKzL9iL1SFxcPv/DidWvmHWQLck2qhYo='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://aotc-route.weathered-lab-b15b.workers.dev https://tile.openstreetmap.org; connect-src 'self' https://formsubmit.co https://script.google.com https://script.googleusercontent.com; frame-src 'none'; form-action 'self' https://formsubmit.co; base-uri 'self'; object-src 'none'; frame-ancestors 'self'" }
+    ] },
+    { "source": "/admin.html", "headers": [
+      { "key": "Strict-Transport-Security", "value": "max-age=63072000" },
+      { "key": "X-Content-Type-Options", "value": "nosniff" },
+      { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+      { "key": "Referrer-Policy", "value": "no-referrer" },
+      { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=()" },
+      { "key": "Cross-Origin-Opener-Policy", "value": "same-origin-allow-popups" },
+      { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
+      { "key": "Cache-Control", "value": "no-store" },
+      { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://aotc-route.weathered-lab-b15b.workers.dev https://tile.openstreetmap.org; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src 'none'; form-action 'none'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'" }
     ] },
     { "source": "/route.html", "headers": [
       { "key": "Strict-Transport-Security", "value": "max-age=63072000" },
