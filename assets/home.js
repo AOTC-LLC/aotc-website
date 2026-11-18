@@ -180,7 +180,8 @@
     });
   }
 
-  window.AOTCStaffGate = prompt;   /* the logo's clicks are counted in assets/logo.js */
+  /* the logo's clicks are counted in assets/logo.js; each rep now signs in on the console page itself (book.html, assets/crm.js) */
+  window.AOTCStaffGate = function () { location.href = "book.html"; };
 })();
 
 /* ---- 12: the menu is wired by assets/site.js on every page ---- */
